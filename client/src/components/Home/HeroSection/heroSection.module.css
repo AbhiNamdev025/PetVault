@@ -247,6 +247,8 @@
   .dogImageOverlay {
     width: 350px;
     height: 350px;
+    top: 54%;
+    left: 70%;
   }
 
   .badge {

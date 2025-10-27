@@ -13,8 +13,8 @@ const router = express.Router();
 
 router.get("/", getAllPets);
 router.get("/:id", getPetById);
-router.post("/", protect, admin, uploadPetImages, createPet);
-router.put("/:id", protect, admin, updatePet);
+router.post("/create", protect, admin, uploadPetImages, createPet);
+router.put("/:id", protect, admin, uploadPetImages, updatePet);
 router.delete("/:id", protect, admin, deletePet);
 
 module.exports = router;

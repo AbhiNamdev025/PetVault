@@ -1,11 +1,26 @@
-import React, { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
-import { PawPrint, Menu, X, User, ShoppingCart } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { PawPrint, Menu, X, User, ShoppingCart, LogOut } from "lucide-react";
 import styles from "./navbar.module.css";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [user, setUser] = useState(null);
   const location = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    checkUserLogin();
+  }, []);
+
+  const checkUserLogin = () => {
+    const token = localStorage.getItem("token");
+    const userData = localStorage.getItem("user");
+
+    if (token && userData) {
+      setUser(JSON.parse(userData));
+    }
+  };
 
   const navItems = [
     { path: "/", label: "Home" },
@@ -15,6 +30,14 @@ const Navbar = () => {
     { path: "/pet-daycare", label: "Daycare" },
     { path: "/pet-products", label: "Products" },
   ];
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    setUser(null);
+    navigate("/");
+    setIsOpen(false);
+  };
 
   return (
     <nav className={styles.navbar}>
@@ -39,10 +62,23 @@ const Navbar = () => {
           ))}
 
           <div className={styles.mobileActions}>
-            <Link to="/login" className={styles.authLink}>
-              <User size={18} />
-              <span>Login</span>
-            </Link>
+            {user ? (
+              <>
+                <Link to="/profile" className={styles.authLink}>
+                  <User size={18} />
+                  <span>{user.name}</span>
+                </Link>
+                <button onClick={handleLogout} className={styles.logoutBtn}>
+                  <LogOut size={18} />
+                  <span>Logout</span>
+                </button>
+              </>
+            ) : (
+              <Link to="/login" className={styles.authLink}>
+                <User size={18} />
+                <span>Login</span>
+              </Link>
+            )}
             <button className={styles.cartBtn}>
               <ShoppingCart size={18} />
               <span className={styles.cartCount}>0</span>
@@ -51,10 +87,23 @@ const Navbar = () => {
         </div>
 
         <div className={styles.navActions}>
-          <Link to="/login" className={styles.authLink}>
-            <User size={18} />
-            <span>Login</span>
-          </Link>
+          {user ? (
+            <>
+              <Link to="/profile" className={styles.authLink}>
+                <User size={18} />
+                <span>{user.name}</span>
+              </Link>
+              <button onClick={handleLogout} className={styles.logoutBtn}>
+                <LogOut size={18} />
+                <span>Logout</span>
+              </button>
+            </>
+          ) : (
+            <Link to="/login" className={styles.authLink}>
+              <User size={18} />
+              <span>Login</span>
+            </Link>
+          )}
           <button className={styles.cartBtn}>
             <ShoppingCart size={18} />
             <span className={styles.cartCount}>0</span>

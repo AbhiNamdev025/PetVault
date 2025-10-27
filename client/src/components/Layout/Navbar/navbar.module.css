@@ -65,6 +65,7 @@
   align-items: center;
   gap: 1rem;
 }
+
 .mobileActions {
   display: none;
 }
@@ -83,6 +84,25 @@
 
 .authLink:hover {
   background: rgba(255, 255, 255, 0.15);
+}
+
+.logoutBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: white;
+  background: rgba(255, 255, 255, 0.15);
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.logoutBtn:hover {
+  background: rgba(255, 107, 107, 0.8);
+  transform: scale(1.05);
 }
 
 .cartBtn {
@@ -166,6 +186,13 @@
     margin-top: 1.5rem;
     display: flex;
     gap: 1rem;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .mobileActions .authLink,
+  .mobileActions .logoutBtn {
+    flex: 1;
     justify-content: center;
   }
 }

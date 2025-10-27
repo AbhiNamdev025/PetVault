@@ -2,26 +2,8 @@ const Pet = require("../models/pet");
 
 const getAllPets = async (req, res) => {
   try {
-    const { category, type, page = 1, limit = 12, featured } = req.query;
-
-    let query = { available: true };
-    if (category) query.category = category;
-    if (type) query.type = type;
-    if (featured) query.featured = featured === "true";
-
-    const pets = await Pet.find(query)
-      .limit(limit * 1)
-      .skip((page - 1) * limit)
-      .sort({ createdAt: -1 });
-
-    const total = await Pet.countDocuments(query);
-
-    res.json({
-      pets,
-      totalPages: Math.ceil(total / limit),
-      currentPage: parseInt(page),
-      total,
-    });
+    const pets = await Pet.find({});
+    res.json({ pets });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -41,15 +23,24 @@ const getPetById = async (req, res) => {
 
 const createPet = async (req, res) => {
   try {
-    const images = req.files
-      ? req.files.petImages.map((file) => file.filename)
-      : [];
+    const images =
+      req.files && req.files.petImages
+        ? req.files.petImages.map((file) => file.filename)
+        : [];
 
     const petData = {
-      ...req.body,
-      images,
-      price: parseFloat(req.body.price),
+      name: req.body.name,
+      breed: req.body.breed,
+      type: req.body.type,
+      gender: req.body.gender,
       age: parseInt(req.body.age),
+      ageUnit: req.body.ageUnit,
+      price: parseFloat(req.body.price),
+      description: req.body.description,
+      vaccinated: req.body.vaccinated === "true",
+      available: req.body.available === "true",
+      category: req.body.category,
+      images: images,
     };
 
     const pet = await Pet.create(petData);
@@ -61,14 +52,38 @@ const createPet = async (req, res) => {
 
 const updatePet = async (req, res) => {
   try {
-    const pet = await Pet.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-    });
-    if (!pet) {
+    const existingPet = await Pet.findById(req.params.id);
+    if (!existingPet) {
       return res.status(404).json({ message: "Pet not found" });
     }
-    res.json(pet);
+
+    let updatedImages = existingPet.images || [];
+    if (req.files && req.files.petImages) {
+      const newImages = req.files.petImages.map((file) => file.filename);
+      updatedImages = [...updatedImages, ...newImages];
+    }
+
+    const updateData = {
+      name: req.body.name || existingPet.name,
+      breed: req.body.breed || existingPet.breed,
+      type: req.body.type || existingPet.type,
+      gender: req.body.gender || existingPet.gender,
+      age: parseInt(req.body.age) || existingPet.age,
+      ageUnit: req.body.ageUnit || existingPet.ageUnit,
+      price: parseFloat(req.body.price) || existingPet.price,
+      description: req.body.description || existingPet.description,
+      vaccinated: req.body.vaccinated === "true" || existingPet.vaccinated,
+      available: req.body.available === "true" || existingPet.available,
+      images: updatedImages,
+    };
+
+    const updatedPet = await Pet.findByIdAndUpdate(req.params.id, updateData, {
+      new: true,
+    });
+
+    res.json(updatedPet);
   } catch (error) {
+    console.error(error);
     res.status(500).json({ message: error.message });
   }
 };
