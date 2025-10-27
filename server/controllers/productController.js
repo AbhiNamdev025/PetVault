@@ -3,7 +3,7 @@ const Product = require("../models/product");
 const getAllProducts = async (req, res) => {
   try {
     const products = await Product.find().sort({ createdAt: -1 });
-    res.json({ products }); // ✅ always send { products: [...] }
+    res.json({ products });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

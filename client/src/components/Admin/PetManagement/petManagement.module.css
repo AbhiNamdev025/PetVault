@@ -265,6 +265,32 @@
   font-size: 1.1rem;
   color: #64748b;
 }
+.categoryBadge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  margin-top: 0.5rem;
+  display: block;
+}
+
+.categoryBadge.shop {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.categoryBadge.adoption {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.adoptionText {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #059669;
+  margin-bottom: 1rem;
+}
 
 @media (max-width: 768px) {
   .header {

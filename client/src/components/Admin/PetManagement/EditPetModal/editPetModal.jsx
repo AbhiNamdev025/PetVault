@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { X, Upload } from "lucide-react";
 import styles from "./editPetModal.module.css";
-import { API_BASE_URL } from "../../../../utils/constants";
+
 const EditPetModal = ({ pet, onClose, onSave }) => {
   if (!pet) return null;
   const [formData, setFormData] = useState({
@@ -14,6 +14,7 @@ const EditPetModal = ({ pet, onClose, onSave }) => {
     price: "",
     description: "",
     available: true,
+    category: "shop",
     vaccinated: false,
   });
   const [images, setImages] = useState([]);
@@ -22,7 +23,6 @@ const EditPetModal = ({ pet, onClose, onSave }) => {
 
   useEffect(() => {
     if (pet && pet._id) {
-      console.log("Editing pet:", pet);
       setFormData({
         name: pet.name || "",
         breed: pet.breed || "",
@@ -33,6 +33,7 @@ const EditPetModal = ({ pet, onClose, onSave }) => {
         price: pet.price ? pet.price.toString() : "0",
         description: pet.description || "",
         available: Boolean(pet.available),
+        category: pet.category || "shop",
         vaccinated: Boolean(pet.vaccinated),
       });
       setExistingImages(pet.images || []);
@@ -70,20 +71,34 @@ const EditPetModal = ({ pet, onClose, onSave }) => {
         breed: formData.breed,
         type: formData.type,
         gender: formData.gender,
-        age: parseInt(formData.age) || 0,
+        age: parseInt(formData.age),
         ageUnit: formData.ageUnit,
-        price: parseFloat(formData.price) || 0,
+        price: parseFloat(formData.price),
         description: formData.description,
-        available: formData.available,
+        category: formData.category,
         vaccinated: formData.vaccinated,
+        available: formData.available,
       };
 
-      if (images.length > 0) {
-        submitData.images = images;
-      }
+      console.log("Sending data to backend:", submitData);
 
-      console.log("Submitting update:", submitData);
-      await onSave(pet._id, submitData);
+      const hasNewImages = images.length > 0;
+
+      if (hasNewImages) {
+        const formDataToSend = new FormData();
+
+        Object.keys(submitData).forEach((key) => {
+          formDataToSend.append(key, submitData[key]);
+        });
+
+        images.forEach((image) => {
+          formDataToSend.append("petImages", image);
+        });
+
+        await onSave(pet._id, formDataToSend);
+      } else {
+        await onSave(pet._id, submitData);
+      }
     } catch (error) {
       console.error("Error updating pet:", error);
     } finally {
@@ -121,7 +136,6 @@ const EditPetModal = ({ pet, onClose, onSave }) => {
             <X size={24} />
           </button>
         </div>
-
         <form onSubmit={handleSubmit} className={styles.form}>
           <div className={styles.formGrid}>
             <div className={styles.formGroup}>
@@ -134,7 +148,6 @@ const EditPetModal = ({ pet, onClose, onSave }) => {
                 required
               />
             </div>
-
             <div className={styles.formGroup}>
               <label>Breed *</label>
               <input
@@ -145,7 +158,6 @@ const EditPetModal = ({ pet, onClose, onSave }) => {
                 required
               />
             </div>
-
             <div className={styles.formGroup}>
               <label>Type *</label>
               <select
@@ -162,7 +174,6 @@ const EditPetModal = ({ pet, onClose, onSave }) => {
                 <option value="other">Other</option>
               </select>
             </div>
-
             <div className={styles.formGroup}>
               <label>Gender *</label>
               <select
@@ -175,7 +186,18 @@ const EditPetModal = ({ pet, onClose, onSave }) => {
                 <option value="female">Female</option>
               </select>
             </div>
-
+            <div className={styles.formGroup}>
+              <label>Category *</label>
+              <select
+                name="category"
+                value={formData.category}
+                onChange={handleInputChange}
+                required
+              >
+                <option value="shop">For Sale</option>
+                <option value="adoption">For Adoption</option>
+              </select>
+            </div>
             <div className={styles.formGroup}>
               <label>Age *</label>
               <div className={styles.ageInput}>
@@ -197,7 +219,6 @@ const EditPetModal = ({ pet, onClose, onSave }) => {
                 </select>
               </div>
             </div>
-
             <div className={styles.formGroup}>
               <label>Price (Rs) *</label>
               <input
@@ -211,7 +232,6 @@ const EditPetModal = ({ pet, onClose, onSave }) => {
               />
             </div>
           </div>
-
           <div className={styles.formGroup}>
             <label>Description *</label>
             <textarea
@@ -222,7 +242,6 @@ const EditPetModal = ({ pet, onClose, onSave }) => {
               required
             />
           </div>
-
           {existingImages.length > 0 && (
             <div className={styles.formGroup}>
               <label>Current Images</label>
@@ -230,15 +249,9 @@ const EditPetModal = ({ pet, onClose, onSave }) => {
                 {existingImages.map((image, index) => (
                   <div key={index} className={styles.previewItem}>
                     <img
-                      src={`http://localhost:5000/uploads/pets/${pet.images?.[0]}`}
+                      src={`http://localhost:5000/uploads/pets/${image}`}
                       alt={pet.name}
                     />
-                    <div
-                      className={styles.imageError}
-                      style={{ display: "none" }}
-                    >
-                      Image not found
-                    </div>
                     <button
                       type="button"
                       onClick={() => removeExistingImage(index)}
@@ -251,8 +264,6 @@ const EditPetModal = ({ pet, onClose, onSave }) => {
               </div>
             </div>
           )}
-
-          {/* New Image Upload */}
           <div className={styles.formGroup}>
             <label>Add New Images</label>
             <div className={styles.imageUpload}>
@@ -267,7 +278,6 @@ const EditPetModal = ({ pet, onClose, onSave }) => {
                   className={styles.fileInput}
                 />
               </label>
-
               {images.length > 0 && (
                 <div className={styles.imagePreview}>
                   {images.map((image, index) => (
@@ -287,6 +297,7 @@ const EditPetModal = ({ pet, onClose, onSave }) => {
             </div>
           </div>
 
+          {/* Available checkbox add karo */}
           <div className={styles.checkboxGroup}>
             <label className={styles.checkboxLabel}>
               <input
@@ -295,9 +306,8 @@ const EditPetModal = ({ pet, onClose, onSave }) => {
                 checked={formData.available}
                 onChange={handleInputChange}
               />
-              Available for sale
+              Available for {formData.category === "shop" ? "sale" : "adoption"}
             </label>
-
             <label className={styles.checkboxLabel}>
               <input
                 type="checkbox"

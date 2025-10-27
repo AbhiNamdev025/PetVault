@@ -52,38 +52,42 @@ const createPet = async (req, res) => {
 
 const updatePet = async (req, res) => {
   try {
-    const existingPet = await Pet.findById(req.params.id);
-    if (!existingPet) {
-      return res.status(404).json({ message: "Pet not found" });
-    }
+    const updateData = { ...req.body };
 
-    let updatedImages = existingPet.images || [];
     if (req.files && req.files.petImages) {
-      const newImages = req.files.petImages.map((file) => file.filename);
-      updatedImages = [...updatedImages, ...newImages];
+      updateData.images = req.files.petImages.map((file) => file.filename);
     }
 
-    const updateData = {
-      name: req.body.name || existingPet.name,
-      breed: req.body.breed || existingPet.breed,
-      type: req.body.type || existingPet.type,
-      gender: req.body.gender || existingPet.gender,
-      age: parseInt(req.body.age) || existingPet.age,
-      ageUnit: req.body.ageUnit || existingPet.ageUnit,
-      price: parseFloat(req.body.price) || existingPet.price,
-      description: req.body.description || existingPet.description,
-      vaccinated: req.body.vaccinated === "true" || existingPet.vaccinated,
-      available: req.body.available === "true" || existingPet.available,
-      images: updatedImages,
-    };
+    if (updateData.available !== undefined) {
+      updateData.available =
+        updateData.available === "true" || updateData.available === true;
+    }
+    if (updateData.vaccinated !== undefined) {
+      updateData.vaccinated =
+        updateData.vaccinated === "true" || updateData.vaccinated === true;
+    }
+
+    if (updateData.age !== undefined) {
+      updateData.age = parseInt(updateData.age);
+    }
+    if (updateData.price !== undefined) {
+      updateData.price = parseFloat(updateData.price);
+    }
+
+    console.log("Updating pet with data:", updateData);
 
     const updatedPet = await Pet.findByIdAndUpdate(req.params.id, updateData, {
       new: true,
+      runValidators: true,
     });
+
+    if (!updatedPet) {
+      return res.status(404).json({ message: "Pet not found" });
+    }
 
     res.json(updatedPet);
   } catch (error) {
-    console.error(error);
+    console.error("Update error:", error);
     res.status(500).json({ message: error.message });
   }
 };

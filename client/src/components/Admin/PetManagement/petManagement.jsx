@@ -17,6 +17,7 @@ const PetManagement = () => {
   const [petToDelete, setPetToDelete] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterType, setFilterType] = useState("all");
+  const [filterCategory, setFilterCategory] = useState("all");
 
   useEffect(() => {
     fetchPets();
@@ -25,7 +26,7 @@ const PetManagement = () => {
   const fetchPets = async () => {
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch(`${API_BASE_URL}/pets?category=shop`, {
+      const response = await fetch(`${API_BASE_URL}/pets`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -47,7 +48,6 @@ const PetManagement = () => {
       const token = localStorage.getItem("token");
       const formData = new FormData();
 
-      // Append all fields
       Object.keys(petData).forEach((key) => {
         if (key === "images" && petData.images) {
           petData.images.forEach((image) => {
@@ -80,19 +80,16 @@ const PetManagement = () => {
       toast.error("Failed to add pet");
     }
   };
-
+ 
   const handleEditPet = async (petId, petData) => {
     try {
       const token = localStorage.getItem("token");
 
-      // Check if there are new images to upload
       const hasNewImages = petData.images && petData.images.length > 0;
 
       if (hasNewImages) {
-        // Use FormData for image upload
         const formData = new FormData();
 
-        // Append all fields including images
         Object.keys(petData).forEach((key) => {
           if (key === "images") {
             petData.images.forEach((image) => {
@@ -145,7 +142,6 @@ const PetManagement = () => {
       toast.error("Failed to update pet");
     }
   };
-
   const handleDeleteClick = (pet) => {
     setPetToDelete(pet);
     setShowDeleteModal(true);
@@ -185,8 +181,10 @@ const PetManagement = () => {
     const matchesSearch =
       pet.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       pet.breed.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesFilter = filterType === "all" || pet.type === filterType;
-    return matchesSearch && matchesFilter;
+    const matchesType = filterType === "all" || pet.type === filterType;
+    const matchesCategory =
+      filterCategory === "all" || pet.category === filterCategory;
+    return matchesSearch && matchesType && matchesCategory;
   });
 
   if (loading) {
@@ -233,6 +231,17 @@ const PetManagement = () => {
             <option value="other">Other</option>
           </select>
         </div>
+        <div className={styles.filterBox}>
+          <Filter size={20} />
+          <select
+            value={filterCategory}
+            onChange={(e) => setFilterCategory(e.target.value)}
+          >
+            <option value="all">All Categories</option>
+            <option value="shop">For Sale</option>
+            <option value="adoption">For Adoption</option>
+          </select>
+        </div>
       </div>
 
       <div className={styles.petsGrid}>
@@ -265,7 +274,18 @@ const PetManagement = () => {
                       pet.available ? styles.available : styles.sold
                     }`}
                   >
-                    {pet.available ? "Available" : "Sold"}
+                    {pet.available
+                      ? "Available"
+                      : pet.category === "shop"
+                      ? "Sold"
+                      : "Adopted"}
+                  </span>
+                  <span
+                    className={`${styles.categoryBadge} ${
+                      pet.category === "shop" ? styles.shop : styles.adoption
+                    }`}
+                  >
+                    {pet.category === "shop" ? "For Sale" : "For Adoption"}
                   </span>
                 </div>
               </div>
@@ -280,7 +300,12 @@ const PetManagement = () => {
                     {pet.age} {pet.ageUnit}
                   </span>
                 </div>
-                <div className={styles.price}>Rs.{pet.price}</div>
+                {pet.category === "shop" && (
+                  <div className={styles.price}>Rs.{pet.price}</div>
+                )}
+                {pet.category === "adoption" && (
+                  <div className={styles.adoptionText}>Free Adoption</div>
+                )}
 
                 <div className={styles.actions}>
                   <button

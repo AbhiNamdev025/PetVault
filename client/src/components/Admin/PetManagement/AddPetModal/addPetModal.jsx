@@ -68,7 +68,7 @@ const AddPetModal = ({ onClose, onSave }) => {
         <form onSubmit={handleSubmit} className={styles.form}>
           <div className={styles.formGrid}>
             <div className={styles.formGroup}>
-              <label>Pet Name</label>
+              <label>Pet Name *</label>
               <input
                 type="text"
                 name="name"
@@ -79,7 +79,7 @@ const AddPetModal = ({ onClose, onSave }) => {
             </div>
 
             <div className={styles.formGroup}>
-              <label>Breed</label>
+              <label>Breed *</label>
               <input
                 type="text"
                 name="breed"
@@ -90,7 +90,7 @@ const AddPetModal = ({ onClose, onSave }) => {
             </div>
 
             <div className={styles.formGroup}>
-              <label>Type</label>
+              <label>Type *</label>
               <select
                 name="type"
                 value={formData.type}
@@ -107,7 +107,7 @@ const AddPetModal = ({ onClose, onSave }) => {
             </div>
 
             <div className={styles.formGroup}>
-              <label>Gender</label>
+              <label>Gender *</label>
               <select
                 name="gender"
                 value={formData.gender}
@@ -120,7 +120,20 @@ const AddPetModal = ({ onClose, onSave }) => {
             </div>
 
             <div className={styles.formGroup}>
-              <label>Age</label>
+              <label>Category *</label>
+              <select
+                name="category"
+                value={formData.category}
+                onChange={handleInputChange}
+                required
+              >
+                <option value="shop">For Sale</option>
+                <option value="adoption">For Adoption</option>
+              </select>
+            </div>
+
+            <div className={styles.formGroup}>
+              <label>Age *</label>
               <div className={styles.ageInput}>
                 <input
                   type="number"
@@ -142,7 +155,7 @@ const AddPetModal = ({ onClose, onSave }) => {
             </div>
 
             <div className={styles.formGroup}>
-              <label>Price (Rs)</label>
+              <label>Price (Rs) *</label>
               <input
                 type="number"
                 name="price"
@@ -156,7 +169,7 @@ const AddPetModal = ({ onClose, onSave }) => {
           </div>
 
           <div className={styles.formGroup}>
-            <label>Description</label>
+            <label>Description *</label>
             <textarea
               name="description"
               value={formData.description}
@@ -208,7 +221,7 @@ const AddPetModal = ({ onClose, onSave }) => {
                 checked={formData.available}
                 onChange={handleInputChange}
               />
-              Available for sale
+              Available for {formData.category === "shop" ? "sale" : "adoption"}
             </label>
 
             <label className={styles.checkboxLabel}>
