@@ -22,6 +22,7 @@ app.use("/api/services", require("./routes/services"));
 app.use("/api/appointments", require("./routes/appointments"));
 app.use("/api/orders", require("./routes/orders"));
 app.use("/api/admin", require("./routes/admin"));
+app.use("/api", require("./routes/enquiryRoutes"));
 
 app.get("/api/health", (req, res) => {
   res.json({ status: "OK", message: "PetVault API is running" });

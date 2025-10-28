@@ -14,6 +14,7 @@ import PetManagement from "../components/Admin/PetManagement/petManagement";
 import ProductManagement from "../components/Admin/ProductManagement/productManagement";
 import ServiceManagement from "../components/Admin/ServiceManagement/serviceManagement";
 import UserManagement from "../components/Admin/UserManagement/userManagement";
+import PetDetails from "../components/PetShop/PetDetails/petDetails";
 
 const AppRoutes = () => {
   return (
@@ -27,6 +28,9 @@ const AppRoutes = () => {
       <Route path="/pet-products" element={<PetProductsPage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
+
+      {/* Pet Details Route - Add this line */}
+      <Route path="/pets/:id" element={<PetDetails />} />
 
       {/* Private Routes */}
       <Route path="/profile" element={<div>User Profile Page</div>} />

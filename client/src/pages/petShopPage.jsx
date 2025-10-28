@@ -1,10 +1,10 @@
 import React from "react";
+import PetShop from "../components/PetShop/petShop";
 
 const PetShopPage = () => {
   return (
     <div className="container">
-      <h1>Pet Shop</h1>
-      <p>Coming soon...</p>
+     <PetShop/>
     </div>
   );
 };

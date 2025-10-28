@@ -108,8 +108,8 @@
 
 .productImage {
   position: relative;
-  height: 200px;
-  background: #f8fafc;
+  height: 250px;
+  padding: 10px;
 }
 
 .productImage img {
