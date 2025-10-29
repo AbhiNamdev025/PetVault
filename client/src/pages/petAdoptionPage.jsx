@@ -1,10 +1,10 @@
 import React from "react";
+import PetAdoption from "../components/PetAdoption/petAdoption";
 
 const PetAdoptionPage = () => {
   return (
     <div className="container">
-      <h1>Pet Adoption</h1>
-      <p>Coming soon...</p>
+      <PetAdoption />
     </div>
   );
 };

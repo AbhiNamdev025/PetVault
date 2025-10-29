@@ -11,9 +11,13 @@ const EnquiryModal = ({ pet, onClose, onSubmit }) => {
     message: "",
   });
 
-  const handleSubmit = (e) => {
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    onSubmit(formData);
+    setLoading(true);
+    await onSubmit(formData);
+    setLoading(false);
   };
 
   const handleChange = (e) => {
@@ -87,6 +91,8 @@ const EnquiryModal = ({ pet, onClose, onSubmit }) => {
               value={formData.phone}
               onChange={handleChange}
               required
+              pattern="^[1-9][0-9]{9}$"
+              title="Phone number must be 10 digits and not start with 0"
             />
           </div>
 
@@ -99,6 +105,9 @@ const EnquiryModal = ({ pet, onClose, onSubmit }) => {
               value={formData.message}
               onChange={handleChange}
               placeholder="Tell us about your interest in this pet..."
+              minLength={10}
+              required
+              style={{ resize: "none" }}
             />
           </div>
 
@@ -107,11 +116,20 @@ const EnquiryModal = ({ pet, onClose, onSubmit }) => {
               type="button"
               onClick={onClose}
               className={styles.cancelButton}
+              disabled={loading}
             >
               Cancel
             </button>
-            <button type="submit" className={styles.submitButton}>
-              Send Enquiry
+            <button
+              type="submit"
+              className={styles.submitButton}
+              disabled={loading}
+            >
+              {loading ? (
+                <div className={styles.spinner}></div>
+              ) : (
+                "Send Enquiry"
+              )}
             </button>
           </div>
         </form>

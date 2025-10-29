@@ -280,9 +280,7 @@ const ProductManagement = () => {
                 <p className={styles.brand}>{product.brand || "No brand"}</p>
                 <div className={styles.details}>
                   <span className={styles.category}>{product.category}</span>
-                  <span className={styles.rating}>
-                    ⭐ {product.rating || 0}
-                  </span>
+                  <span className={styles.rating}>⭐ {product.rating}</span>
                 </div>
                 <div className={styles.price}>Rs.{product.price}</div>
 

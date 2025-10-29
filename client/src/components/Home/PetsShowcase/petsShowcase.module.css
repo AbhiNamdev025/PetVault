@@ -113,7 +113,7 @@
 
 .petDetails {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   background: #fafafa;
   padding: 0.6rem 1rem;

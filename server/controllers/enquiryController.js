@@ -13,7 +13,7 @@ const sendEnquiryEmail = async (req, res) => {
     });
 
     const mailOptions = {
-      from: PetVault,
+      from: email,
       to: process.env.EMAIL_USER,
       subject: `Pet Enquiry - ${petName}`,
       text: `
@@ -101,7 +101,11 @@ PetShop Team
       success: true,
       message: "Enquiry sent successfully!",
     });
-    console.log(mailOptions);
+    console.log(
+      "Enquiry of Buying Product Sent By ",
+      mailOptions.from,
+      mailOptions.subject
+    );
   } catch (error) {
     console.error("Error sending enquiry email:", error);
     res.status(500).json({

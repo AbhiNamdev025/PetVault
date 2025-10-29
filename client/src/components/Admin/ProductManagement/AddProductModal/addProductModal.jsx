@@ -9,6 +9,7 @@ const AddProductModal = ({ onClose, onSave }) => {
     price: "",
     description: "",
     stock: "",
+    rating: "",
     brand: "",
     features: "",
   });
@@ -123,6 +124,17 @@ const AddProductModal = ({ onClose, onSave }) => {
                 type="number"
                 name="stock"
                 value={formData.stock}
+                onChange={handleInputChange}
+                min="0"
+                required
+              />
+            </div>
+            <div className={styles.formGroup}>
+              <label>Rating</label>
+              <input
+                type="number"
+                name="rating"
+                value={formData.rating}
                 onChange={handleInputChange}
                 min="0"
                 required

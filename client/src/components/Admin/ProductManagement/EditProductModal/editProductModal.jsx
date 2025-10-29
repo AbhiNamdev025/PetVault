@@ -12,6 +12,7 @@ const EditProductModal = ({ product, onClose, onSave }) => {
     price: "",
     description: "",
     stock: "",
+    rating: "",
     brand: "",
     features: "",
   });
@@ -171,6 +172,18 @@ const EditProductModal = ({ product, onClose, onSave }) => {
                 type="number"
                 name="stock"
                 value={formData.stock}
+                onChange={handleInputChange}
+                min="0"
+                required
+              />
+            </div>
+
+            <div className={styles.formGroup}>
+              <label>Rating</label>
+              <input
+                type="number"
+                name="rating"
+                value={formData.rating}
                 onChange={handleInputChange}
                 min="0"
                 required
