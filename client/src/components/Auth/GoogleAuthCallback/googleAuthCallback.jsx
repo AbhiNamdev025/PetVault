@@ -11,7 +11,7 @@ const GoogleAuthCallback = () => {
     const token = params.get("token");
     const name = params.get("name");
     const email = params.get("email");
-    const role = params.get("role");
+    let role = params.get("role");
     const id = params.get("id");
     const error = params.get("error");
 
@@ -22,15 +22,23 @@ const GoogleAuthCallback = () => {
     }
 
     if (token) {
+      // role
+      role = role ? role.toLowerCase() : "user";
+
       localStorage.setItem("token", token);
       localStorage.setItem(
         "user",
         JSON.stringify({ _id: id, name, email, role })
       );
+
       toast.success(`Welcome ${name || "User"}!`);
 
-      // Always navigate to home after login
-      navigate("/");
+      // Redirect with role
+      if (role === "admin") {
+        navigate("/admin");
+      } else {
+        navigate("/");
+      }
     } else {
       toast.error("Google login failed!");
       navigate("/login");

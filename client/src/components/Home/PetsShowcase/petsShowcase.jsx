@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Heart, MapPin } from "lucide-react";
+import { Heart } from "lucide-react";
 import { toast } from "react-toastify";
 import { API_BASE_URL } from "../../../utils/constants";
 import styles from "./petsShowcase.module.css";
+import EnquiryModal from "../../PetAdoption/AdoptionEnquiryModal/adoptionEnquiryModal";
 
 const PetsShowcase = () => {
   const [pets, setPets] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedPet, setSelectedPet] = useState(null);
+  const [showEnquiryModal, setShowEnquiryModal] = useState(false);
 
   useEffect(() => {
     fetchFeaturedPets();
@@ -36,6 +39,35 @@ const PetsShowcase = () => {
       toast.error("Error fetching featured pets");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleEnquiry = (pet) => {
+    setSelectedPet(pet);
+    setShowEnquiryModal(true);
+  };
+
+  const handleEnquirySubmit = async (enquiryData) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/enquiries`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...enquiryData,
+          petId: selectedPet._id,
+          petName: selectedPet.name,
+        }),
+      });
+
+      if (response.ok) {
+        toast.success("Enquiry sent successfully!");
+        setShowEnquiryModal(false);
+        setSelectedPet(null);
+      } else {
+        toast.error("Failed to send enquiry");
+      }
+    } catch (error) {
+      toast.error("Failed to send enquiry");
     }
   };
 
@@ -85,7 +117,10 @@ const PetsShowcase = () => {
                     </span>
                   </div>
 
-                  <button className={styles.adoptButton}>
+                  <button
+                    className={styles.adoptButton}
+                    onClick={() => handleEnquiry(pet)}
+                  >
                     {pet.category === "shop" ? "Buy Now" : "Adopt Now"}
                   </button>
                 </div>
@@ -100,6 +135,17 @@ const PetsShowcase = () => {
           </Link>
         </div>
       </div>
+
+      {showEnquiryModal && selectedPet && (
+        <EnquiryModal
+          pet={selectedPet}
+          onClose={() => {
+            setShowEnquiryModal(false);
+            setSelectedPet(null);
+          }}
+          onSubmit={handleEnquirySubmit}
+        />
+      )}
     </section>
   );
 };

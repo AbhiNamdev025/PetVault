@@ -1,10 +1,10 @@
 import React from "react";
+import Products from "../components/PetProducts/products";
 
 const PetProductsPage = () => {
   return (
-    <div className="container">
-      <h1>Pet Products</h1>
-      <p>Coming soon...</p>
+    <div>
+      <Products />
     </div>
   );
 };

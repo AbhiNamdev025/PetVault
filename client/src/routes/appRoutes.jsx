@@ -1,5 +1,5 @@
 import React from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import HomePage from "../pages/homePage";
 import PetShopPage from "../pages/petShopPage";
 import VetServicesPage from "../pages/vetServices";
@@ -16,36 +16,85 @@ import ServiceManagement from "../components/Admin/ServiceManagement/serviceMana
 import UserManagement from "../components/Admin/UserManagement/userManagement";
 import PetDetails from "../components/PetShop/PetDetails/petDetails";
 import AdoptionPetDetails from "../components/PetAdoption/AdoptionPetDetails/adoptionPetDetails";
-import ProtectedPath from "./protectPath";
 import GoogleAuthCallback from "../components/Auth/GoogleAuthCallback/googleAuthCallback";
+import CartPage from "../pages/cartPage";
+import ProtectedPath from "./protectPath";
+import ProductDetails from "../components/PetProducts/ProductDetails/productDetails";
+
+const PublicRoute = ({ children }) => {
+  const token =
+    localStorage.getItem("token") || sessionStorage.getItem("token");
+  const userData =
+    localStorage.getItem("user") || sessionStorage.getItem("user");
+  const user = userData ? JSON.parse(userData) : null;
+
+  if (token && user) {
+    if (user.role === "admin") return <Navigate to="/admin" />;
+    return <Navigate to="/" />;
+  }
+
+  return children;
+};
 
 const AppRoutes = () => {
   return (
     <Routes>
-      {/* Public Routes */}
+      {/* Public Pages */}
       <Route path="/" element={<HomePage />} />
       <Route path="/pet-shop" element={<PetShopPage />} />
       <Route path="/vet-services" element={<VetServicesPage />} />
       <Route path="/pet-adoption" element={<PetAdoptionPage />} />
       <Route path="/pet-daycare" element={<PetDaycarePage />} />
       <Route path="/pet-products" element={<PetProductsPage />} />
-      <Route path="/login" element={<LoginPage />} />
-      <Route path="/register" element={<RegisterPage />} />
+      <Route path="/products/:id" element={<ProductDetails />} />
 
-      {/* Pet Details for shopping */}
+      {/* Auth Pages */}
+      <Route
+        path="/login"
+        element={
+          <PublicRoute>
+            <LoginPage />
+          </PublicRoute>
+        }
+      />
+      <Route
+        path="/register"
+        element={
+          <PublicRoute>
+            <RegisterPage />
+          </PublicRoute>
+        }
+      />
+      {/* Pet Details */}
       <Route path="/shop-pets/:id" element={<PetDetails />} />
-      {/* Pet Details for adoption */}
       <Route path="/adopt-pets/:id" element={<AdoptionPetDetails />} />
-      {/* Private Routes */}
-      <Route path="/profile" element={<div>User Profile Page</div>} />
+      {/* User Pages */}
+      <Route
+        path="/profile"
+        element={
+          <ProtectedPath requiredRole="user">
+            <div>User Profile Page</div>
+          </ProtectedPath>
+        }
+      />
       <Route
         path="/my-appointments"
-        element={<div>My Appointments Page</div>}
+        element={
+          <ProtectedPath requiredRole="user">
+            <div>My Appointments Page</div>
+          </ProtectedPath>
+        }
       />
-      <Route path="/my-orders" element={<div>My Orders Page</div>} />
-      <Route path="/cart" element={<div>Cart Page</div>} />
-
-      {/* Admin Routes */}
+      <Route
+        path="/my-orders"
+        element={
+          <ProtectedPath requiredRole="user">
+            <div>My Orders Page</div>
+          </ProtectedPath>
+        }
+      />
+      <Route path="/cart" element={<CartPage />} />
+      {/* Admin Protected Pages */}
       <Route
         path="/admin/*"
         element={
@@ -60,8 +109,10 @@ const AppRoutes = () => {
         <Route path="services" element={<ServiceManagement />} />
         <Route path="users" element={<UserManagement />} />
       </Route>
-
+      {/* Google Auth */}
       <Route path="/login/success" element={<GoogleAuthCallback />} />
+      {/* Fallback */}
+      <Route path="*" element={<Navigate to="/" />} />
     </Routes>
   );
 };

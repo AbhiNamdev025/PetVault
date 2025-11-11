@@ -1,5 +1,6 @@
 .sidebar {
   width: 280px;
+  height: 100vh;
   background: white;
   border-right: 1px solid #e2e8f0;
   display: flex;

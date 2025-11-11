@@ -1,25 +1,59 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { PawPrint, Menu, X, User, ShoppingCart, LogOut } from "lucide-react";
+import {
+  PawPrint,
+  Menu,
+  X,
+  User,
+  ShoppingCart,
+  ChevronDown,
+  LogOut,
+} from "lucide-react";
 import styles from "./navbar.module.css";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [user, setUser] = useState(null);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
+  const dropdownRef = useRef(null);
 
   useEffect(() => {
     checkUserLogin();
   }, []);
 
-  const checkUserLogin = () => {
-    const token = localStorage.getItem("token");
-    const userData = localStorage.getItem("user");
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
+  const checkUserLogin = () => {
+    const token =
+      localStorage.getItem("token") || sessionStorage.getItem("token");
+    const userData =
+      localStorage.getItem("user") || sessionStorage.getItem("user");
     if (token && userData) {
       setUser(JSON.parse(userData));
+    } else {
+      setUser(null);
     }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    sessionStorage.removeItem("token");
+    sessionStorage.removeItem("user");
+    localStorage.removeItem("rememberMe");
+    setUser(null);
+    setDropdownOpen(false);
+    navigate("/");
   };
 
   const navItems = [
@@ -30,14 +64,6 @@ const Navbar = () => {
     { path: "/pet-daycare", label: "Daycare" },
     { path: "/pet-products", label: "Products" },
   ];
-
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    setUser(null);
-    navigate("/");
-    setIsOpen(false);
-  };
 
   return (
     <nav className={styles.navbar}>
@@ -60,53 +86,67 @@ const Navbar = () => {
               {item.label}
             </Link>
           ))}
-
-          <div className={styles.mobileActions}>
-            {user ? (
-              <>
-                <Link to="/profile" className={styles.authLink}>
-                  <User size={18} />
-                  <span>{user.name}</span>
-                </Link>
-                <button onClick={handleLogout} className={styles.logoutBtn}>
-                  <LogOut size={18} />
-                  <span>Logout</span>
-                </button>
-              </>
-            ) : (
-              <Link to="/login" className={styles.authLink}>
-                <User size={18} />
-                <span>Login</span>
-              </Link>
-            )}
-            <button className={styles.cartBtn}>
-              <ShoppingCart size={18} />
-              <span className={styles.cartCount}>0</span>
-            </button>
-          </div>
         </div>
 
         <div className={styles.navActions}>
           {user ? (
-            <>
-              <Link to="/profile" className={styles.authLink}>
+            <div className={styles.userMenu} ref={dropdownRef}>
+              <button
+                className={styles.userButton}
+                onClick={() => setDropdownOpen((prev) => !prev)}
+              >
                 <User size={18} />
-                <span>{user.name}</span>
-              </Link>
-              <button onClick={handleLogout} className={styles.logoutBtn}>
-                <LogOut size={18} />
-                <span>Logout</span>
+                <span className={styles.userName}>
+                  {user.name.length > 10
+                    ? `${user.name.slice(0, 10)}...`
+                    : user.name}
+                </span>
+                <ChevronDown size={16} />
               </button>
-            </>
+
+              {dropdownOpen && (
+                <div className={styles.dropdownMenu}>
+                  <Link
+                    to="/my-orders"
+                    className={styles.dropdownItem}
+                    onClick={() => setDropdownOpen(false)}
+                  >
+                    My Orders
+                  </Link>
+                  <Link
+                    to="/my-appointments"
+                    className={styles.dropdownItem}
+                    onClick={() => setDropdownOpen(false)}
+                  >
+                    My Appointments
+                  </Link>
+                  <Link
+                    to="/my-services"
+                    className={styles.dropdownItem}
+                    onClick={() => setDropdownOpen(false)}
+                  >
+                    My Services
+                  </Link>
+                  <button onClick={handleLogout} className={styles.dropdownItem}>
+                    <LogOut size={16} />
+                    Logout
+                  </button>
+                </div>
+              )}
+            </div>
           ) : (
             <Link to="/login" className={styles.authLink}>
               <User size={18} />
               <span>Login</span>
             </Link>
           )}
-          <button className={styles.cartBtn}>
+
+          <button
+            className={styles.cartBtn}
+            onClick={() => navigate("/cart")}
+          >
             <ShoppingCart size={18} />
-            <span className={styles.cartCount}>0</span>
+            <span className={styles.cartCount}>●</span>
           </button>
         </div>
 

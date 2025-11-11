@@ -1,0 +1,134 @@
+.card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #fff;
+  border-radius: 18px;
+  padding: 1.2rem 1.5rem;
+  margin-bottom: 1.2rem;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 28px rgba(167, 139, 250, 0.25);
+}
+
+.left {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.image {
+  width: 95px;
+  height: 95px;
+  border-radius: 14px;
+  object-fit: contain;
+  background: #f9f9f9;
+  flex-shrink: 0;
+}
+
+.details {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.name {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #111;
+  margin-bottom: 0.2rem;
+}
+
+.description {
+  color: #777;
+  font-size: 0.9rem;
+  margin-bottom: 0.4rem;
+  max-width: 280px;
+  line-height: 1.4;
+}
+
+.price {
+  color: #7c3aed;
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.right {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+.quantityControl {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f3f0ff;
+  border-radius: 12px;
+  padding: 0.3rem 0.6rem;
+  box-shadow: 0 2px 8px rgba(124, 58, 237, 0.15);
+}
+
+.qtyBtn {
+  background: transparent;
+  border: none;
+  color: #7c3aed;
+  cursor: pointer;
+  padding: 0.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.qtyBtn:hover {
+  transform: scale(1.15);
+}
+
+.quantityControl span {
+  font-weight: 600;
+  font-size: 1rem;
+  margin: 0 0.6rem;
+  color: #111;
+}
+
+.removeBtn {
+  background: #fff0f0;
+  border: none;
+  color: #ef4444;
+  border-radius: 12px;
+  padding: 0.6rem 0.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.removeBtn:hover {
+  background: #fee2e2;
+  color: #b91c1c;
+  transform: scale(1.05);
+}
+
+@media (max-width: 768px) {
+  .card {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 1rem;
+  }
+
+  .right {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .description {
+    max-width: 100%;
+  }
+}

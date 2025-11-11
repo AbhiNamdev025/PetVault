@@ -4,15 +4,16 @@ import {
   PawPrint,
   ShoppingBag,
   Calendar,
-  TrendingUp,
   Plus,
 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { API_BASE_URL } from "../../../utils/constants";
 import styles from "./adminDashboard.module.css";
 
 const AdminDashboard = () => {
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchDashboardStats();
@@ -20,11 +21,10 @@ const AdminDashboard = () => {
 
   const fetchDashboardStats = async () => {
     try {
-      const token = localStorage.getItem("token");
+      const token =
+        localStorage.getItem("token") || sessionStorage.getItem("token");
       const response = await fetch(`${API_BASE_URL}/admin/dashboard`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
       });
 
       if (response.ok) {
@@ -101,22 +101,37 @@ const AdminDashboard = () => {
             <h3>Quick Actions</h3>
           </div>
           <div className={styles.actions}>
-            <button className={styles.actionBtn}>
+            <button
+              className={styles.actionBtn}
+              onClick={() => navigate("/admin/pets")}
+            >
               <PawPrint size={18} />
-              <span>Add New Pet</span>
+              <span>Manage Pets</span>
               <Plus size={16} />
             </button>
-            <button className={styles.actionBtn}>
+
+            <button
+              className={styles.actionBtn}
+              onClick={() => navigate("/admin/products")}
+            >
               <ShoppingBag size={18} />
-              <span>Add Product</span>
+              <span>Manage Products</span>
               <Plus size={16} />
             </button>
-            <button className={styles.actionBtn}>
+
+            <button
+              className={styles.actionBtn}
+              onClick={() => navigate("/admin/services")}
+            >
               <Calendar size={18} />
               <span>Manage Services</span>
               <Plus size={16} />
             </button>
-            <button className={styles.actionBtn}>
+
+            <button
+              className={styles.actionBtn}
+              onClick={() => navigate("/admin/users")}
+            >
               <Users size={18} />
               <span>View Users</span>
             </button>

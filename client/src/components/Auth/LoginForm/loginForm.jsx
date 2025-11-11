@@ -4,14 +4,19 @@ import { Mail, Lock, Eye, EyeOff, PawPrint } from "lucide-react";
 import { toast } from "react-toastify";
 import { API_BASE_URL } from "../../../utils/constants";
 import styles from "./loginForm.module.css";
+import ForgotPasswordModal from "./components/ForgotPassword/forgotPasswordModal";
 
 const LoginForm = () => {
+  const [showForgotModal, setShowForgotModal] = useState(false);
+
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
+
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -28,25 +33,26 @@ const LoginForm = () => {
     try {
       const response = await fetch(`${API_BASE_URL}/auth/login`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
 
       const data = await response.json();
 
       if (response.ok) {
-        localStorage.setItem("token", data.token);
-        localStorage.setItem(
-          "user",
-          JSON.stringify({
-            _id: data._id,
-            name: data.name,
-            email: data.email,
-            role: data.role,
-          })
-        );
+        const userData = {
+          _id: data._id,
+          name: data.name,
+          email: data.email,
+          role: data.role,
+        };
+
+        const storage = rememberMe ? localStorage : sessionStorage;
+        storage.setItem("token", data.token);
+        storage.setItem("user", JSON.stringify(userData));
+
+        if (rememberMe) sessionStorage.clear();
+        else localStorage.clear();
 
         toast.success("Login successful!");
         navigate(data.role === "admin" ? "/admin" : "/");
@@ -125,12 +131,21 @@ const LoginForm = () => {
 
         <div className={styles.formOptions}>
           <label className={styles.checkboxLabel}>
-            <input type="checkbox" className={styles.checkbox} />
+            <input
+              type="checkbox"
+              checked={rememberMe}
+              onChange={(e) => setRememberMe(e.target.checked)}
+              className={styles.checkbox}
+            />
             <span>Remember me</span>
           </label>
-          <Link to="/forgot-password" className={styles.forgotLink}>
+          <button
+            type="button"
+            className={styles.forgotLink}
+            onClick={() => setShowForgotModal(true)}
+          >
             Forgot password?
-          </Link>
+          </button>
         </div>
 
         <button
@@ -169,6 +184,10 @@ const LoginForm = () => {
           Sign up
         </Link>
       </div>
+
+      {showForgotModal && (
+        <ForgotPasswordModal onClose={() => setShowForgotModal(false)} />
+      )}
     </div>
   );
 };

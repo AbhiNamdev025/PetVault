@@ -195,6 +195,7 @@ const PetAdoption = () => {
           }}
           onSubmit={handleEnquirySubmit}
         />
+        
       )}
     </div>
   );

@@ -64,6 +64,11 @@
 .inputWrapper {
   position: relative;
 }
+.inputIcon,
+.passwordToggle {
+  position: absolute;
+  z-index: 2;
+}
 
 .input {
   width: 100%;
@@ -75,6 +80,8 @@
   background: #fafbfc;
   color: #2d3748;
   line-height: 1.5;
+  position: relative;
+  z-index: 1;
 }
 
 .input:focus {
@@ -148,12 +155,13 @@
   transition: all 0.3s ease;
   padding: 8px 12px;
   border-radius: 8px;
+  border: none;
+  background: transparent;
 }
 
 .forgotLink:hover {
   color: #5a67d8;
   text-decoration: underline;
-  background: #f7fafc;
 }
 
 .submitButton {
