@@ -7,6 +7,16 @@ const orderSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
+    customerName: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    mobileNumber: {
+      type: String,
+      required: true,
+      match: [/^[6-9]\d{9}$/, "Please enter a valid 10-digit mobile number"],
+    },
     items: [
       {
         product: {
@@ -31,7 +41,7 @@ const orderSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ["pending", "confirmed", "shipped", "delivered", "cancelled"],
+      enum: ["pending", "confirmed", "delivered", "cancelled"],
       default: "pending",
     },
     shippingAddress: {
@@ -45,9 +55,7 @@ const orderSchema = new mongoose.Schema(
       required: true,
     },
   },
-  {
-    timestamps: true,
-  }
+  { timestamps: true }
 );
 
 module.exports = mongoose.model("Order", orderSchema);
