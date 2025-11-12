@@ -22,10 +22,22 @@ const userSchema = new mongoose.Schema(
       trim: true,
     },
     address: {
-      street: String,
-      city: String,
-      state: String,
-      zipCode: String,
+      street: {
+        type: String,
+        trim: true,
+      },
+      city: {
+        type: String,
+        trim: true,
+      },
+      state: {
+        type: String,
+        trim: true,
+      },
+      zipCode: {
+        type: String,
+        trim: true,
+      },
     },
     role: {
       type: String,
