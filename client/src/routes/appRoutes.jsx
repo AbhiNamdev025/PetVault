@@ -26,6 +26,7 @@ import CheckoutPage from "../components/Order/CheckoutPage/checkoutPage";
 import OrderManagement from "../components/Admin/Order Management/orderManagement";
 import AppointmentsPage from "../components/Appointments/appointmentsPage";
 import AppointmentManagement from "../components/Admin/Appoinment Management/AppointmentManagement";
+import Profile from "../components/UserProfile/userProfile";
 
 const PublicRoute = ({ children }) => {
   const token =
@@ -75,7 +76,7 @@ const AppRoutes = () => {
       <Route path="/shop-pets/:id" element={<PetDetails />} />
       <Route path="/adopt-pets/:id" element={<AdoptionPetDetails />} />
       {/* User Pages */}
-      <Route path="/profile" element={<div>User Profile Page</div>} />
+      <Route path="/profile" element={<Profile />} />
       <Route path="/my-appointments" element={<AppointmentsPage />} />
       <Route path="/my-orders" element={<Order />} />
       <Route path="/cart" element={<CartPage />} />
