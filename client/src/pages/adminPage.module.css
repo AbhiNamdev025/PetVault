@@ -2,11 +2,105 @@
   display: flex;
   min-height: 100vh;
   background: #f8fafc;
+  position: relative;
+  overflow-x: hidden;
+}
+
+.sidebarWrapper {
+  width: 280px;
+  transition: transform 0.3s ease-in-out;
+}
+
+@media (max-width: 992px) {
+  .sidebarWrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background: #fff;
+    z-index: 1000;
+    transform: translateX(-100%);
+    box-shadow: 4px 0 15px rgba(0, 0, 0, 0.1);
+  }
+
+  .sidebarWrapper.open {
+    transform: translateX(0);
+  }
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(15, 23, 42, 0.5);
+  z-index: 900;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .mainContent {
   flex: 1;
+  background: #f8fafc;
   padding: 2rem;
   overflow-y: auto;
-  background: #f8fafc;
+  transition: margin-left 0.3s ease-in-out;
+}
+
+@media (max-width: 992px) {
+  .mainContent {
+    padding: 1rem;
+  }
+}
+
+.mobileHeader {
+  display: none;
+}
+
+@media (max-width: 992px) {
+  .mobileHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #fff;
+    border-bottom: 1px solid #e2e8f0;
+    padding: 1rem;
+    margin: -1rem -1rem 1rem -1rem;
+    position: sticky;
+    top: 0;
+    z-index: 800;
+  }
+
+  .mobileHeader h2 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #1e293b;
+  }
+
+  .menuBtn {
+    background: none;
+    border: none;
+    color: #1e293b;
+    cursor: pointer;
+    padding: 0.4rem;
+    border-radius: 6px;
+    transition: background 0.3s;
+  }
+
+  .menuBtn:hover {
+    background: #f1f5f9;
+  }
+}
+
+.outletWrapper {
+  margin-top: 1rem;
 }

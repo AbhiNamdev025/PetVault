@@ -53,7 +53,7 @@ const Navbar = () => {
     localStorage.removeItem("rememberMe");
     setUser(null);
     setDropdownOpen(false);
-    navigate("/");
+    navigate("/login");
   };
 
   const navItems = [
@@ -107,6 +107,13 @@ const Navbar = () => {
               {dropdownOpen && (
                 <div className={styles.dropdownMenu}>
                   <Link
+                    to="/profile"
+                    className={styles.dropdownItem}
+                    onClick={() => setDropdownOpen(false)}
+                  >
+                    Profile
+                  </Link>
+                  <Link
                     to="/my-orders"
                     className={styles.dropdownItem}
                     onClick={() => setDropdownOpen(false)}
@@ -120,14 +127,17 @@ const Navbar = () => {
                   >
                     My Appointments
                   </Link>
-                  <Link
+                  {/* <Link
                     to="/my-services"
                     className={styles.dropdownItem}
                     onClick={() => setDropdownOpen(false)}
                   >
                     My Services
-                  </Link>
-                  <button onClick={handleLogout} className={styles.dropdownItem}>
+                  </Link> */}
+                  <button
+                    onClick={handleLogout}
+                    className={styles.dropdownItem}
+                  >
                     <LogOut size={16} />
                     Logout
                   </button>
@@ -141,10 +151,7 @@ const Navbar = () => {
             </Link>
           )}
 
-          <button
-            className={styles.cartBtn}
-            onClick={() => navigate("/cart")}
-          >
+          <button className={styles.cartBtn} onClick={() => navigate("/cart")}>
             <ShoppingCart size={18} />
             <span className={styles.cartCount}>●</span>
           </button>

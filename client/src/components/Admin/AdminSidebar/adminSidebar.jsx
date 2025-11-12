@@ -8,6 +8,7 @@ import {
   Calendar,
   LogOut,
   Home,
+  ClipboardList,
 } from "lucide-react";
 import styles from "./adminSidebar.module.css";
 
@@ -41,6 +42,11 @@ const AdminSidebar = () => {
       path: "/admin/users",
       icon: <Users size={20} />,
       label: "Users Management",
+    },
+    {
+      path: "/admin/orders",
+      icon: <ClipboardList size={20} />,
+      label: "Order Management",
     },
   ];
 

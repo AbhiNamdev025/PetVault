@@ -43,25 +43,20 @@ const Cart = () => {
     fetchCart();
   };
 
-  const handleContinueShopping = () => {
-    navigate("/pet-products");
+  const handleProceed = () => {
+    navigate("/checkout");
   };
 
   useEffect(() => {
     fetchCart();
   }, []);
 
-  if (loading)
-    return <div className={styles.loading}>Loading your cart...</div>;
+  if (loading) return <div className={styles.loading}>Loading your cart...</div>;
 
   if (cartItems.length === 0) return <EmptyCart />;
 
-  const totalPrice = cartItems.reduce(
-    (sum, item) => sum + item.price * item.quantity,
-    0
-  );
-
-  const gstRate = 0.10; // 18% GST
+  const totalPrice = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const gstRate = 0.10;
   const gstAmount = totalPrice * gstRate;
   const finalAmount = totalPrice + gstAmount;
 
@@ -104,17 +99,14 @@ const Cart = () => {
             </div>
 
             <div className={styles.summaryActions}>
-              <button className={styles.checkoutBtn}>
+              <button className={styles.checkoutBtn} onClick={handleProceed}>
                 Proceed to Checkout
               </button>
               <button onClick={handleClear} className={styles.clearBtn}>
                 Clear Cart
               </button>
 
-              <button
-                onClick={handleContinueShopping}
-                className={styles.continueBtn}
-              >
+              <button onClick={() => navigate("/pet-products")} className={styles.continueBtn}>
                 Continue Shopping
               </button>
             </div>

@@ -6,6 +6,12 @@ import ProductGrid from "./ProductGrid/productGrid";
 import { API_BASE_URL } from "../../utils/constants";
 import styles from "./products.module.css";
 
+// ✅ Import Swiper React components and styles
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+import "swiper/css/autoplay";
+import { Autoplay } from "swiper/modules";
+
 const Products = () => {
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);
@@ -15,12 +21,12 @@ const Products = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [category, setCategory] = useState("all");
   const [sortOrder, setSortOrder] = useState("newest");
-  const [currentSlide, setCurrentSlide] = useState(0);
 
   const carouselImages = [
-    "https://img.freepik.com/free-vector/flat-horizontal-sale-banner-template-national-pet-day-with-animals_23-2151258558.jpg?semt=ais_hybrid&w=740&q=80",
-    "https://www.shutterstock.com/image-photo/advertising-banner-design-pet-shop-260nw-2164168569.jpg",
-    "https://img.freepik.com/free-vector/flat-national-pet-day-horizontal-sale-banner-template_23-2151346535.jpg?semt=ais_hybrid&w=740&q=80",
+    "https://shakehands.co.in/cdn/shop/files/Range_Banners_Shake_Hands_A_5760_x_2000_1900x500.png?v=1731997954",
+    "https://www.vetnpetdirect.com.au/cdn/shop/files/dog-toys-banner-desktop_1600x.jpg?v=1712018963",
+    "https://cdn.prod.website-files.com/64c2c941368dd7094ffd75ac/66673e795dcd6b71be4c562c_toff.jpeg",
+    "https://mir-s3-cdn-cf.behance.net/project_modules/1400/2027a2169601075.644fdce4171a6.jpg",
   ];
 
   useEffect(() => {
@@ -30,13 +36,6 @@ const Products = () => {
   useEffect(() => {
     filterProducts();
   }, [products, searchTerm, category, sortOrder]);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % carouselImages.length);
-    }, 4000);
-    return () => clearInterval(interval);
-  }, []);
 
   const fetchProducts = async () => {
     try {
@@ -97,7 +96,7 @@ const Products = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`, // ✅ added this
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           productId: product._id,
@@ -111,32 +110,42 @@ const Products = () => {
         const errData = await res.json();
         toast.error(errData.message || "Failed to add to cart");
       }
-    } catch (error) {
-      console.error(error);
+    } catch {
       toast.error("Something went wrong");
     }
   };
 
+  const categories = [
+    { value: "all", label: "All Products" },
+    { value: "food", label: "Food" },
+    { value: "toy", label: "Toys" },
+    { value: "accessory", label: "Accessories" },
+    { value: "grooming", label: "Grooming" },
+    { value: "health", label: "Health" },
+  ];
+
   return (
-    <div className={styles.productPage}>
-      <div className={styles.heroSection}>
-        <div
-          className={styles.carousel}
-          style={{
-            backgroundImage: `url(${carouselImages[currentSlide]})`,
-          }}
+    <div className={styles.productsPage}>
+      {/* ✅ Infinite Swiper Carousel */}
+      <div className={styles.carouselSection}>
+        <Swiper
+          modules={[Autoplay]}
+          autoplay={{ delay: 1500, disableOnInteraction: false }}
+          loop={true}
+          speed={1000}
+          slidesPerView={1}
+          spaceBetween={0}
         >
-          <div className={styles.overlay}>
-            <div className={styles.heroContent}>
-              <h1 className={styles.heroTitle}>
-                Discover Premium <span>Pet Products</span>
-              </h1>
-              <p className={styles.heroSubtitle}>
-                Quality food, toys, and accessories your furry friends deserve.
-              </p>
-            </div>
-          </div>
-        </div>
+          {carouselImages.map((img, i) => (
+            <SwiperSlide key={i}>
+              <img
+                src={img}
+                alt={`banner-${i}`}
+                className={styles.carouselImage}
+              />
+            </SwiperSlide>
+          ))}
+        </Swiper>
       </div>
 
       <div className={styles.container}>
@@ -148,6 +157,23 @@ const Products = () => {
           sortOrder={sortOrder}
           onSortChange={setSortOrder}
         />
+
+        <div className={styles.categorySection}>
+          <h2 className={styles.categoryTitle}>Browse by Category</h2>
+          <div className={styles.categoryGrid}>
+            {categories.map((c) => (
+              <button
+                key={c.value}
+                className={`${styles.categoryButton} ${
+                  category === c.value ? styles.active : ""
+                }`}
+                onClick={() => setCategory(c.value)}
+              >
+                {c.label}
+              </button>
+            ))}
+          </div>
+        </div>
 
         <div className={styles.resultsInfo}>
           <h2>All Products</h2>

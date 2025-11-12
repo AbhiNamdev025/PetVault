@@ -20,6 +20,10 @@ import GoogleAuthCallback from "../components/Auth/GoogleAuthCallback/googleAuth
 import CartPage from "../pages/cartPage";
 import ProtectedPath from "./protectPath";
 import ProductDetails from "../components/PetProducts/ProductDetails/productDetails";
+import Confirmation from "../components/Order/Confirmation/confirmation";
+import Order from "../components/Order/Orders/order";
+import CheckoutPage from "../components/Order/CheckoutPage/checkoutPage";
+import OrderManagement from "../components/Admin/Order Management/orderManagement";
 
 const PublicRoute = ({ children }) => {
   const token =
@@ -69,14 +73,7 @@ const AppRoutes = () => {
       <Route path="/shop-pets/:id" element={<PetDetails />} />
       <Route path="/adopt-pets/:id" element={<AdoptionPetDetails />} />
       {/* User Pages */}
-      <Route
-        path="/profile"
-        element={
-          <ProtectedPath requiredRole="user">
-            <div>User Profile Page</div>
-          </ProtectedPath>
-        }
-      />
+      <Route path="/profile" element={<div>User Profile Page</div>} />
       <Route
         path="/my-appointments"
         element={
@@ -85,16 +82,12 @@ const AppRoutes = () => {
           </ProtectedPath>
         }
       />
-      <Route
-        path="/my-orders"
-        element={
-          <ProtectedPath requiredRole="user">
-            <div>My Orders Page</div>
-          </ProtectedPath>
-        }
-      />
+      <Route path="/my-orders" element={<Order />} />
       <Route path="/cart" element={<CartPage />} />
-      {/* Admin Protected Pages */}
+      <Route path="/checkout" element={<CheckoutPage />} />
+      <Route path="/confirmation" element={<Confirmation />} />
+
+      {/* Admin Protected */}
       <Route
         path="/admin/*"
         element={
@@ -108,6 +101,7 @@ const AppRoutes = () => {
         <Route path="products" element={<ProductManagement />} />
         <Route path="services" element={<ServiceManagement />} />
         <Route path="users" element={<UserManagement />} />
+        <Route path="orders" element={<OrderManagement />} />
       </Route>
       {/* Google Auth */}
       <Route path="/login/success" element={<GoogleAuthCallback />} />
