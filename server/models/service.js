@@ -27,6 +27,8 @@ const serviceSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
+    images: [String],
+
     features: [String],
   },
   {

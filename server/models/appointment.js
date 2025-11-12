@@ -10,6 +10,7 @@ const appointmentSchema = new mongoose.Schema(
     service: {
       type: String,
       required: true,
+      enum: ["vet", "daycare", "grooming", "training", "boarding", "others"],
     },
     petName: {
       type: String,
@@ -18,6 +19,12 @@ const appointmentSchema = new mongoose.Schema(
     petType: {
       type: String,
       required: true,
+      enum: ["Dog", "Cat", "Bird", "Others"],
+    },
+    parentPhone: {
+      type: String,
+      required: true,
+      match: /^[1-9][0-9]{9}$/,
     },
     date: {
       type: Date,
@@ -26,6 +33,10 @@ const appointmentSchema = new mongoose.Schema(
     time: {
       type: String,
       required: true,
+    },
+    healthIssues: {
+      type: String,
+      default: "",
     },
     reason: {
       type: String,

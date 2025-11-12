@@ -15,7 +15,7 @@ const createAppointment = async (req, res) => {
 const getUserAppointments = async (req, res) => {
   try {
     const appointments = await Appointment.find({ user: req.user._id }).sort({
-      date: -1,
+      createdAt: -1,
     });
     res.json(appointments);
   } catch (error) {
@@ -27,7 +27,7 @@ const getAllAppointments = async (req, res) => {
   try {
     const appointments = await Appointment.find()
       .populate("user", "name email phone")
-      .sort({ date: -1 });
+      .sort({ createdAt: -1 });
     res.json(appointments);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -45,7 +45,23 @@ const updateAppointmentStatus = async (req, res) => {
     if (!appointment) {
       return res.status(404).json({ message: "Appointment not found" });
     }
+
     res.json(appointment);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+//  Delete Appointment
+const deleteAppointment = async (req, res) => {
+  try {
+    const appointment = await Appointment.findByIdAndDelete(req.params.id);
+
+    if (!appointment) {
+      return res.status(404).json({ message: "Appointment not found" });
+    }
+
+    res.json({ message: "Appointment deleted successfully" });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -56,4 +72,5 @@ module.exports = {
   getUserAppointments,
   getAllAppointments,
   updateAppointmentStatus,
+  deleteAppointment,
 };
