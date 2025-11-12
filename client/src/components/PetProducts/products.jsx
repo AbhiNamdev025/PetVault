@@ -5,8 +5,6 @@ import ProductFilters from "./ProductFilters/productFilter";
 import ProductGrid from "./ProductGrid/productGrid";
 import { API_BASE_URL } from "../../utils/constants";
 import styles from "./products.module.css";
-
-// ✅ Import Swiper React components and styles
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/autoplay";
@@ -17,16 +15,18 @@ const Products = () => {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-
   const [searchTerm, setSearchTerm] = useState("");
   const [category, setCategory] = useState("all");
   const [sortOrder, setSortOrder] = useState("newest");
 
   const carouselImages = [
-    "https://shakehands.co.in/cdn/shop/files/Range_Banners_Shake_Hands_A_5760_x_2000_1900x500.png?v=1731997954",
-    "https://www.vetnpetdirect.com.au/cdn/shop/files/dog-toys-banner-desktop_1600x.jpg?v=1712018963",
-    "https://cdn.prod.website-files.com/64c2c941368dd7094ffd75ac/66673e795dcd6b71be4c562c_toff.jpeg",
-    "https://mir-s3-cdn-cf.behance.net/project_modules/1400/2027a2169601075.644fdce4171a6.jpg",
+    "https://supertails.com/cdn/shop/files/joint_care_b32a151f-e2dd-487c-8429-abf99b04a677_1200x.webp?v=1762764821",
+    "/images/products/img3.png",
+    "https://supertails.com/cdn/shop/files/online_store_web_dcb01f7b-c69c-499f-b2c2-eb09fc8b3542_1200x.webp?v=1762793524",
+    "/images/products/img1.png",
+    "/images/products/img5.png",
+    "https://supertails.com/cdn/shop/files/supplements_vitamins_934243e7-b553-4065-97df-0e5378d58c48_1200x.webp?v=1762764821",
+    "https://supertails.com/cdn/shop/files/bowls_7a9810c1-58ba-4195-a916-bef17dc536af_1200x.webp?v=1762764821",
   ];
 
   useEffect(() => {
@@ -72,7 +72,6 @@ const Products = () => {
       default:
         filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     }
-
     setFilteredProducts(filtered);
   };
 
@@ -126,7 +125,6 @@ const Products = () => {
 
   return (
     <div className={styles.productsPage}>
-      {/* ✅ Infinite Swiper Carousel */}
       <div className={styles.carouselSection}>
         <Swiper
           modules={[Autoplay]}

@@ -1,0 +1,188 @@
+.vetForm {
+  max-width: 420px;
+  width: 100%;
+  margin: 2rem auto;
+  background: #ffffff;
+  padding: 2rem 1.8rem;
+  border-radius: 16px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.05);
+  border: 1px solid #f2f3f5;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+}
+
+.vetForm * {
+  box-sizing: border-box;
+}
+
+.vetForm:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 45px rgba(0, 0, 0, 0.08);
+}
+
+.formHeader {
+  text-align: center;
+  margin-bottom: 1.6rem;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-bottom: 0.8rem;
+  color: #6d28d9;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.logoIcon {
+  color: #6d28d9;
+}
+
+.title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 0.3rem;
+}
+
+.subtitle {
+  color: #6b7280;
+  font-size: 0.9rem;
+}
+
+.formGroup {
+  margin-bottom: 1rem;
+  width: 100%;
+}
+
+.label {
+  display: block;
+  margin-bottom: 0.4rem;
+  font-weight: 600;
+  color: #374151;
+  font-size: 0.9rem;
+}
+
+.inputWrapper {
+  position: relative;
+  width: 100%;
+}
+
+.input,
+.textarea,
+select.input {
+  width: 100%;
+  padding: 12px 44px;
+  border: 2px solid #e5e7eb;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  background: #fafafa;
+  color: #111827;
+  transition: all 0.3s ease;
+  appearance: none;
+  box-sizing: border-box;
+  display: block;
+}
+
+.input:focus,
+.textarea:focus,
+select.input:focus {
+  outline: none;
+  border-color: #8b5cf6;
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+}
+
+.inputIcon {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #9ca3af;
+  pointer-events: none;
+}
+
+.textarea {
+  resize: none;
+  min-height: 70px;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  width: 100%;
+}
+
+.row .formGroup {
+  flex: 1 1 48%;
+  min-width: 0;
+}
+
+.submitButton {
+  width: 100%;
+  background: linear-gradient(135deg, #6d28d9 0%, #8b5cf6 100%);
+  color: white;
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: block;
+}
+
+.submitButton:hover:not(.loading) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(139, 92, 246, 0.35);
+}
+
+.submitButton.loading {
+  opacity: 0.85;
+}
+
+.buttonSpinner {
+  width: 22px;
+  height: 22px;
+  border: 3px solid transparent;
+  border-top: 3px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+select.input {
+  background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' fill='gray' xmlns='http://www.w3.org/2000/svg'%3E<path d='M4 6l4 4 4-4'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1.2rem center;
+  background-size: 1rem;
+}
+
+@media (max-width: 540px) {
+  .vetForm {
+    max-width: 90%;
+    padding: 1.6rem 1.2rem;
+  }
+
+  .row {
+    flex-direction: column;
+  }
+
+  .input,
+  .textarea {
+    padding: 12px 40px;
+  }
+
+  .submitButton {
+    font-size: 0.9rem;
+  }
+}

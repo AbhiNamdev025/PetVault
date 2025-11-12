@@ -26,18 +26,13 @@ const ProductManagement = () => {
     try {
       const token = localStorage.getItem("token");
       const response = await fetch(`${API_BASE_URL}/products`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
       });
-
       if (response.ok) {
         const data = await response.json();
         setProducts(data.products || []);
-      } else {
-        toast.error("Failed to load products");
-      }
-    } catch (error) {
+      } else toast.error("Failed to fetch products");
+    } catch {
       toast.error("Error fetching products");
     } finally {
       setLoading(false);
@@ -47,153 +42,85 @@ const ProductManagement = () => {
   const handleAddProduct = async (productData) => {
     try {
       const token = localStorage.getItem("token");
-      const formData = new FormData();
-
+      const form = new FormData();
       Object.keys(productData).forEach((key) => {
         if (key === "images" && productData.images) {
-          productData.images.forEach((image) => {
-            formData.append("productImages", image);
-          });
-        } else {
-          formData.append(key, productData[key]);
-        }
+          productData.images.forEach((img) =>
+            form.append("productImages", img)
+          );
+        } else form.append(key, productData[key]);
       });
-
-      const response = await fetch(`${API_BASE_URL}/products/create`, {
+      const res = await fetch(`${API_BASE_URL}/products/create`, {
         method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        body: formData,
+        headers: { Authorization: `Bearer ${token}` },
+        body: form,
       });
-
-      const responseData = await response.json();
-
-      if (response.ok) {
-        toast.success("Product added successfully");
+      if (res.ok) {
+        toast.success("Product added");
         setShowAddModal(false);
         fetchProducts();
-      } else {
-        toast.error(responseData.message || "Failed to add product");
-      }
-    } catch (error) {
-      console.error("Add product error:", error);
-      toast.error("Failed to add product");
+      } else toast.error("Failed to add product");
+    } catch {
+      toast.error("Error adding product");
     }
   };
 
-  const handleEditProduct = async (productId, productData) => {
+  const handleEditProduct = async (id, productData) => {
     try {
       const token = localStorage.getItem("token");
-
-      const hasNewImages = productData.images && productData.images.length > 0;
-
-      if (hasNewImages) {
-        const formData = new FormData();
-
-        Object.keys(productData).forEach((key) => {
-          if (key === "images") {
-            productData.images.forEach((image) => {
-              formData.append("productImages", image);
-            });
-          } else {
-            formData.append(key, productData[key]);
-          }
-        });
-
-        const response = await fetch(`${API_BASE_URL}/products/${productId}`, {
-          method: "PUT",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          body: formData,
-        });
-
-        const responseData = await response.json();
-
-        if (response.ok) {
-          toast.success("Product updated successfully");
-          setShowEditModal(false);
-          fetchProducts();
-        } else {
-          toast.error(responseData.message || "Failed to update product");
-        }
-      } else {
-        const response = await fetch(`${API_BASE_URL}/products/${productId}`, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(productData),
-        });
-
-        const responseData = await response.json();
-
-        if (response.ok) {
-          toast.success("Product updated successfully");
-          setShowEditModal(false);
-          fetchProducts();
-        } else {
-          toast.error(responseData.message || "Failed to update product");
-        }
+      const form = new FormData();
+      Object.keys(productData).forEach((key) =>
+        form.append(key, productData[key])
+      );
+      if (productData.images && productData.images.length > 0) {
+        productData.images.forEach((img) => form.append("productImages", img));
       }
-    } catch (error) {
-      console.error("Update product error:", error);
-      toast.error("Failed to update product");
+      const res = await fetch(`${API_BASE_URL}/products/${id}`, {
+        method: "PUT",
+        headers: { Authorization: `Bearer ${token}` },
+        body: form,
+      });
+      if (res.ok) {
+        toast.success("Product updated");
+        setShowEditModal(false);
+        fetchProducts();
+      } else toast.error("Failed to update product");
+    } catch {
+      toast.error("Error updating product");
     }
-  };
-
-  const handleDeleteClick = (product) => {
-    setProductToDelete(product);
-    setShowDeleteModal(true);
   };
 
   const handleDeleteConfirm = async () => {
     if (!productToDelete) return;
-
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch(
+      const res = await fetch(
         `${API_BASE_URL}/products/${productToDelete._id}`,
         {
           method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
-
-      if (response.ok) {
-        toast.success("Product deleted successfully");
+      if (res.ok) {
+        toast.success("Product deleted");
         setShowDeleteModal(false);
         setProductToDelete(null);
         fetchProducts();
-      } else {
-        toast.error("Failed to delete product");
-      }
-    } catch (error) {
-      toast.error("Failed to delete product");
+      } else toast.error("Failed to delete product");
+    } catch {
+      toast.error("Error deleting product");
     }
   };
 
-  const handleDeleteCancel = () => {
-    setShowDeleteModal(false);
-    setProductToDelete(null);
-  };
-
-  const filteredProducts = products.filter((product) => {
-    const matchesSearch =
-      product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      product.brand?.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesFilter =
-      filterCategory === "all" || product.category === filterCategory;
-    return matchesSearch && matchesFilter;
+  const filteredProducts = products.filter((p) => {
+    const matchSearch =
+      p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      p.brand?.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchCat = filterCategory === "all" || p.category === filterCategory;
+    return matchSearch && matchCat;
   });
 
-  if (loading) {
-    return <div className={styles.loading}>Loading products...</div>;
-  }
+  if (loading) return <div className={styles.loading}>Loading products...</div>;
 
   return (
     <div className={styles.productManagement}>
@@ -216,7 +143,7 @@ const ProductManagement = () => {
           <Search size={20} />
           <input
             type="text"
-            placeholder="Search products by name or brand..."
+            placeholder="Search by name or brand..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -246,8 +173,7 @@ const ProductManagement = () => {
               className={styles.addButton}
               onClick={() => setShowAddModal(true)}
             >
-              <Plus size={20} />
-              Add Your First Product
+              <Plus size={20} /> Add Your First Product
             </button>
           </div>
         ) : (
@@ -256,7 +182,10 @@ const ProductManagement = () => {
               <div className={styles.productImage}>
                 {product.images && product.images.length > 0 ? (
                   <img
-                    src={`http://localhost:5000/uploads/products/${product.images?.[0]}`}
+                    src={`${API_BASE_URL.replace(
+                      "/api",
+                      ""
+                    )}/uploads/products/${product.images[0]}`}
                     alt={product.name}
                   />
                 ) : (
@@ -282,8 +211,7 @@ const ProductManagement = () => {
                   <span className={styles.category}>{product.category}</span>
                   <span className={styles.rating}>⭐ {product.rating}</span>
                 </div>
-                <div className={styles.price}>Rs.{product.price}</div>
-
+                <div className={styles.price}>₹{product.price}</div>
                 <div className={styles.actions}>
                   <button
                     className={styles.viewBtn}
@@ -291,8 +219,7 @@ const ProductManagement = () => {
                       window.open(`/products/${product._id}`, "_blank")
                     }
                   >
-                    <Eye size={16} />
-                    View
+                    <Eye size={16} /> View
                   </button>
                   <button
                     className={styles.editBtn}
@@ -301,15 +228,16 @@ const ProductManagement = () => {
                       setShowEditModal(true);
                     }}
                   >
-                    <Edit size={16} />
-                    Edit
+                    <Edit size={16} /> Edit
                   </button>
                   <button
                     className={styles.deleteBtn}
-                    onClick={() => handleDeleteClick(product)}
+                    onClick={() => {
+                      setProductToDelete(product);
+                      setShowDeleteModal(true);
+                    }}
                   >
-                    <Trash2 size={16} />
-                    Delete
+                    <Trash2 size={16} /> Delete
                   </button>
                 </div>
               </div>
@@ -324,22 +252,20 @@ const ProductManagement = () => {
           onSave={handleAddProduct}
         />
       )}
-
       {showEditModal && selectedProduct && (
         <EditProductModal
           product={selectedProduct}
           onClose={() => {
             setShowEditModal(false);
             setSelectedProduct(null);
+            fetchProducts();
           }}
-          onSave={handleEditProduct}
         />
       )}
-
       {showDeleteModal && productToDelete && (
         <DeleteConfirmationModal
           isOpen={showDeleteModal}
-          onClose={handleDeleteCancel}
+          onClose={() => setShowDeleteModal(false)}
           onConfirm={handleDeleteConfirm}
           itemType="product"
           itemName={productToDelete.name}

@@ -1,6 +1,7 @@
 import React from "react";
 import { Star } from "lucide-react";
 import styles from "./productCard.module.css";
+import { BASE_URL } from "../../../utils/constants";
 
 const ProductCard = ({ product, onView, onAddToCart }) => {
   const ratingStars = Array.from({ length: 5 }, (_, i) => (
@@ -17,7 +18,7 @@ const ProductCard = ({ product, onView, onAddToCart }) => {
       <div className={styles.imageContainer}>
         {product.images && product.images.length > 0 ? (
           <img
-            src={`http://localhost:5000/uploads/products/${product.images?.[0]}`}
+            src={`${BASE_URL}/uploads/products/${product.images?.[0]}`}
             alt={product.name}
             className={styles.productImage}
           />

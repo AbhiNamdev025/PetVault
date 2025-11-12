@@ -4,19 +4,14 @@
   border-radius: 20px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   margin-bottom: 2rem;
-}
-
-.filtersRow {
   display: flex;
+  flex-direction: column;
   gap: 1.5rem;
-  align-items: center;
-  flex-wrap: wrap;
 }
 
 .searchBox {
   position: relative;
-  flex: 2;
-  min-width: 250px;
+  width: 100%;
 }
 
 .searchIcon {
@@ -29,7 +24,7 @@
 
 .searchInput {
   width: 100%;
-  padding: 1rem 1rem 1rem 3rem;
+  padding: 0.7rem 0.7rem 0.7rem 3rem;
   border: 2px solid #f5f1e8;
   border-radius: 12px;
   font-size: 1rem;
@@ -44,8 +39,10 @@
   box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.1);
 }
 
-.searchInput::placeholder {
-  color: #999;
+.filterRow {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
 }
 
 .filterBox {
@@ -91,22 +88,31 @@
     padding: 1.5rem;
   }
 
-  .filtersRow {
-    flex-direction: column;
+  .filterRow {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
     gap: 1rem;
-  }
-
-  .searchBox {
-    width: 100%;
   }
 
   .filterBox {
     width: 100%;
+  }
+  .filterSelect {
+    width: 85%;
   }
 }
 
 @media (max-width: 480px) {
   .filtersContainer {
     padding: 1.25rem;
+  }
+
+  .filterRow {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+  }
+
+  .filterSelect {
+    padding: 0.8rem 0.8rem 0.8rem 2.2rem;
   }
 }

@@ -1,0 +1,27 @@
+.userManagement {
+  padding: 2rem;
+  min-height: 100vh;
+  background: #fafafa;
+}
+
+.title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  color: #1e293b;
+}
+
+.grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  justify-content: flex-start;
+}
+
+.loading,
+.emptyState {
+  text-align: center;
+  margin-top: 4rem;
+  font-size: 1.2rem;
+  color: #555;
+}

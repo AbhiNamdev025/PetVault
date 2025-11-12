@@ -1,0 +1,50 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(17, 17, 17, 0.6);
+  backdrop-filter: blur(3px);
+  display: flex;
+  justify-content: center;
+  align-items: end;
+  z-index: 999;
+  transition: all 0.3s ease;
+}
+
+.modal {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 2rem;
+  width: 100%;
+  height: 100%;
+  max-width: 550px;
+  position: relative;
+  box-shadow: 0 20px 60px rgba(167, 139, 250, 0.25);
+  animation: slideUp 0.3s ease forwards;
+}
+
+.closeBtn {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #7c3aed;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.closeBtn:hover {
+  transform: rotate(90deg);
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { X, Upload } from "lucide-react";
 import styles from "./editPetModal.module.css";
+import { API_BASE_URL } from "../../../../utils/constants";
+import { toast } from "react-toastify";
 
-const EditPetModal = ({ pet, onClose, onSave }) => {
+const EditPetModal = ({ pet, onClose }) => {
   if (!pet) return null;
+
   const [formData, setFormData] = useState({
     name: "",
     breed: "",
@@ -29,11 +32,11 @@ const EditPetModal = ({ pet, onClose, onSave }) => {
         breed: pet.breed || "",
         type: pet.type || "dog",
         gender: pet.gender || "male",
-        age: pet.age ? pet.age.toString() : "0",
+        age: pet.age ? pet.age.toString() : "",
         ageUnit: pet.ageUnit || "months",
-        price: pet.price ? pet.price.toString() : "0",
+        price: pet.price ? pet.price.toString() : "",
+        color: pet.color || "",
         description: pet.description || "",
-        color: pet.color || "Black & Brown",
         available: Boolean(pet.available),
         category: pet.category || "shop",
         vaccinated: Boolean(pet.vaccinated),
@@ -59,76 +62,56 @@ const EditPetModal = ({ pet, onClose, onSave }) => {
     setImages((prev) => prev.filter((_, i) => i !== index));
   };
 
-  const removeExistingImage = (index) => {
-    setExistingImages((prev) => prev.filter((_, i) => i !== index));
+  const handleDeleteExistingImage = async (img) => {
+    try {
+      const token = localStorage.getItem("token");
+      const res = await fetch(`${API_BASE_URL}/pets/${pet._id}/image/${img}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (res.ok) {
+        setExistingImages((prev) => prev.filter((i) => i !== img));
+        toast.success("Image deleted");
+      } else {
+        toast.error("Failed to delete image");
+      }
+    } catch {
+      toast.error("Error deleting image");
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-
     try {
-      const submitData = {
-        name: formData.name,
-        breed: formData.breed,
-        type: formData.type,
-        gender: formData.gender,
-        age: parseInt(formData.age),
-        ageUnit: formData.ageUnit,
-        price: parseFloat(formData.price),
-        color: formData.color,
-        description: formData.description,
-        category: formData.category,
-        vaccinated: formData.vaccinated,
-        available: formData.available,
-      };
-
-      console.log("Sending data to backend:", submitData);
-
-      const hasNewImages = images.length > 0;
-
-      if (hasNewImages) {
-        const formDataToSend = new FormData();
-
-        Object.keys(submitData).forEach((key) => {
-          formDataToSend.append(key, submitData[key]);
-        });
-
-        images.forEach((image) => {
-          formDataToSend.append("petImages", image);
-        });
-
-        await onSave(pet._id, formDataToSend);
-      } else {
-        await onSave(pet._id, submitData);
+      const token = localStorage.getItem("token");
+      const form = new FormData();
+      Object.keys(formData).forEach((key) => form.append(key, formData[key]));
+      if (images.length > 0) {
+        form.append("replaceImages", "false");
+        images.forEach((img) => form.append("petImages", img));
       }
-    } catch (error) {
-      console.error("Error updating pet:", error);
+      const response = await fetch(`${API_BASE_URL}/pets/${pet._id}`, {
+        method: "PUT",
+        headers: { Authorization: `Bearer ${token}` },
+        body: form,
+      });
+      if (response.ok) {
+        const updated = await response.json();
+        setExistingImages(updated.images || []);
+        toast.success("Pet updated successfully");
+        onClose();
+      } else {
+        toast.error("Failed to update pet");
+      }
+    } catch {
+      toast.error("Error updating pet");
     } finally {
       setLoading(false);
     }
   };
 
-  if (!pet || !pet._id) {
-    return (
-      <div className={styles.modalOverlay}>
-        <div className={styles.modal}>
-          <div className={styles.modalHeader}>
-            <h2>Error</h2>
-            <button className={styles.closeButton} onClick={onClose}>
-              <X size={24} />
-            </button>
-          </div>
-          <div className={styles.form}>
-            <p>No pet data available. Please try again.</p>
-            <button onClick={onClose} className={styles.cancelButton}>
-              Close
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  if (!pet || !pet._id) return null;
 
   return (
     <div className={styles.modalOverlay}>
@@ -207,7 +190,7 @@ const EditPetModal = ({ pet, onClose, onSave }) => {
                 <input
                   type="number"
                   name="age"
-                  value={formData.age}
+                  value={formData.age || ""}
                   onChange={handleInputChange}
                   min="0"
                   required
@@ -227,14 +210,13 @@ const EditPetModal = ({ pet, onClose, onSave }) => {
               <input
                 type="number"
                 name="price"
-                value={formData.price}
+                value={formData.price || ""}
                 onChange={handleInputChange}
                 min="0"
                 step="0.01"
                 required
               />
             </div>
-
             <div className={styles.formGroup}>
               <label>Color</label>
               <input
@@ -246,6 +228,7 @@ const EditPetModal = ({ pet, onClose, onSave }) => {
               />
             </div>
           </div>
+
           <div className={styles.formGroup}>
             <label>Description *</label>
             <textarea
@@ -256,30 +239,34 @@ const EditPetModal = ({ pet, onClose, onSave }) => {
               required
             />
           </div>
-          {existingImages.length > 0 && (
+
+          {existingImages && existingImages.length > 0 && (
             <div className={styles.formGroup}>
-              <label>Current Images</label>
+              <label>Existing Images</label>
               <div className={styles.imagePreview}>
-                {existingImages.map((image, index) => (
-                  <div key={index} className={styles.previewItem}>
-                    <img
-                      src={`http://localhost:5000/uploads/pets/${image}`}
-                      alt={pet.name}
-                    />
-                    <button
-                      type="button"
-                      onClick={() => removeExistingImage(index)}
-                      className={styles.removeImage}
-                    >
-                      <X size={16} />
-                    </button>
-                  </div>
-                ))}
+                {existingImages.map((img, index) => {
+                  const imageUrl = img.startsWith("http")
+                    ? img
+                    : `${API_BASE_URL.replace("/api", "")}/uploads/pets/${img}`;
+                  return (
+                    <div key={index} className={styles.previewItem}>
+                      <img src={imageUrl} alt="Pet" />
+                      <button
+                        type="button"
+                        onClick={() => handleDeleteExistingImage(img)}
+                        className={styles.removeImage}
+                      >
+                        <X size={16} />
+                      </button>
+                    </div>
+                  );
+                })}
               </div>
             </div>
           )}
+
           <div className={styles.formGroup}>
-            <label>Add New Images</label>
+            <label>Upload New Images</label>
             <div className={styles.imageUpload}>
               <label className={styles.uploadArea}>
                 <Upload size={24} />
@@ -294,12 +281,12 @@ const EditPetModal = ({ pet, onClose, onSave }) => {
               </label>
               {images.length > 0 && (
                 <div className={styles.imagePreview}>
-                  {images.map((image, index) => (
-                    <div key={index} className={styles.previewItem}>
-                      <img src={URL.createObjectURL(image)} alt="Preview" />
+                  {images.map((img, i) => (
+                    <div key={i} className={styles.previewItem}>
+                      <img src={URL.createObjectURL(img)} alt="Preview" />
                       <button
                         type="button"
-                        onClick={() => removeNewImage(index)}
+                        onClick={() => removeNewImage(i)}
                         className={styles.removeImage}
                       >
                         <X size={16} />
@@ -311,7 +298,6 @@ const EditPetModal = ({ pet, onClose, onSave }) => {
             </div>
           </div>
 
-          {/* Available checkbox add karo */}
           <div className={styles.checkboxGroup}>
             <label className={styles.checkboxLabel}>
               <input

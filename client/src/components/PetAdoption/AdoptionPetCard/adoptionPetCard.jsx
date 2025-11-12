@@ -1,13 +1,13 @@
 import React from "react";
 import styles from "./adoptionPetCard.module.css";
-
+import { BASE_URL } from "../../../utils/constants";
 const AdoptionPetCard = ({ pet, onView, onEnquiry }) => {
   return (
     <div className={styles.petCard}>
       <div className={styles.imageContainer}>
         {pet.images && pet.images.length > 0 ? (
           <img
-            src={`http://localhost:5000/uploads/pets/${pet.images?.[0]}`}
+            src={`${BASE_URL}/uploads/pets/${pet.images?.[0]}`}
             alt={pet.name}
             className={styles.petImage}
           />

@@ -19,11 +19,7 @@ const OrderManagement = () => {
   const [filteredOrders, setFilteredOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState("all");
-  const [popup, setPopup] = useState({
-    open: false,
-    orderId: null,
-    newStatus: "",
-  });
+  const [popup, setPopup] = useState({ open: false, orderId: null, newStatus: "" });
   const [updatingId, setUpdatingId] = useState(null);
 
   const fetchOrders = async () => {
@@ -49,8 +45,14 @@ const OrderManagement = () => {
     fetchOrders();
   }, []);
 
+  useEffect(() => {
+    if (statusFilter === "all") setFilteredOrders(orders);
+    else setFilteredOrders(orders.filter((o) => o.status === statusFilter));
+  }, [orders, statusFilter]);
+
   const handleStatusUpdate = async () => {
     const { orderId, newStatus } = popup;
+    if (!orderId) return;
     setUpdatingId(orderId);
 
     try {
@@ -66,13 +68,12 @@ const OrderManagement = () => {
       });
 
       if (res.ok) {
+        toast.success(`Order marked as ${newStatus}`);
         setOrders((prev) =>
-          prev.map((order) =>
-            order._id === orderId ? { ...order, status: newStatus } : order
+          prev.map((o) =>
+            o._id === orderId ? { ...o, status: newStatus } : o
           )
         );
-        toast.success(`Order marked as ${newStatus}`);
-        applyFilter(statusFilter);
       } else {
         toast.error("Failed to update order status");
       }
@@ -94,9 +95,7 @@ const OrderManagement = () => {
       });
 
       if (res.ok) {
-        // Instantly remove from both lists
         setOrders((prev) => prev.filter((o) => o._id !== id));
-        setFilteredOrders((prev) => prev.filter((o) => o._id !== id));
         toast.info("Order deleted");
       } else {
         toast.error("Failed to delete order");
@@ -106,17 +105,9 @@ const OrderManagement = () => {
     }
   };
 
-  const applyFilter = (filter) => {
-    setStatusFilter(filter);
-    if (filter === "all") setFilteredOrders(orders);
-    else setFilteredOrders(orders.filter((order) => order.status === filter));
-  };
-
   const renderStatusIcon = (status) => {
     if (status === "confirmed")
-      return (
-        <CheckCircle className={`${styles.statusIcon} ${styles.confirmed}`} />
-      );
+      return <CheckCircle className={`${styles.statusIcon} ${styles.confirmed}`} />;
     else if (status === "shipped")
       return <Truck className={`${styles.statusIcon} ${styles.shipped}`} />;
     else if (status === "delivered")
@@ -132,12 +123,11 @@ const OrderManagement = () => {
     <div className={styles.orderManagement}>
       <div className={styles.headerBar}>
         <h1 className={styles.title}>Order Management</h1>
-
         <div className={styles.filterBar}>
           <Filter size={18} />
           <select
             value={statusFilter}
-            onChange={(e) => applyFilter(e.target.value)}
+            onChange={(e) => setStatusFilter(e.target.value)}
             className={styles.filterSelect}
           >
             <option value="all">All</option>
@@ -163,21 +153,15 @@ const OrderManagement = () => {
                   <h3>#{order._id.slice(-8)}</h3>
                   <p>{new Date(order.createdAt).toLocaleDateString()}</p>
                 </div>
-
-                <div className={styles.topRightActions}>
-                  <button
-                    className={styles.deleteBtn}
-                    onClick={() => handleDeleteOrder(order._id)}
-                  >
-                    <Trash2 size={18} />
-                  </button>
-                </div>
-
+                <button
+                  className={styles.deleteBtn}
+                  onClick={() => handleDeleteOrder(order._id)}
+                >
+                  <Trash2 size={18} />
+                </button>
                 <div className={styles.status}>
                   {renderStatusIcon(order.status)}
-                  <span
-                    className={`${styles.statusText} ${styles[order.status]}`}
-                  >
+                  <span className={`${styles.statusText} ${styles[order.status]}`}>
                     {order.status}
                   </span>
                 </div>

@@ -2,14 +2,16 @@ import React, { useEffect, useState } from "react";
 import styles from "./order.module.css";
 import { API_BASE_URL } from "../../../utils/constants";
 import { toast } from "react-toastify";
-import { Package, Truck, CheckCircle, Clock, XCircle, X } from "lucide-react";
+import { Package, CheckCircle, Clock, XCircle, X } from "lucide-react";
 
 const Order = () => {
   const [orders, setOrders] = useState([]);
+  const [filteredOrders, setFilteredOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [showPopup, setShowPopup] = useState(false);
   const [updating, setUpdating] = useState(false);
+  const [filterStatus, setFilterStatus] = useState("all");
 
   const fetchOrders = async () => {
     try {
@@ -19,13 +21,14 @@ const Order = () => {
         toast.info("Please login to view your orders");
         return;
       }
-
       const res = await fetch(`${API_BASE_URL}/orders/my-orders`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await res.json();
-      if (res.ok) setOrders(data);
-      else toast.error(data.message || "Failed to fetch orders");
+      if (res.ok) {
+        setOrders(data);
+        setFilteredOrders(data);
+      } else toast.error(data.message || "Failed to fetch orders");
     } catch {
       toast.error("Something went wrong while fetching orders");
     } finally {
@@ -37,6 +40,14 @@ const Order = () => {
     fetchOrders();
   }, []);
 
+  useEffect(() => {
+    if (filterStatus === "all") setFilteredOrders(orders);
+    else
+      setFilteredOrders(
+        orders.filter((o) => o.status.toLowerCase() === filterStatus)
+      );
+  }, [filterStatus, orders]);
+
   const openCancelPopup = (order) => {
     setSelectedOrder(order);
     setShowPopup(true);
@@ -44,12 +55,10 @@ const Order = () => {
 
   const handleCancelOrder = async () => {
     if (!selectedOrder) return;
-
     try {
       setUpdating(true);
       const token =
         localStorage.getItem("token") || sessionStorage.getItem("token");
-
       const res = await fetch(
         `${API_BASE_URL}/orders/${selectedOrder._id}/status`,
         {
@@ -61,7 +70,6 @@ const Order = () => {
           body: JSON.stringify({ status: "cancelled" }),
         }
       );
-
       if (res.ok) {
         toast.success("Order cancelled successfully!");
         setOrders((prev) =>
@@ -72,7 +80,7 @@ const Order = () => {
       } else {
         toast.error("Failed to cancel order");
       }
-    } catch (error) {
+    } catch {
       toast.error("Something went wrong!");
     } finally {
       setUpdating(false);
@@ -82,17 +90,15 @@ const Order = () => {
   };
 
   const renderStatusIcon = (status) => {
-    if (status === "confirmed") {
+    if (status === "confirmed")
       return (
         <CheckCircle className={`${styles.statusIcon} ${styles.confirmed}`} />
       );
-    } else if (status === "delivered") {
+    if (status === "delivered")
       return <Package className={`${styles.statusIcon} ${styles.delivered}`} />;
-    } else if (status === "cancelled") {
+    if (status === "cancelled")
       return <XCircle className={`${styles.statusIcon} ${styles.cancelled}`} />;
-    } else {
-      return <Clock className={`${styles.statusIcon} ${styles.pending}`} />;
-    }
+    return <Clock className={`${styles.statusIcon} ${styles.pending}`} />;
   };
 
   if (loading)
@@ -109,10 +115,23 @@ const Order = () => {
 
   return (
     <div className={styles.ordersPage}>
-      <h1 className={styles.title}>My Orders</h1>
+      <div className={styles.header}>
+        <h1 className={styles.title}>My Orders</h1>
+        <select
+          value={filterStatus}
+          onChange={(e) => setFilterStatus(e.target.value)}
+          className={styles.filterSelect}
+        >
+          <option value="all">All Orders</option>
+          <option value="pending">Pending</option>
+          <option value="confirmed">Confirmed</option>
+          <option value="delivered">Delivered</option>
+          <option value="cancelled">Cancelled</option>
+        </select>
+      </div>
 
       <div className={styles.ordersList}>
-        {orders.map((order) => (
+        {filteredOrders.map((order) => (
           <div className={styles.orderCard} key={order._id}>
             <div className={styles.orderHeader}>
               <div>

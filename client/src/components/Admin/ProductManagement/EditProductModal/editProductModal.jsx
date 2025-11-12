@@ -2,8 +2,9 @@ import React, { useState, useEffect } from "react";
 import { X, Upload } from "lucide-react";
 import styles from "./editProductModal.module.css";
 import { API_BASE_URL } from "../../../../utils/constants";
+import { toast } from "react-toastify";
 
-const EditProductModal = ({ product, onClose, onSave }) => {
+const EditProductModal = ({ product, onClose }) => {
   if (!product) return null;
 
   const [formData, setFormData] = useState({
@@ -28,6 +29,7 @@ const EditProductModal = ({ product, onClose, onSave }) => {
         price: product.price ? product.price.toString() : "",
         description: product.description || "",
         stock: product.stock ? product.stock.toString() : "",
+        rating: product.rating ? product.rating.toString() : "",
         brand: product.brand || "",
         features: product.features ? product.features.join(", ") : "",
       });
@@ -37,10 +39,7 @@ const EditProductModal = ({ product, onClose, onSave }) => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleImageUpload = (e) => {
@@ -52,56 +51,54 @@ const EditProductModal = ({ product, onClose, onSave }) => {
     setImages((prev) => prev.filter((_, i) => i !== index));
   };
 
-  const removeExistingImage = (index) => {
-    setExistingImages((prev) => prev.filter((_, i) => i !== index));
+  const handleDeleteExistingImage = async (img) => {
+    try {
+      const token = localStorage.getItem("token");
+      const res = await fetch(`${API_BASE_URL}/products/${product._id}/image/${img}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (res.ok) {
+        setExistingImages((prev) => prev.filter((i) => i !== img));
+        toast.success("Image deleted");
+      } else {
+        toast.error("Failed to delete image");
+      }
+    } catch {
+      toast.error("Error deleting image");
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-
     try {
-      const submitData = {
-        ...formData,
-        price: formData.price,
-        stock: formData.stock,
-        features: formData.features
-          ? formData.features.split(",").map((f) => f.trim())
-          : [],
-      };
-
+      const token = localStorage.getItem("token");
+      const form = new FormData();
+      Object.keys(formData).forEach((key) => form.append(key, formData[key]));
       if (images.length > 0) {
-        submitData.images = images;
+        form.append("replaceImages", "false");
+        images.forEach((img) => form.append("productImages", img));
       }
-
-      await onSave(product._id, submitData);
-    } catch (error) {
-      console.error("Error updating product:", error);
+      const res = await fetch(`${API_BASE_URL}/products/${product._id}`, {
+        method: "PUT",
+        headers: { Authorization: `Bearer ${token}` },
+        body: form,
+      });
+      if (res.ok) {
+        const updated = await res.json();
+        setExistingImages(updated.images || []);
+        toast.success("Product updated");
+        onClose();
+      } else toast.error("Failed to update product");
+    } catch {
+      toast.error("Error updating product");
     } finally {
       setLoading(false);
     }
   };
 
-  if (!product || !product._id) {
-    return (
-      <div className={styles.modalOverlay}>
-        <div className={styles.modal}>
-          <div className={styles.modalHeader}>
-            <h2>Error</h2>
-            <button className={styles.closeButton} onClick={onClose}>
-              <X size={24} />
-            </button>
-          </div>
-          <div className={styles.form}>
-            <p>No product data available. Please try again.</p>
-            <button onClick={onClose} className={styles.cancelButton}>
-              Close
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  if (!product || !product._id) return null;
 
   return (
     <div className={styles.modalOverlay}>
@@ -112,28 +109,15 @@ const EditProductModal = ({ product, onClose, onSave }) => {
             <X size={24} />
           </button>
         </div>
-
         <form onSubmit={handleSubmit} className={styles.form}>
           <div className={styles.formGrid}>
             <div className={styles.formGroup}>
               <label>Product Name *</label>
-              <input
-                type="text"
-                name="name"
-                value={formData.name}
-                onChange={handleInputChange}
-                required
-              />
+              <input type="text" name="name" value={formData.name} onChange={handleInputChange} required />
             </div>
-
             <div className={styles.formGroup}>
               <label>Category *</label>
-              <select
-                name="category"
-                value={formData.category}
-                onChange={handleInputChange}
-                required
-              >
+              <select name="category" value={formData.category} onChange={handleInputChange} required>
                 <option value="food">Food</option>
                 <option value="toy">Toys</option>
                 <option value="accessory">Accessories</option>
@@ -142,131 +126,69 @@ const EditProductModal = ({ product, onClose, onSave }) => {
                 <option value="bedding">Bedding</option>
               </select>
             </div>
-
             <div className={styles.formGroup}>
               <label>Brand</label>
-              <input
-                type="text"
-                name="brand"
-                value={formData.brand}
-                onChange={handleInputChange}
-              />
+              <input type="text" name="brand" value={formData.brand} onChange={handleInputChange} />
             </div>
-
             <div className={styles.formGroup}>
-              <label>Price (Rs) *</label>
-              <input
-                type="number"
-                name="price"
-                value={formData.price}
-                onChange={handleInputChange}
-                min="0"
-                step="0.01"
-                required
-              />
+              <label>Price (Rs)</label>
+              <input type="number" name="price" value={formData.price} onChange={handleInputChange} min="0" step="0.01" />
             </div>
-
             <div className={styles.formGroup}>
-              <label>Stock *</label>
-              <input
-                type="number"
-                name="stock"
-                value={formData.stock}
-                onChange={handleInputChange}
-                min="0"
-                required
-              />
+              <label>Stock</label>
+              <input type="number" name="stock" value={formData.stock} onChange={handleInputChange} min="0" />
             </div>
-
             <div className={styles.formGroup}>
               <label>Rating</label>
-              <input
-                type="number"
-                name="rating"
-                value={formData.rating}
-                onChange={handleInputChange}
-                min="0"
-                required
-              />
+              <input type="number" name="rating" value={formData.rating} onChange={handleInputChange} min="0" />
             </div>
           </div>
-
           <div className={styles.formGroup}>
             <label>Description *</label>
-            <textarea
-              name="description"
-              value={formData.description}
-              onChange={handleInputChange}
-              rows="4"
-              required
-            />
+            <textarea name="description" value={formData.description} onChange={handleInputChange} rows="4" required />
           </div>
-
           <div className={styles.formGroup}>
             <label>Features (comma separated)</label>
-            <input
-              type="text"
-              name="features"
-              value={formData.features}
-              onChange={handleInputChange}
-              placeholder="Feature 1, Feature 2, Feature 3"
-            />
+            <input type="text" name="features" value={formData.features} onChange={handleInputChange} />
           </div>
-
           {existingImages.length > 0 && (
             <div className={styles.formGroup}>
-              <label>Current Images</label>
+              <label>Existing Images</label>
               <div className={styles.imagePreview}>
-                {existingImages.map((image, index) => (
-                  <div key={index} className={styles.previewItem}>
-                    <img
-                      src={`http://localhost:5000/uploads/products/${product.images?.[0]}`}
-                      alt={product.name}
-                    />
-                    <div
-                      className={styles.imageError}
-                      style={{ display: "none" }}
-                    >
-                      Image not found
+                {existingImages.map((img, index) => {
+                  const imageUrl = img.startsWith("http")
+                    ? img
+                    : `${API_BASE_URL.replace("/api", "")}/uploads/products/${img}`;
+                  return (
+                    <div key={index} className={styles.previewItem}>
+                      <img src={imageUrl} alt="Product" />
+                      <button
+                        type="button"
+                        onClick={() => handleDeleteExistingImage(img)}
+                        className={styles.removeImage}
+                      >
+                        <X size={16} />
+                      </button>
                     </div>
-                    <button
-                      type="button"
-                      onClick={() => removeExistingImage(index)}
-                      className={styles.removeImage}
-                    >
-                      <X size={16} />
-                    </button>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
           )}
-
           <div className={styles.formGroup}>
             <label>Add New Images</label>
             <div className={styles.imageUpload}>
               <label className={styles.uploadArea}>
                 <Upload size={24} />
-                <span>Click to upload new images</span>
-                <input
-                  type="file"
-                  multiple
-                  accept="image/*"
-                  onChange={handleImageUpload}
-                  className={styles.fileInput}
-                />
+                <span>Click to upload</span>
+                <input type="file" multiple accept="image/*" onChange={handleImageUpload} className={styles.fileInput} />
               </label>
-
               {images.length > 0 && (
                 <div className={styles.imagePreview}>
-                  {images.map((image, index) => (
-                    <div key={index} className={styles.previewItem}>
+                  {images.map((image, i) => (
+                    <div key={i} className={styles.previewItem}>
                       <img src={URL.createObjectURL(image)} alt="Preview" />
-                      <button
-                        type="button"
-                        onClick={() => removeNewImage(index)}
-                        className={styles.removeImage}
-                      >
+                      <button type="button" onClick={() => removeNewImage(i)} className={styles.removeImage}>
                         <X size={16} />
                       </button>
                     </div>
@@ -275,20 +197,11 @@ const EditProductModal = ({ product, onClose, onSave }) => {
               )}
             </div>
           </div>
-
           <div className={styles.modalActions}>
-            <button
-              type="button"
-              onClick={onClose}
-              className={styles.cancelButton}
-            >
+            <button type="button" onClick={onClose} className={styles.cancelButton}>
               Cancel
             </button>
-            <button
-              type="submit"
-              disabled={loading}
-              className={styles.saveButton}
-            >
+            <button type="submit" disabled={loading} className={styles.saveButton}>
               {loading ? "Updating..." : "Update Product"}
             </button>
           </div>

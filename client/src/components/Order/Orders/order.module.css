@@ -14,10 +14,10 @@
 
 .ordersList {
   display: flex;
-  flex-direction: column;
   gap: 2rem;
-  max-width: 900px;
-  margin: 0 auto;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-evenly;
 }
 
 .orderCard {
@@ -26,6 +26,8 @@
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
   padding: 2rem;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  width: 400px;
+  height: 350px;
 }
 
 .orderCard:hover {
@@ -85,8 +87,8 @@
 .items {
   border-top: 1px solid #f1f5f9;
   border-bottom: 1px solid #f1f5f9;
-  padding: 1rem 0;
-  margin-bottom: 1rem;
+  /* padding: 1rem 0; */
+  /* margin-bottom: 1rem;*/
 }
 
 .item {
@@ -281,5 +283,40 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 0.5rem;
+  }
+}
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.filterSelect {
+  padding: 0.8rem 1rem;
+  border: 2px solid #f5f1e8;
+  border-radius: 12px;
+  font-size: 1rem;
+  background: #faf9f6;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.filterSelect:focus {
+  outline: none;
+  border-color: #a78bfa;
+  background: white;
+  box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.1);
+}
+
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .filterSelect {
+    width: 100%;
   }
 }

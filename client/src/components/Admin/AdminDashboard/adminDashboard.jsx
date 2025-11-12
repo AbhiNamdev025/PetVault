@@ -5,6 +5,7 @@ import {
   ShoppingBag,
   Calendar,
   Plus,
+  ClipboardList,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { API_BASE_URL } from "../../../utils/constants";
@@ -93,6 +94,15 @@ const AdminDashboard = () => {
             <p>Appointments</p>
           </div>
         </div>
+        <div className={styles.statCard}>
+          <div className={styles.statIcon}>
+            <ClipboardList size={24} />
+          </div>
+          <div className={styles.statContent}>
+            <h3>{stats?.totalOrders || 0}</h3>
+            <p>Orders</p>
+          </div>
+        </div>
       </div>
 
       <div className={styles.contentGrid}>
@@ -109,7 +119,6 @@ const AdminDashboard = () => {
               <span>Manage Pets</span>
               <Plus size={16} />
             </button>
-
             <button
               className={styles.actionBtn}
               onClick={() => navigate("/admin/products")}
@@ -118,7 +127,6 @@ const AdminDashboard = () => {
               <span>Manage Products</span>
               <Plus size={16} />
             </button>
-
             <button
               className={styles.actionBtn}
               onClick={() => navigate("/admin/services")}
@@ -127,7 +135,6 @@ const AdminDashboard = () => {
               <span>Manage Services</span>
               <Plus size={16} />
             </button>
-
             <button
               className={styles.actionBtn}
               onClick={() => navigate("/admin/users")}

@@ -12,18 +12,18 @@ const ProductFilters = ({
 }) => {
   return (
     <div className={styles.filtersContainer}>
-      <div className={styles.filtersRow}>
-        <div className={styles.searchBox}>
-          <Search size={20} className={styles.searchIcon} />
-          <input
-            type="text"
-            placeholder="Search products..."
-            value={searchTerm}
-            onChange={(e) => onSearchChange(e.target.value)}
-            className={styles.searchInput}
-          />
-        </div>
+      <div className={styles.searchBox}>
+        <Search size={20} className={styles.searchIcon} />
+        <input
+          type="text"
+          placeholder="Search products..."
+          value={searchTerm}
+          onChange={(e) => onSearchChange(e.target.value)}
+          className={styles.searchInput}
+        />
+      </div>
 
+      <div className={styles.filterRow}>
         <div className={styles.filterBox}>
           <SlidersHorizontal size={18} className={styles.filterIcon} />
           <select

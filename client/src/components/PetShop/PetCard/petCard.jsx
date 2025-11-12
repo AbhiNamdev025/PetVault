@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./petCard.module.css";
-import { API_BASE_URL } from "../../../utils/constants";
+import { API_BASE_URL, BASE_URL } from "../../../utils/constants";
 
 const PetCard = ({ pet, onView, onEnquiry }) => {
   return (
@@ -8,7 +8,7 @@ const PetCard = ({ pet, onView, onEnquiry }) => {
       <div className={styles.imageContainer}>
         {pet.images && pet.images.length > 0 ? (
           <img
-            src={`http://localhost:5000/uploads/pets/${pet.images?.[0]}`}
+            src={`${BASE_URL}/uploads/pets/${pet.images?.[0]}`}
             alt={pet.name}
             className={styles.petImage}
           />

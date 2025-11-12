@@ -9,6 +9,7 @@ import {
   LogOut,
   Home,
   ClipboardList,
+  CalendarClock,
 } from "lucide-react";
 import styles from "./adminSidebar.module.css";
 
@@ -33,20 +34,27 @@ const AdminSidebar = () => {
       icon: <ShoppingBag size={20} />,
       label: "Products Management",
     },
+
+    {
+      path: "/admin/orders",
+      icon: <ClipboardList size={20} />,
+      label: "Order Management",
+    },
+
     {
       path: "/admin/services",
       icon: <Calendar size={20} />,
       label: "Services Management",
     },
     {
+      path: "/admin/appointments",
+      icon: <CalendarClock size={20} />,
+      label: "Appointments Management",
+    },
+    {
       path: "/admin/users",
       icon: <Users size={20} />,
       label: "Users Management",
-    },
-    {
-      path: "/admin/orders",
-      icon: <ClipboardList size={20} />,
-      label: "Order Management",
     },
   ];
 
