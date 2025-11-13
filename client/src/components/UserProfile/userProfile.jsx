@@ -118,52 +118,45 @@ const Profile = () => {
             <>
               <input
                 name="name"
-                value={formData.name || ""}
+                value={formData.name || "User"}
                 onChange={handleChange}
                 className={styles.input}
-                placeholder="Name"
               />
               <input
                 name="email"
-                value={formData.email || ""}
+                value={formData.email || "user@gmail.com"}
                 onChange={handleChange}
                 className={styles.input}
-                placeholder="Email"
               />
               <input
                 name="phone"
-                value={formData.phone || ""}
+                value={formData.phone || "9999999999"}
                 onChange={handleChange}
                 className={styles.input}
-                placeholder="Phone"
               />
               <input
                 name="address.street"
-                value={formData.address?.street || ""}
+                value={formData.address?.street || "Moon"}
                 onChange={handleChange}
                 className={styles.input}
-                placeholder="Street"
               />
               <input
                 name="address.city"
-                value={formData.address?.city || ""}
+                value={formData.address?.city || "Moon"}
                 onChange={handleChange}
                 className={styles.input}
-                placeholder="City"
               />
               <input
                 name="address.state"
-                value={formData.address?.state || ""}
+                value={formData.address?.state || "Moon"}
                 onChange={handleChange}
                 className={styles.input}
-                placeholder="State"
               />
               <input
                 name="address.zipCode"
-                value={formData.address?.zipCode || ""}
+                value={formData.address?.zipCode || "999999"}
                 onChange={handleChange}
                 className={styles.input}
-                placeholder="Zip Code"
               />
               <button onClick={handleUpdate} className={styles.saveButton}>
                 Save Changes
@@ -195,7 +188,16 @@ const Profile = () => {
       </div>
 
       <div className={styles.dataSection}>
-        <h3 className={styles.sectionTitle}>Appointments</h3>
+        <div className={styles.sectionHeader}>
+          <h3 className={styles.sectionTitle}>Appointments</h3>
+          <button
+            className={styles.viewAllBtn}
+            onClick={() => (window.location.href = "/my-appointments")}
+          >
+            View All
+          </button>
+        </div>
+
         <table className={styles.table}>
           <thead>
             <tr>
@@ -206,12 +208,12 @@ const Profile = () => {
             </tr>
           </thead>
           <tbody>
-            {appointments.map((a) => {
-              const serviceData = SERVICE_PRICES[a.service] || {};
+            {appointments.slice(0, 3).map((a) => {
+              const s = SERVICE_PRICES[a.service] || {};
               return (
                 <tr key={a._id}>
-                  <td>{serviceData.name || "N/A"}</td>
-                  <td>₹{serviceData.price || "0"}</td>
+                  <td>{s.name || "N/A"}</td>
+                  <td>₹{s.price || "0"}</td>
                   <td
                     className={
                       a.status === "confirmed"
@@ -230,7 +232,16 @@ const Profile = () => {
       </div>
 
       <div className={styles.dataSection}>
-        <h3 className={styles.sectionTitle}>Orders</h3>
+        <div className={styles.sectionHeader}>
+          <h3 className={styles.sectionTitle}>Orders</h3>
+          <button
+            className={styles.viewAllBtn}
+            onClick={() => (window.location.href = "/my-orders")}
+          >
+            View All
+          </button>
+        </div>
+
         <table className={styles.table}>
           <thead>
             <tr>
@@ -241,15 +252,19 @@ const Profile = () => {
             </tr>
           </thead>
           <tbody>
-            {orders.map((o) => (
+            {orders.slice(0, 3).map((o) => (
               <tr key={o._id}>
                 <td>
-                  {o.items?.[0]?.name || o.items?.[0]?.product?.name || "N/A"}
+                  {o.items?.[0]?.name ||
+                    o.items?.[0]?.product?.name ||
+                    "N/A"}
                 </td>
                 <td>₹{o.totalAmount}</td>
                 <td
                   className={
-                    o.status === "confirmed" ? styles.confirmed : styles.pending
+                    o.status === "confirmed"
+                      ? styles.confirmed
+                      : styles.pending
                   }
                 >
                   {o.status}

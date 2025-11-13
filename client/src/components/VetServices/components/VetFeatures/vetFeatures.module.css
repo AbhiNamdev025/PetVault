@@ -1,0 +1,90 @@
+.featuresSection {
+  background: #faf8ff;
+  padding: 5rem 2rem;
+  text-align: center;
+}
+
+.header {
+  margin-bottom: 3rem;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #1f2937;
+  margin-bottom: 0.6rem;
+}
+
+.subtitle {
+  color: #6b7280;
+  font-size: 1rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  justify-content: center;
+}
+
+.card {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 2rem 1.8rem;
+  text-align: left;
+  box-shadow: 0 8px 30px rgba(109, 40, 217, 0.06);
+  transition: all 0.3s ease;
+  border: 1px solid rgba(109, 40, 217, 0.1);
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 14px 45px rgba(109, 40, 217, 0.12);
+  border-color: rgba(109, 40, 217, 0.2);
+}
+
+.icon {
+  color: #8b5cf6;
+  background: rgba(139, 92, 246, 0.1);
+  width: 55px;
+  height: 55px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.cardTitle {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #4c1d95;
+  margin-bottom: 0.8rem;
+}
+
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.list li {
+  color: #4b5563;
+  font-size: 0.95rem;
+  margin-bottom: 0.4rem;
+  position: relative;
+  padding-left: 1.2rem;
+}
+
+.list li::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: #8b5cf6;
+}
+
+@media (max-width: 768px) {
+  .title {
+    font-size: 1.6rem;
+  }
+}

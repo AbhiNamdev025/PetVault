@@ -38,25 +38,27 @@ const Footer = () => {
             </div>
           </div>
 
-          <div className={styles.footerSection}>
-            <h4>Quick Links</h4>
-            <div className={styles.links}>
-              <Link to="/pet-shop">Pet Shop</Link>
-              <Link to="/vet-services">Vet Services</Link>
-              <Link to="/pet-adoption">Adoption</Link>
-              <Link to="/pet-daycare">Daycare</Link>
-              <Link to="/pet-products">Products</Link>
+          <div className={styles.middleGroup}>
+            <div className={styles.footerSection}>
+              <h4>Quick Links</h4>
+              <div className={styles.links}>
+                <Link to="/pet-shop">Pet Shop</Link>
+                <Link to="/vet-services">Vet Services</Link>
+                <Link to="/pet-adoption">Adoption</Link>
+                <Link to="/pet-daycare">Daycare</Link>
+                <Link to="/pet-products">Products</Link>
+              </div>
             </div>
-          </div>
 
-          <div className={styles.footerSection}>
-            <h4>Services</h4>
-            <div className={styles.links}>
-              <Link to="/vet-services">Veterinary Care</Link>
-              <Link to="/pet-daycare">Pet Daycare</Link>
-              <Link to="/pet-adoption">Pet Adoption</Link>
-              <Link to="/pet-products">Pet Products</Link>
-              <Link to="/pet-shop">Pet Shopping</Link>
+            <div className={styles.footerSection}>
+              <h4>Services</h4>
+              <div className={styles.links}>
+                <Link to="/vet-services">Veterinary Care</Link>
+                <Link to="/pet-daycare">Pet Daycare</Link>
+                <Link to="/pet-adoption">Pet Adoption</Link>
+                <Link to="/pet-products">Pet Products</Link>
+                <Link to="/pet-shop">Pet Shopping</Link>
+              </div>
             </div>
           </div>
 

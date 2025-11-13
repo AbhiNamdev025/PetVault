@@ -85,7 +85,7 @@
   font-weight: 600;
   margin-top: 10px;
   cursor: pointer;
-  transition: 0.3s ease;
+  transition: 0.3s;
 }
 
 .editButton:hover,
@@ -94,15 +94,35 @@
   box-shadow: 0 8px 20px rgba(124, 58, 237, 0.3);
 }
 
+.sectionHeader {
+  width: 100%;
+  max-width: 1000px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .sectionTitle {
   font-size: 1.8rem;
   font-weight: 800;
   color: #5b21b6;
-  margin-bottom: 1rem;
-  margin-top: 1.5rem;
-  text-align: left;
-  width: 100%;
-  max-width: 1000px;
+}
+
+.viewAllBtn {
+  background: transparent;
+  border: 2px solid #7c3aed;
+  color: #7c3aed;
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.viewAllBtn:hover {
+  background: #7c3aed;
+  color: white;
+  transform: translateY(-2px);
 }
 
 .table {

@@ -5,6 +5,7 @@ import DaycareCTA from "./components/DaycareCTA/DycareCTA";
 import ServiceBookingForm from "./components/ServicesBooking/serviceBookingForm";
 import styles from "./daycareService.module.css";
 import ServiceShowcase from "./components/Services Showcase/serviceShowcase";
+import DaycareReviews from "./components/DaycareReviews/daycareReviews";
 
 const DaycareService = () => {
   const [showForm, setShowForm] = useState(false);
@@ -23,9 +24,10 @@ const DaycareService = () => {
   return (
     <>
       <DaycareHero />
-      <DaycareFeatured />
-      <DaycareCTA />
       <ServiceShowcase onBookNow={handleBookNow} />
+      <DaycareCTA />
+      <DaycareFeatured />
+      <DaycareReviews />
 
       {showForm && (
         <div className={styles.overlay}>

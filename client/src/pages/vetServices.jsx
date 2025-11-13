@@ -1,11 +1,10 @@
 import React from "react";
-import VetAppointmentForm from "../components/VetServices/VetAppointment/vetAppointmentForm";
+import VetSection from "../components/VetServices/vetSection";
 
 const VetServicesPage = () => {
   return (
-    <div className="container">
-      <h1>Vet Services</h1>
-      <VetAppointmentForm />
+    <div>
+      <VetSection />
     </div>
   );
 };

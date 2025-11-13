@@ -1,0 +1,251 @@
+.hero {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  background: url("https://img.freepik.com/free-photo/top-view-paper-paw-print-bone-with-stethoscope-planet-earth-animal-day_23-2148668868.jpg?semt=ais_hybrid&w=1280&q=80")
+    center/cover no-repeat;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(3px);
+  z-index: 1;
+}
+
+.container {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1250px;
+  width: 100%;
+  padding: 0 2rem;
+  gap: 1.5rem;
+}
+
+.left,
+.center,
+.right {
+  flex: 1;
+  position: relative;
+}
+
+.petImage {
+  width: 90%;
+  max-width: 360px;
+  border-radius: 50% 35% 65% 40% / 40% 50% 60% 50%;
+  transition: transform 0.5s ease;
+  position: relative;
+  z-index: 2;
+}
+
+.vetImage {
+  width: 100%;
+  max-width: 400px;
+  border-radius: 35% 50% 35% 50% / 50% 30% 50% 40%;
+  transition: transform 0.5s ease;
+  position: relative;
+  z-index: 2;
+}
+
+.petImage:hover,
+.vetImage:hover {
+  transform: scale(1.03) translateY(-5px);
+}
+
+.center {
+  text-align: center;
+  padding: 2rem;
+}
+
+.title {
+  font-size: 2.6rem;
+  color: #1f2937;
+  font-weight: 800;
+  margin-bottom: 1rem;
+  line-height: 1.3;
+}
+
+.subtitle {
+  font-size: 1.1rem;
+  color: #4b5563;
+  margin-bottom: 1.8rem;
+}
+
+.bookButton {
+  background: linear-gradient(135deg, #6d28d9 0%, #8b5cf6 100%);
+  color: #fff;
+  border: none;
+  padding: 0.9rem 2.3rem;
+  border-radius: 50px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 25px rgba(109, 40, 217, 0.3);
+}
+
+.bookButton:hover {
+  transform: scale(1.05);
+  box-shadow: 0 10px 35px rgba(109, 40, 217, 0.45);
+}
+
+.featureCards {
+  display: flex;
+  justify-content: center;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+  margin-top: 1.8rem;
+}
+
+.featureCard {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(8px);
+  border-radius: 12px;
+  padding: 0.7rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(139, 92, 246, 0.1);
+}
+
+.featureCard:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(139, 92, 246, 0.2);
+}
+
+.featureIcon {
+  color: #6d28d9;
+}
+
+.featureText {
+  color: #1f2937;
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.floatingIcons {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.icon {
+  position: absolute;
+  opacity: 0.75;
+  color: #8b5cf6;
+  animation: wave 6s ease-in-out infinite;
+}
+
+.paw1 {
+  top: 12%;
+  left: 18%;
+  animation-delay: 0s;
+}
+.heart1 {
+  bottom: 18%;
+  right: 20%;
+  color: #ef4444;
+  animation-delay: 1.5s;
+}
+.bone1 {
+  top: 25%;
+  right: 10%;
+  color: #f59e0b;
+  animation-delay: 2.5s;
+}
+
+@keyframes wave {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0);
+  }
+  50% {
+    transform: translateY(-15px) rotate(8deg);
+  }
+}
+
+.iconGroup {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.sideIcon {
+  position: absolute;
+  color: #8b5cf6;
+  opacity: 0.8;
+  animation: floatIcon 5s ease-in-out infinite;
+}
+
+.iconTopLeft {
+  top: -25px;
+  left: -25px;
+  color: #6d28d9;
+}
+.iconTopRight {
+  top: -25px;
+  right: -25px;
+  color: #f59e0b;
+}
+.iconBottomLeft {
+  bottom: -25px;
+  left: -25px;
+  color: #ef4444;
+}
+.iconBottomRight {
+  bottom: -25px;
+  right: -25px;
+  color: #22c55e;
+}
+
+@keyframes floatIcon {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-8px) scale(1.1);
+  }
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .container {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .left,
+  .right {
+    display: none;
+  }
+
+  .title {
+    font-size: 2.1rem;
+  }
+  .subtitle {
+    font-size: 1rem;
+  }
+  .bookButton {
+    font-size: 0.95rem;
+    padding: 0.8rem 1.8rem;
+  }
+}
+
+@media (max-width: 540px) {
+  .title {
+    font-size: 1.8rem;
+  }
+}

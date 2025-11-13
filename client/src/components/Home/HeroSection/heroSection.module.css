@@ -1,6 +1,5 @@
 .hero {
   background: #f5f1e8;
-  min-height: 100vh;
   display: flex;
   overflow: hidden;
   position: relative;
@@ -240,6 +239,9 @@
 }
 
 @media (max-width: 768px) {
+  .hero {
+    padding: 1.5rem;
+  }
   .heroTitle {
     font-size: 5rem;
   }
@@ -247,7 +249,7 @@
   .dogImageOverlay {
     width: 350px;
     height: 350px;
-    top: 54%;
+    top: 56%;
     left: 70%;
   }
 
@@ -278,6 +280,9 @@
 
   .descriptionText {
     max-width: 100%;
+  }
+  .descriptionTitle {
+    margin-top: 1rem;
   }
 }
 

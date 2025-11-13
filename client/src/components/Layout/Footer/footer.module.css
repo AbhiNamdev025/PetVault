@@ -4,27 +4,34 @@
   background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
   color: white;
   margin-top: auto;
-  padding-top: 3rem;
+  padding: 3rem 2rem 1rem;
   font-family: "Poppins", sans-serif;
   box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.2);
 }
 
 .footerContent {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
   gap: 3rem;
-  padding-bottom: 3rem;
+  padding-bottom: 2.5rem;
+}
+
+.footerSection {
+  flex: 1 1 250px;
+  min-width: 250px;
 }
 
 .footerSection h3 {
-  font-size: 1.8rem;
+  font-size: 1.7rem;
   margin-bottom: 1rem;
   font-weight: 700;
 }
 
 .footerSection h4 {
-  font-size: 1.2rem;
-  margin-bottom: 1.5rem;
+  font-size: 1.15rem;
+  margin-bottom: 1.2rem;
   color: #ffd700;
   font-weight: 600;
   letter-spacing: 0.5px;
@@ -33,7 +40,7 @@
 .brand {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   margin-bottom: 1rem;
 }
 
@@ -49,13 +56,14 @@
 .tagline {
   color: #cbd5e0;
   margin-bottom: 1.5rem;
-  line-height: 1.6;
+  line-height: 1.5;
   font-size: 0.95rem;
 }
 
 .socialLinks {
   display: flex;
-  gap: 1rem;
+  gap: 0.8rem;
+  flex-wrap: wrap;
 }
 
 .socialLink {
@@ -63,7 +71,7 @@
   align-items: center;
   color: #cbd5e0;
   background: rgba(255, 255, 255, 0.1);
-  padding: 10px;
+  padding: 8px;
   border-radius: 8px;
   transition: all 0.3s ease;
 }
@@ -74,17 +82,22 @@
   transform: translateY(-3px);
 }
 
+.middleGroup {
+  display: flex;
+  gap: 2rem;
+  flex: 1 1 300px;
+}
+
 .links {
   display: flex;
   flex-direction: column;
-  gap: 0.8rem;
+  gap: 0.6rem;
 }
 
 .links a {
   color: #cbd5e0;
   text-decoration: none;
   transition: all 0.3s ease;
-  position: relative;
 }
 
 .links a:hover {
@@ -95,13 +108,13 @@
 .contactInfo {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 0.8rem;
 }
 
 .contactItem {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   color: #cbd5e0;
   transition: all 0.3s ease;
 }
@@ -113,10 +126,10 @@
 
 .footerBottom {
   border-top: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 1.8rem 0;
+  padding: 1.2rem 0;
   text-align: center;
   color: #cbd5e0;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   letter-spacing: 0.3px;
 }
 
@@ -125,22 +138,124 @@
   color: #e2e8f0;
 }
 
-@media (max-width: 768px) {
+/* Responsive */
+@media (max-width: 1024px) {
   .footerContent {
-    grid-template-columns: 1fr;
-    text-align: center;
+    justify-content: center;
     gap: 2.5rem;
+  }
+
+  .footerSection {
+    text-align: center;
+  }
+
+  .middleGroup {
+    text-align: center;
+  }
+
+  .socialLinks {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 768px) {
+  .footer {
+    padding: 2rem 1.5rem 1rem;
+  }
+
+  .footerContent {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 2rem;
   }
 
   .brand {
     justify-content: center;
   }
 
-  .socialLinks {
+  .tagline {
+    font-size: 0.9rem;
+  }
+
+  .middleGroup {
+    flex-direction: row;
     justify-content: center;
+    align-items: flex-start;
+    gap: 2rem;
+  }
+
+  .middleGroup .footerSection {
+    flex: 1 1 45%;
+    min-width: 140px;
+  }
+
+  .footerSection h4 {
+    font-size: 1rem;
+  }
+
+  .links a {
+    font-size: 0.9rem;
+  }
+
+  .contactInfo {
+    align-items: center;
+    gap: 0.6rem;
   }
 
   .contactItem {
     justify-content: center;
+    font-size: 0.9rem;
+  }
+
+  .footerBottom {
+    font-size: 0.8rem;
+    padding: 1rem 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer {
+    padding: 1.5rem 1rem 0.8rem;
+  }
+
+  .footerSection h3 {
+    font-size: 1.3rem;
+  }
+
+  .footerSection h4 {
+    font-size: 0.95rem;
+  }
+
+  .tagline {
+    font-size: 0.85rem;
+  }
+
+  .socialLinks {
+    gap: 0.6rem;
+  }
+
+  .socialLink {
+    padding: 6px;
+  }
+
+  .links a {
+    font-size: 0.85rem;
+  }
+
+  .contactItem {
+    font-size: 0.85rem;
+  }
+
+  .footerBottom {
+    font-size: 0.75rem;
+  }
+
+  .middleGroup {
+    gap: 1rem;
+  }
+
+  .middleGroup .footerSection {
+    flex: 1 1 48%;
   }
 }

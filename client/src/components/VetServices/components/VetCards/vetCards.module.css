@@ -1,0 +1,127 @@
+.vetCardsSection {
+  background: #faf8ff;
+  padding: 5rem 2rem;
+  text-align: center;
+}
+
+.heading {
+  font-size: 2rem;
+  color: #1f2937;
+  font-weight: 800;
+  margin-bottom: 3rem;
+  position: relative;
+}
+
+.cardsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
+.card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2.5rem;
+  background: #fff;
+  padding: 2rem;
+  border-radius: 18px;
+  box-shadow: 0 8px 30px rgba(139, 92, 246, 0.1);
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(139, 92, 246, 0.15);
+}
+
+.reverse {
+  flex-direction: row-reverse;
+}
+
+.imageWrapper {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.image {
+  width: 100%;
+  max-width: 320px;
+  border-radius: 18px;
+  object-fit: cover;
+}
+
+.info {
+  flex: 1;
+  text-align: left;
+}
+
+.name {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #4c1d95;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 0.5rem;
+}
+
+.specialization {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #6b21a8;
+  margin-bottom: 0.6rem;
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  font-size: 0.9rem;
+  color: #6b7280;
+  margin-bottom: 1rem;
+}
+
+.meta svg {
+  margin-right: 4px;
+  color: #7c3aed;
+}
+
+.about {
+  font-size: 0.95rem;
+  color: #4b5563;
+  margin-bottom: 1.5rem;
+}
+
+.bookButton {
+  background: linear-gradient(135deg, #6d28d9 0%, #8b5cf6 100%);
+  color: white;
+  border: none;
+  padding: 0.8rem 1.6rem;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.bookButton:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 20px rgba(139, 92, 246, 0.35);
+}
+
+@media (max-width: 900px) {
+  .card,
+  .reverse {
+    flex-direction: column;
+  }
+
+  .info {
+    text-align: center;
+  }
+
+  .meta {
+    justify-content: center;
+  }
+}
