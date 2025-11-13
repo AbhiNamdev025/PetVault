@@ -35,6 +35,9 @@ app.use("/api/auth", require("./routes/passwordRoutes"));
 //cart
 app.use("/api/cart", require("./routes/cartRoutes"));
 
+//wapp
+app.use("/api/whatsapp", require("./routes/whatsapp"));
+
 // Health check
 app.get("/api/health", (req, res) => {
   res.json({ status: "OK", message: "PetVault API is running" });
