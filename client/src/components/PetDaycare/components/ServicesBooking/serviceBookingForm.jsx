@@ -9,6 +9,7 @@ import {
   MessageSquare,
   List,
   X,
+  MessageCircleCode,
 } from "lucide-react";
 import { toast } from "react-toastify";
 import styles from "./serviceBookingForm.module.css";
@@ -238,6 +239,18 @@ const ServiceBookingForm = ({ defaultService = "", onClose }) => {
               "Book Service"
             )}
           </button>
+          <div className={styles.divider}>
+            <a
+              href={`${API_BASE_URL}/whatsapp/open`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={styles.whatsappButton}
+            >
+              {" "}
+              <MessageCircleCode size={20} className={styles.whatsappIcon} />
+              Contact on WhatsApp
+            </a>
+          </div>
         </form>
       </div>
     </div>

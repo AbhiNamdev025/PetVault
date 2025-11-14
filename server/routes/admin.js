@@ -3,6 +3,7 @@ const {
   getDashboardStats,
   getAllUsers,
   updateUserRole,
+  deleteUser,
 } = require("../controllers/adminController");
 const { protect, admin } = require("../middleware/authMiddleware");
 
@@ -14,5 +15,6 @@ router.use(admin);
 router.get("/dashboard", getDashboardStats);
 router.get("/users", getAllUsers);
 router.put("/users/:id/role", updateUserRole);
+router.delete("/users/:id", deleteUser);
 
 module.exports = router;

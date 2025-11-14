@@ -27,6 +27,7 @@ import OrderManagement from "../components/Admin/Order Management/orderManagemen
 import AppointmentsPage from "../components/Appointments/appointmentsPage";
 import AppointmentManagement from "../components/Admin/Appoinment Management/AppointmentManagement";
 import Profile from "../components/UserProfile/userProfile";
+import ScrollToTop from "./scrollToTop";
 
 const PublicRoute = ({ children }) => {
   const token =
@@ -45,66 +46,69 @@ const PublicRoute = ({ children }) => {
 
 const AppRoutes = () => {
   return (
-    <Routes>
-      {/* Public Pages */}
-      <Route path="/" element={<HomePage />} />
-      <Route path="/pet-shop" element={<PetShopPage />} />
-      <Route path="/vet-services" element={<VetServicesPage />} />
-      <Route path="/pet-adoption" element={<PetAdoptionPage />} />
-      <Route path="/pet-daycare" element={<PetDaycarePage />} />
-      <Route path="/pet-products" element={<PetProductsPage />} />
-      <Route path="/products/:id" element={<ProductDetails />} />
+    <>
+      <ScrollToTop />
+      <Routes>
+        {/* Public Pages */}
+        <Route path="/" element={<HomePage />} />
+        <Route path="/pet-shop" element={<PetShopPage />} />
+        <Route path="/vet-services" element={<VetServicesPage />} />
+        <Route path="/pet-adoption" element={<PetAdoptionPage />} />
+        <Route path="/pet-daycare" element={<PetDaycarePage />} />
+        <Route path="/pet-products" element={<PetProductsPage />} />
+        <Route path="/products/:id" element={<ProductDetails />} />
 
-      {/* Auth Pages */}
-      <Route
-        path="/login"
-        element={
-          <PublicRoute>
-            <LoginPage />
-          </PublicRoute>
-        }
-      />
-      <Route
-        path="/register"
-        element={
-          <PublicRoute>
-            <RegisterPage />
-          </PublicRoute>
-        }
-      />
-      {/* Pet Details */}
-      <Route path="/shop-pets/:id" element={<PetDetails />} />
-      <Route path="/adopt-pets/:id" element={<AdoptionPetDetails />} />
-      {/* User Pages */}
-      <Route path="/profile" element={<Profile />} />
-      <Route path="/my-appointments" element={<AppointmentsPage />} />
-      <Route path="/my-orders" element={<Order />} />
-      <Route path="/cart" element={<CartPage />} />
-      <Route path="/checkout" element={<CheckoutPage />} />
-      <Route path="/confirmation" element={<Confirmation />} />
+        {/* Auth Pages */}
+        <Route
+          path="/login"
+          element={
+            <PublicRoute>
+              <LoginPage />
+            </PublicRoute>
+          }
+        />
+        <Route
+          path="/register"
+          element={
+            <PublicRoute>
+              <RegisterPage />
+            </PublicRoute>
+          }
+        />
+        {/* Pet Details */}
+        <Route path="/shop-pets/:id" element={<PetDetails />} />
+        <Route path="/adopt-pets/:id" element={<AdoptionPetDetails />} />
+        {/* User Pages */}
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/my-appointments" element={<AppointmentsPage />} />
+        <Route path="/my-orders" element={<Order />} />
+        <Route path="/cart" element={<CartPage />} />
+        <Route path="/checkout" element={<CheckoutPage />} />
+        <Route path="/confirmation" element={<Confirmation />} />
 
-      {/* Admin Protected */}
-      <Route
-        path="/admin/*"
-        element={
-          <ProtectedPath requiredRole="admin">
-            <AdminPage />
-          </ProtectedPath>
-        }
-      >
-        <Route index element={<AdminDashboard />} />
-        <Route path="pets" element={<PetManagement />} />
-        <Route path="products" element={<ProductManagement />} />
-        <Route path="services" element={<ServiceManagement />} />
-        <Route path="users" element={<UserManagement />} />
-        <Route path="orders" element={<OrderManagement />} />
-        <Route path="appointments" element={<AppointmentManagement />} />
-      </Route>
-      {/* Google Auth */}
-      <Route path="/login/success" element={<GoogleAuthCallback />} />
-      {/* Fallback */}
-      <Route path="*" element={<Navigate to="/" />} />
-    </Routes>
+        {/* Admin Protected */}
+        <Route
+          path="/admin/*"
+          element={
+            <ProtectedPath requiredRole="admin">
+              <AdminPage />
+            </ProtectedPath>
+          }
+        >
+          <Route index element={<AdminDashboard />} />
+          <Route path="pets" element={<PetManagement />} />
+          <Route path="products" element={<ProductManagement />} />
+          <Route path="services" element={<ServiceManagement />} />
+          <Route path="users" element={<UserManagement />} />
+          <Route path="orders" element={<OrderManagement />} />
+          <Route path="appointments" element={<AppointmentManagement />} />
+        </Route>
+        {/* Google Auth */}
+        <Route path="/login/success" element={<GoogleAuthCallback />} />
+        {/* Fallback */}
+        <Route path="*" element={<Navigate to="/" />} />
+      </Routes>
+    </>
   );
 };
 

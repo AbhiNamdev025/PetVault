@@ -9,6 +9,7 @@ import {
   Phone,
   HeartPulse,
   X,
+  MessageCircleCode,
 } from "lucide-react";
 import { toast } from "react-toastify";
 import styles from "./vetAppointmentForm.module.css";
@@ -210,8 +211,24 @@ const VetAppointmentForm = ({ onClose }) => {
               isLoading ? styles.loading : ""
             }`}
           >
-            {isLoading ? <div className={styles.buttonSpinner}></div> : "Book Appointment"}
+            {isLoading ? (
+              <div className={styles.buttonSpinner}></div>
+            ) : (
+              "Book Appointment"
+            )}
           </button>
+          <div className={styles.divider}>
+            <a
+              href={`${API_BASE_URL}/whatsapp/open`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={styles.whatsappButton}
+            >
+              {" "}
+              <MessageCircleCode size={20} className={styles.whatsappIcon} />
+              Contact on WhatsApp
+            </a>
+          </div>
         </form>
       </div>
     </div>

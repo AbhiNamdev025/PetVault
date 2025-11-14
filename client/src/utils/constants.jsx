@@ -3,11 +3,11 @@ export const GOOGLE_AUTH_URL = `${API_BASE_URL}/auth/google`;
 export const BASE_URL = "http://localhost:5000";
 
 // all items idea
-// export const PET_TYPES = ["dog", "cat", "bird", "rabbit", "fish", "other"];
-// export const PET_GENDERS = ["male", "female"];
-// export const PET_CATEGORIES = ["shop", "adoption"];
+// PET_TYPES = ["dog", "cat", "bird", "rabbit", "fish", "other"];
+// PET_GENDERS = ["male", "female"];
+// PET_CATEGORIES = ["shop", "adoption"];
 
-// export const PRODUCT_CATEGORIES = [
+// PRODUCT_CATEGORIES = [
 //   "food",
 //   "toy",
 //   "accessory",
@@ -16,7 +16,7 @@ export const BASE_URL = "http://localhost:5000";
 //   "bedding",
 // ];
 
-// export const SERVICE_TYPES = [
+// SERVICE_TYPES = [
 //   "vet",
 //   "daycare",
 //   "grooming",
@@ -24,13 +24,13 @@ export const BASE_URL = "http://localhost:5000";
 //   "boarding",
 // ];
 
-// export const APPOINTMENT_STATUS = [
+// APPOINTMENT_STATUS = [
 //   "pending",
 //   "confirmed",
 //   "completed",
 //   "cancelled",
 // ];
-// export const ORDER_STATUS = [
+// ORDER_STATUS = [
 //   "pending",
 //   "confirmed",
 //   "shipped",

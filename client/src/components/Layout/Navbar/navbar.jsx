@@ -52,7 +52,6 @@ const Navbar = () => {
     sessionStorage.removeItem("user");
     localStorage.removeItem("rememberMe");
     setUser(null);
-    setDropdownOpen(false);
     navigate("/login");
   };
 
@@ -73,7 +72,7 @@ const Navbar = () => {
           <span>PetVault</span>
         </Link>
 
-        <div className={`${styles.navMenu} ${isOpen ? styles.active : ""}`}>
+        <div className={styles.navMenu}>
           {navItems.map((item) => (
             <Link
               key={item.path}
@@ -81,7 +80,6 @@ const Navbar = () => {
               className={`${styles.navLink} ${
                 location.pathname === item.path ? styles.activeLink : ""
               }`}
-              onClick={() => setIsOpen(false)}
             >
               {item.label}
             </Link>
@@ -127,13 +125,6 @@ const Navbar = () => {
                   >
                     My Appointments
                   </Link>
-                  {/* <Link
-                    to="/my-services"
-                    className={styles.dropdownItem}
-                    onClick={() => setDropdownOpen(false)}
-                  >
-                    My Services
-                  </Link> */}
                   <button
                     onClick={handleLogout}
                     className={styles.dropdownItem}
@@ -163,6 +154,87 @@ const Navbar = () => {
         >
           {isOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
+
+        {isOpen && (
+          <div className={styles.mobileDropdown}>
+            {navItems.map((item) => (
+              <Link
+                key={item.path}
+                to={item.path}
+                className={styles.mobileItem}
+                onClick={() => setIsOpen(false)}
+              >
+                {item.label}
+              </Link>
+            ))}
+
+            <div className={styles.divider}></div>
+
+            {user ? (
+              <>
+                <Link
+                  to="/profile"
+                  className={styles.mobileItem}
+                  onClick={() => setIsOpen(false)}
+                >
+                  Profile
+                </Link>
+
+                <Link
+                  to="/my-orders"
+                  className={styles.mobileItem}
+                  onClick={() => setIsOpen(false)}
+                >
+                  Orders
+                </Link>
+
+                <Link
+                  to="/my-appointments"
+                  className={styles.mobileItem}
+                  onClick={() => setIsOpen(false)}
+                >
+                  Appointments
+                </Link>
+
+                <Link
+                  to="/cart"
+                  className={styles.mobileItem}
+                  onClick={() => setIsOpen(false)}
+                >
+                  Cart
+                </Link>
+
+                <button
+                  className={styles.mobileItem}
+                  onClick={() => {
+                    handleLogout();
+                    setIsOpen(false);
+                  }}
+                >
+                  Logout
+                </button>
+              </>
+            ) : (
+              <>
+                <Link
+                  to="/login"
+                  className={styles.mobileItem}
+                  onClick={() => setIsOpen(false)}
+                >
+                  Login
+                </Link>
+
+                <Link
+                  to="/cart"
+                  className={styles.mobileItem}
+                  onClick={() => setIsOpen(false)}
+                >
+                  Cart
+                </Link>
+              </>
+            )}
+          </div>
+        )}
       </div>
     </nav>
   );

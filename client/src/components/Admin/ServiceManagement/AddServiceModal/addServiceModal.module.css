@@ -21,6 +21,7 @@
   box-shadow: 0 5px 20px rgba(0, 0, 0, 0.25);
   position: relative;
   animation: popIn 0.2s ease-in-out;
+  scrollbar-width: none;
 }
 
 @keyframes popIn {

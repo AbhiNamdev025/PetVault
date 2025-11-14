@@ -212,3 +212,34 @@ select.input:focus {
     flex-direction: column;
   }
 }
+
+.whatsappButton {
+  margin-top: 14px;
+  width: 100%;
+  background: #25d366;
+  color: white;
+  padding: 12px;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-decoration: none;
+  transition: 0.3s ease;
+}
+
+.whatsappButton:hover {
+  background: #1ebe5c;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(37, 211, 102, 0.35);
+}
+
+.whatsappIcon {
+  color: white;
+}
+.divider {
+  border-top: 1px solid #ccc;
+  margin-top: 1rem;
+}
