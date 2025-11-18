@@ -1,0 +1,39 @@
+.page {
+  padding: 2rem 0;
+  background: #f8f4ff;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.topBox {
+  width: 90%;
+  margin: 0 auto;
+  padding: 2rem;
+  background: #fff;
+  border-radius: 22px;
+  box-shadow: 0 8px 30px rgba(139, 92, 246, 0.15);
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.tabContent {
+  width: 90%;
+  margin: 0 auto;
+}
+
+.box {
+  background: white;
+  padding: 2rem;
+  border-radius: 18px;
+  box-shadow: 0 6px 25px rgba(139, 92, 246, 0.12);
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .topBox {
+    flex-direction: column;
+    text-align: center;
+  }
+}

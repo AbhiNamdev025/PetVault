@@ -127,7 +127,7 @@ const Navbar = () => {
                   </Link>
                   <button
                     onClick={handleLogout}
-                    className={styles.dropdownItem}
+                    className={`${styles.dropdownItem} ${styles.mobileItem}`}
                   >
                     <LogOut size={16} />
                     Logout

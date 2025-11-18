@@ -1,0 +1,44 @@
+.reviewFormBox {
+  width: 90%;
+  margin: 1rem auto 2rem auto;
+  background: white;
+  padding: 2rem;
+  border-radius: 18px;
+  box-shadow: 0 6px 20px rgba(139, 92, 246, 0.12);
+}
+
+.starRow {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 1rem;
+}
+
+.starActive {
+  color: #facc15;
+  cursor: pointer;
+}
+
+.starInactive {
+  color: #d1d5db;
+  cursor: pointer;
+}
+
+.reviewTextarea {
+  width: 100%;
+  min-height: 100px;
+  padding: 1rem;
+  border-radius: 12px;
+  border: 2px solid #e5e7eb;
+  background: #fafafa;
+  margin-bottom: 1rem;
+}
+
+.submitReviewButton {
+  padding: 12px 20px;
+  background: linear-gradient(135deg, #6d28d9, #8b5cf6);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 600;
+}

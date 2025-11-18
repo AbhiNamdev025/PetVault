@@ -7,6 +7,16 @@ const appointmentSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
+    providerType: {
+      type: String,
+      required: true,
+      enum: ["doctor", "caretaker"],
+    },
+    providerId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
     service: {
       type: String,
       required: true,
@@ -42,15 +52,17 @@ const appointmentSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    petImages: {
+      type: [String],
+      default: [],
+    },
     status: {
       type: String,
       enum: ["pending", "confirmed", "completed", "cancelled"],
       default: "pending",
     },
   },
-  {
-    timestamps: true,
-  }
+  { timestamps: true }
 );
 
 module.exports = mongoose.model("Appointment", appointmentSchema);

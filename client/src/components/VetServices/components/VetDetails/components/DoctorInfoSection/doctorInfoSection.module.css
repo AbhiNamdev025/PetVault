@@ -1,0 +1,86 @@
+.rightInfoBox {
+  flex: 1.5;
+  min-width: 300px;
+}
+
+.docName {
+  font-size: 2.3rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #4c1d95;
+}
+
+.docSpec {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #6b21a8;
+  margin-top: 6px;
+}
+
+.ratingRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 12px 0;
+}
+
+.reviewCount {
+  margin-left: 5px;
+  color: #6b7280;
+}
+
+.infoList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 1rem 0;
+}
+
+.infoList span {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #4b5563;
+}
+
+.actionButtons {
+  margin-top: 1.5rem;
+  display: flex;
+  gap: 1rem;
+}
+
+.bookButton {
+  padding: 12px 26px;
+  background: linear-gradient(135deg, #6d28d9, #8b5cf6);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.bookButton:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+}
+
+.callButton,
+.whatsappButton {
+  padding: 12px 22px;
+  border-radius: 12px;
+  border: 2px solid #ddd;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+}
+
+.callButton {
+  color: #4c1d95;
+}
+
+.whatsappButton {
+  color: #1db954;
+  border-color: #1db954;
+}

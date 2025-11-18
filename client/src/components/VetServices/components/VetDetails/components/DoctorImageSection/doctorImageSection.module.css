@@ -1,0 +1,31 @@
+.leftImageBox {
+  flex: 1;
+  min-width: 280px;
+  max-width: 450px;
+  background: #f3e9ff;
+  border-radius: 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+  position: relative;
+}
+
+.doctorImage {
+  width: 100%;
+  max-height: 420px;
+  object-fit: contain;
+  border-radius: 16px;
+}
+
+.availabilityBadge {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  background: white;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  border: 2px solid;
+  font-weight: 600;
+  font-size: 0.9rem;
+}

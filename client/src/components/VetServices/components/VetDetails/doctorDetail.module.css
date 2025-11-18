@@ -1,0 +1,80 @@
+.page {
+  min-height: 100vh;
+  padding: 2rem 0;
+  background: #f8f4ff;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.loading {
+  text-align: center;
+  padding: 4rem 0;
+  font-size: 1.2rem;
+}
+
+.topSection {
+  width: 90%;
+  margin: 0 auto;
+  padding: 2rem;
+  background: white;
+  border-radius: 22px;
+  box-shadow: 0 8px 30px rgba(139, 92, 246, 0.15);
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.tabContent {
+  width: 90%;
+  margin: 0 auto;
+}
+
+.aboutBox,
+.servicesBox,
+.availabilityBox,
+.reviewBox {
+  background: white;
+  padding: 2rem;
+  border-radius: 18px;
+  box-shadow: 0 6px 25px rgba(139, 92, 246, 0.12);
+}
+
+.servicesBox ul {
+  margin-top: 1rem;
+  line-height: 1.8rem;
+}
+
+.availabilityGrid {
+  display: grid;
+  gap: 1rem;
+}
+
+.availabilityItem {
+  background: #f8f5ff;
+  padding: 1rem;
+  border-radius: 12px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.statusBadge {
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  color: white;
+  font-weight: 600;
+}
+
+@media (max-width: 900px) {
+  .topSection {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .topSection {
+    width: 95%;
+    padding: 1.2rem;
+  }
+}

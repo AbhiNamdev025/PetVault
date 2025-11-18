@@ -1,0 +1,30 @@
+.tabs {
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.tabs button {
+  background: none;
+  border: none;
+  padding-bottom: 6px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  color: #6b7280;
+  border-bottom: 2px solid transparent;
+}
+
+.activeTab {
+  color: #6d28d9 !important;
+  border-bottom: 2px solid #6d28d9 !important;
+}
+
+@media (max-width: 480px) {
+  .tabs {
+    gap: 1rem;
+  }
+  .tabs button {
+    font-size: 0.9rem;
+  }
+}

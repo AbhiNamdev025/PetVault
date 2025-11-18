@@ -13,7 +13,8 @@ const AppointmentsPage = () => {
 
   const fetchAppointments = async () => {
     try {
-      const token = localStorage.getItem("token");
+      const token =
+        localStorage.getItem("token") || sessionStorage.getItem("token");
       const res = await fetch(`${API_BASE_URL}/appointments/my-appointments`, {
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -32,8 +33,10 @@ const AppointmentsPage = () => {
 
   const handleCancelAppointment = async (id) => {
     if (!window.confirm("Cancel this appointment?")) return;
+
     try {
       const token = localStorage.getItem("token");
+
       const res = await fetch(`${API_BASE_URL}/appointments/${id}/status`, {
         method: "PUT",
         headers: {
@@ -44,6 +47,7 @@ const AppointmentsPage = () => {
       });
 
       const data = await res.json();
+
       if (res.ok) {
         setAppointments((prev) =>
           prev.map((a) => (a._id === id ? { ...a, status: "cancelled" } : a))
@@ -76,7 +80,9 @@ const AppointmentsPage = () => {
           <PawPrint className={styles.headerIcon} />
           <div>
             <h2 className={styles.title}>My Appointments</h2>
-            <p className={styles.subtitle}>Manage your pet’s scheduled visits</p>
+            <p className={styles.subtitle}>
+              Manage your pet’s scheduled visits
+            </p>
           </div>
         </div>
 
@@ -102,7 +108,10 @@ const AppointmentsPage = () => {
         <div className={styles.emptyState}>
           <FileText size={60} className={styles.emptyIcon} />
           <h3>No Appointments Found</h3>
-          <p>No {filterStatus !== "all" ? filterStatus : ""} appointments to show.</p>
+          <p>
+            No {filterStatus !== "all" ? filterStatus : ""} appointments to
+            show.
+          </p>
         </div>
       ) : (
         <div className={styles.cardGrid}>

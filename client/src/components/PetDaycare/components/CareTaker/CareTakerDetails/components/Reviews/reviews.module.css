@@ -1,0 +1,28 @@
+.reviewCard {
+  background: #f8f5ff;
+  padding: 1rem;
+  border-radius: 14px;
+  margin-bottom: 1rem;
+}
+
+.starRow {
+  display: flex;
+  gap: 6px;
+}
+
+.reviewText {
+  margin: 8px 0;
+}
+
+.reviewDate {
+  font-size: 0.8rem;
+  opacity: 0.6;
+}
+
+.starActive {
+  color: #facc15;
+}
+
+.starInactive {
+  color: #d1d5db;
+}

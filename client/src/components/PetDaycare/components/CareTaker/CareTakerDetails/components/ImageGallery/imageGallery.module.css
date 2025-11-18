@@ -1,0 +1,68 @@
+.leftImgBox {
+  flex: 1;
+  min-width: 280px;
+  max-width: 450px;
+  background: #f3e9ff;
+  border-radius: 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+  position: relative;
+}
+
+.img {
+  width: 100%;
+  max-height: 420px;
+  object-fit: cover;
+  border-radius: 16px;
+}
+
+.imageThumbnails {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.thumbnail {
+  width: 65px;
+  height: 65px;
+  border-radius: 12px;
+  border: 2px solid transparent;
+  object-fit: cover;
+  cursor: pointer;
+}
+
+.thumbnailActive {
+  border-color: #6d28d9;
+}
+
+.availabilityBadge {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  background: white;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  border: 2px solid;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.imageCountBadge {
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+  background: white;
+  padding: 5px 10px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8rem;
+}

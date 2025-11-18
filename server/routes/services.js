@@ -9,7 +9,7 @@ const {
 } = require("../controllers/serviceController");
 
 const { protect, admin } = require("../middleware/authMiddleware");
-const { uploadServiceImages } = require("../middleware/uploadMiddleware");
+const { uploadServiceImages } = require("../middleware/upload");
 
 const router = express.Router();
 

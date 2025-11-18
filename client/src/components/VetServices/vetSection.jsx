@@ -16,10 +16,11 @@ const VetSection = () => {
   return (
     <>
       <VetHero onBookNow={handleBookNow} />
-      <VetFeatures />
+      <VetCards onBookNow={handleBookNow} />
+
       <VetCTA onBookNow={handleBookNow} />
 
-      <VetCards onBookNow={handleBookNow} />
+      <VetFeatures />
       <VetReviews />
 
       {showForm && (

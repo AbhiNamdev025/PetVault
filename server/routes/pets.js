@@ -8,7 +8,7 @@ const {
   deletePetImage,
 } = require("../controllers/petController");
 const { protect, admin } = require("../middleware/authMiddleware");
-const { uploadPetImages } = require("../middleware/uploadMiddleware");
+const { uploadPetImages } = require("../middleware/upload");
 
 const router = express.Router();
 

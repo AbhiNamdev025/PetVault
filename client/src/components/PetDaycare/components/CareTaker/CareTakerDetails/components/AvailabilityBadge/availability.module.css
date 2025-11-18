@@ -1,0 +1,29 @@
+.availabilityGrid {
+  display: grid;
+  gap: 1rem;
+}
+
+.availabilityItem {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem;
+  background: #f8f5ff;
+  border-radius: 12px;
+  border-left: 4px solid #6d28d9;
+}
+
+.statusBadge {
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  color: white;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 900px) {
+  .availabilityItem {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+}

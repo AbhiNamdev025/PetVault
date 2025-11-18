@@ -28,6 +28,8 @@ import AppointmentsPage from "../components/Appointments/appointmentsPage";
 import AppointmentManagement from "../components/Admin/Appoinment Management/AppointmentManagement";
 import Profile from "../components/UserProfile/userProfile";
 import ScrollToTop from "./scrollToTop";
+import DoctorDetails from "../components/VetServices/components/VetDetails/doctorDetailPage";
+import CaretakerDetails from "../components/PetDaycare/components/CareTaker/CareTakerDetails/caretakerDetails";
 
 const PublicRoute = ({ children }) => {
   const token =
@@ -85,6 +87,9 @@ const AppRoutes = () => {
         <Route path="/cart" element={<CartPage />} />
         <Route path="/checkout" element={<CheckoutPage />} />
         <Route path="/confirmation" element={<Confirmation />} />
+
+        <Route path="/doctor/:id" element={<DoctorDetails />} />
+        <Route path="/caretaker/:id" element={<CaretakerDetails />} />
 
         {/* Admin Protected */}
         <Route

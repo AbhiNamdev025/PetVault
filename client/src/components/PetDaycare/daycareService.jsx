@@ -6,6 +6,7 @@ import ServiceBookingForm from "./components/ServicesBooking/serviceBookingForm"
 import styles from "./daycareService.module.css";
 import ServiceShowcase from "./components/Services Showcase/serviceShowcase";
 import DaycareReviews from "./components/DaycareReviews/daycareReviews";
+import CaretakerCards from "./components/CareTaker/CareTakerCards/caretakerCards";
 
 const DaycareService = () => {
   const [showForm, setShowForm] = useState(false);
@@ -24,6 +25,7 @@ const DaycareService = () => {
   return (
     <>
       <DaycareHero />
+      <CaretakerCards/>
       <ServiceShowcase onBookNow={handleBookNow} />
       <DaycareCTA />
       <DaycareFeatured />
