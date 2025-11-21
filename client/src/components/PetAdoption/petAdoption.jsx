@@ -15,7 +15,6 @@ const PetAdoption = () => {
   const [loading, setLoading] = useState(true);
   const [selectedPet, setSelectedPet] = useState(null);
   const [showEnquiryModal, setShowEnquiryModal] = useState(false);
-
   const [searchTerm, setSearchTerm] = useState("");
   const [filterType, setFilterType] = useState("all");
   const [filterGender, setFilterGender] = useState("all");
@@ -31,23 +30,22 @@ const PetAdoption = () => {
   ];
 
   useEffect(() => {
-    fetchPetsForSale();
+    fetchPetsForAdoption();
   }, []);
 
   useEffect(() => {
     filterPets();
   }, [pets, searchTerm, filterType, filterGender]);
 
-  const fetchPetsForSale = async () => {
+  const fetchPetsForAdoption = async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/pets`);
-
+      const response = await fetch(`${API_BASE_URL}/pets?populate=ngoId`);
       if (response.ok) {
         const data = await response.json();
-        const petsForSale = (data.pets || []).filter(
+        const adoptionPets = (data.pets || []).filter(
           (pet) => pet.category === "adoption" && pet.available
         );
-        setPets(petsForSale);
+        setPets(adoptionPets);
       } else {
         toast.error("Failed to fetch pets");
       }
@@ -60,15 +58,14 @@ const PetAdoption = () => {
 
   const filterPets = () => {
     let filtered = pets.filter((pet) => {
-      const matchesSearch =
+      const searchMatch =
         pet.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         pet.breed.toLowerCase().includes(searchTerm.toLowerCase());
 
-      const matchesType = filterType === "all" || pet.type === filterType;
-      const matchesGender =
-        filterGender === "all" || pet.gender === filterGender;
+      const typeMatch = filterType === "all" || pet.type === filterType;
+      const genderMatch = filterGender === "all" || pet.gender === filterGender;
 
-      return matchesSearch && matchesType && matchesGender;
+      return searchMatch && typeMatch && genderMatch;
     });
 
     setFilteredPets(filtered);
@@ -87,9 +84,7 @@ const PetAdoption = () => {
     try {
       const response = await fetch(`${API_BASE_URL}/enquiries`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...enquiryData,
           petId: selectedPet._id,
@@ -154,6 +149,7 @@ const PetAdoption = () => {
           filterGender={filterGender}
           onGenderChange={setFilterGender}
         />
+
         <div className={styles.categorySection}>
           <h2 className={styles.categoryTitle}>Browse by Category</h2>
           <div className={styles.categoryGrid}>
@@ -170,6 +166,7 @@ const PetAdoption = () => {
             ))}
           </div>
         </div>
+
         <div className={styles.resultsInfo}>
           <h2>Available Pets</h2>
           <span className={styles.resultsCount}>
@@ -195,7 +192,6 @@ const PetAdoption = () => {
           }}
           onSubmit={handleEnquirySubmit}
         />
-        
       )}
     </div>
   );

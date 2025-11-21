@@ -1,6 +1,6 @@
 .adminPage {
   display: flex;
-  min-height: 100vh;
+  height: auto;
   background: #f8fafc;
   position: relative;
   overflow-x: hidden;

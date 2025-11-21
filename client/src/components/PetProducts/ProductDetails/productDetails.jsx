@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Star, ArrowLeft, CheckCircle } from "lucide-react";
+import { Star, ArrowLeft, CheckCircle, Store } from "lucide-react";
 import { toast } from "react-toastify";
 import { API_BASE_URL } from "../../../utils/constants";
 import styles from "./productDetails.module.css";
@@ -18,7 +18,7 @@ const ProductDetails = () => {
 
   const fetchProduct = async () => {
     try {
-      const res = await fetch(`${API_BASE_URL}/products/${id}`);
+      const res = await fetch(`${API_BASE_URL}/products/${id}?populate=shopId`);
       if (!res.ok) throw new Error("Failed to fetch product details");
       const data = await res.json();
       setProduct(data);
@@ -30,7 +30,6 @@ const ProductDetails = () => {
     }
   };
 
-  // ✅ Centralized Add to Cart logic — clean and reusable
   const handleAddToCart = async () => {
     if (!product || product.stock === 0) {
       toast.info("This product is out of stock");
@@ -38,7 +37,8 @@ const ProductDetails = () => {
     }
 
     const token =
-      localStorage.getItem("token") || sessionStorage.getItem("token");
+      JSON.parse(localStorage.getItem("token")) ||
+      JSON.parse(sessionStorage.getItem("token"));
     const userData =
       localStorage.getItem("user") || sessionStorage.getItem("user");
 
@@ -75,6 +75,14 @@ const ProductDetails = () => {
     }
   };
 
+  const handleShopClick = () => {
+    if (product.shopId && product.shopId._id) {
+      navigate(`/shop/${product.shopId._id}`);
+    } else {
+      toast.info("Shop information not available");
+    }
+  };
+
   if (loading)
     return (
       <div className={styles.loading}>
@@ -87,7 +95,10 @@ const ProductDetails = () => {
     return (
       <div className={styles.notFound}>
         <h2>Product Not Found</h2>
-        <button onClick={() => navigate("/pet-products")} className={styles.backBtn}>
+        <button
+          onClick={() => navigate("/pet-products")}
+          className={styles.backBtn}
+        >
           <ArrowLeft size={20} /> Back to Products
         </button>
       </div>
@@ -95,7 +106,10 @@ const ProductDetails = () => {
 
   return (
     <div className={styles.productDetails}>
-      <button className={styles.backBtn} onClick={() => navigate("/pet-products")}>
+      <button
+        className={styles.backBtn}
+        onClick={() => navigate("/pet-products")}
+      >
         <ArrowLeft size={20} /> Back to Products
       </button>
 
@@ -103,7 +117,9 @@ const ProductDetails = () => {
         <div className={styles.imageSection}>
           {product.images && product.images.length > 0 ? (
             <img
-              src={`${API_BASE_URL.replace("/api", "")}/uploads/products/${product.images[0]}`}
+              src={`${API_BASE_URL.replace("/api", "")}/uploads/products/${
+                product.images[0]
+              }`}
               alt={product.name}
               className={styles.image}
             />
@@ -116,16 +132,30 @@ const ProductDetails = () => {
           <h1 className={styles.title}>{product.name}</h1>
           <p className={styles.brand}>{product.brand}</p>
 
+          {product.shopId && (
+            <div className={styles.shopSection} onClick={handleShopClick}>
+              <Store size={18} />
+              <div className={styles.shopInfo}>
+                <span className={styles.shopName}>
+                  {product.shopId.businessName ||
+                    product.shopId.name ||
+                    "Unknown Shop"}
+                </span>
+                <span className={styles.viewShop}>View Shop →</span>
+              </div>
+            </div>
+          )}
+
           <div className={styles.rating}>
             {Array.from({ length: 5 }, (_, i) => (
               <Star
                 key={i}
                 size={18}
-                fill={i < Math.round(product.rating) ? "#facc15" : "none"}
+                fill={i < Math.round(product.rating || 0) ? "#facc15" : "none"}
                 stroke="#facc15"
               />
             ))}
-            <span className={styles.ratingValue}>{product.rating}/5</span>
+            <span className={styles.ratingValue}>{product.rating || 0}/5</span>
           </div>
 
           <p className={styles.price}>₹{product.price}</p>

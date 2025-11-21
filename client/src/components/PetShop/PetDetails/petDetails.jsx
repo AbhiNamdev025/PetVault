@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Store } from "lucide-react";
 import { toast } from "react-toastify";
 import EnquiryModal from "../EnquiryModal/enquiryModal";
 import styles from "./petDetails.module.css";
-import { API_BASE_URL } from "../../../utils/constants";
+import { API_BASE_URL, BASE_URL } from "../../../utils/constants";
 
 const PetDetails = () => {
   const { id } = useParams();
@@ -22,7 +22,9 @@ const PetDetails = () => {
 
   const fetchPetDetails = async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/pets/${id}`);
+      const response = await fetch(
+        `${API_BASE_URL}/pets/${id}?populate=shopId`
+      );
 
       if (response.ok) {
         const data = await response.json();
@@ -36,6 +38,14 @@ const PetDetails = () => {
       toast.error("Failed to fetch pet details");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleShopClick = () => {
+    if (pet.shopId && pet.shopId._id) {
+      navigate(`/shop/${pet.shopId._id}`);
+    } else {
+      toast.info("Shop information not available");
     }
   };
 
@@ -120,7 +130,7 @@ const PetDetails = () => {
             <div className={styles.mainImage}>
               {pet.images && pet.images.length > 0 ? (
                 <img
-                  src={`http://localhost:5000/uploads/pets/${pet.images?.[0]}`}
+                  src={`${BASE_URL}/uploads/pets/${pet.images?.[selectedImage]}`}
                   alt={pet.name}
                 />
               ) : (
@@ -144,6 +154,21 @@ const PetDetails = () => {
                     />
                   </button>
                 ))}
+              </div>
+            )}
+
+            {/* Shop Section */}
+            {pet.shopId && (
+              <div className={styles.shopSection} onClick={handleShopClick}>
+                <Store size={18} />
+                <div className={styles.shopInfo}>
+                  <span className={styles.shopName}>
+                    {pet.shopId.businessName ||
+                      pet.shopId.name ||
+                      "Unknown Shop"}
+                  </span>
+                  <span className={styles.viewShop}>View Shop →</span>
+                </div>
               </div>
             )}
 

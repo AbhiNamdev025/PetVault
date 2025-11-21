@@ -42,13 +42,13 @@
   display: flex;
   align-items: center;
   gap: 10px;
+  text-align: left;
 }
 
 .actions {
   margin-top: 1.5rem;
   display: flex;
   gap: 1rem;
-  flex-wrap: wrap;
 }
 
 .bookBtn {
@@ -85,4 +85,76 @@
 .wpBtn {
   color: #1db954;
   border-color: #1db954;
+}
+
+@media (max-width: 768px) {
+  .rightBox {
+    margin-top: 1.5rem;
+  }
+
+  .name {
+    font-size: 1.9rem;
+  }
+
+  .spec {
+    font-size: 1.1rem;
+  }
+
+  .ratingRow {
+    font-size: 1rem;
+  }
+
+  .infoList span {
+    font-size: 0.95rem;
+  }
+
+  .actions {
+    gap: 0.8rem;
+  }
+
+  .bookBtn,
+  .callBtn,
+  .wpBtn {
+    flex: 1 1 100%;
+    justify-content: center;
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .rightBox {
+    margin-top: 1.2rem;
+  }
+
+  .name {
+    font-size: 1.6rem;
+  }
+
+  .spec {
+    font-size: 1rem;
+  }
+
+  .ratingRow {
+    font-size: 0.95rem;
+  }
+
+  .infoList {
+    gap: 6px;
+  }
+
+  .infoList span {
+    font-size: 0.9rem;
+  }
+
+  .actions {
+    gap: 0.6rem;
+  }
+
+  .bookBtn,
+  .callBtn,
+  .wpBtn {
+    width: 100%;
+    padding: 10px;
+    font-size: 0.9rem;
+  }
 }

@@ -21,8 +21,6 @@
 }
 
 .grid {
-  /* display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); */
   gap: 2rem;
   display: flex;
   flex-wrap: wrap;
@@ -86,8 +84,53 @@
   color: #8b5cf6;
 }
 
+/* ------------------ MOBILE VIEW UPDATE ------------------ */
 @media (max-width: 768px) {
   .title {
     font-size: 1.6rem;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.2rem;
+  }
+
+  .card {
+    width: 100%;
+    padding: 1.2rem;
+    border-radius: 16px;
+    box-shadow: 0 6px 20px rgba(109, 40, 217, 0.05);
+  }
+
+  .icon {
+    width: 45px;
+    height: 45px;
+  }
+
+  .cardTitle {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .list li {
+    font-size: 0.85rem;
+    margin-bottom: 0.3rem;
+  }
+}
+
+/* EXTRA SMALL PHONES */
+@media (max-width: 480px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.8rem;
+  }
+
+  .card {
+    padding: 1rem;
+  }
+
+  .cardTitle {
+    font-size: 1rem;
   }
 }

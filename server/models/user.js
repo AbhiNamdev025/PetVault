@@ -48,21 +48,20 @@ const userSchema = new mongoose.Schema(
     },
 
     roleData: {
+      daycareId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
       daycareName: String,
       daycareDescription: String,
       daycareImages: [String],
       maxPetsAllowed: Number,
-
       daycareStaffIds: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
 
       staffSpecialization: String,
       staffExperience: Number,
-
+      hospitalId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
       hospitalName: String,
       hospitalDescription: String,
       hospitalImages: [String],
       hospitalServices: [String],
-
       hospitalDoctorIds: [
         { type: mongoose.Schema.Types.ObjectId, ref: "User" },
       ],
@@ -73,6 +72,15 @@ const userSchema = new mongoose.Schema(
       doctorCertificates: String,
       consultationFee: Number,
       doctorImages: [String],
+      doctorQualifications: {
+        degree: String,
+        institution: String,
+        yearOfCompletion: Number,
+        licenseNumber: String,
+        certifications: [String],
+        skills: [String],
+        languages: [String],
+      },
 
       serviceType: String,
       serviceDescription: String,
@@ -82,24 +90,18 @@ const userSchema = new mongoose.Schema(
       shopName: String,
       shopDescription: String,
       shopImages: [String],
-
       openTime: String,
       closeTime: String,
       daysOpen: [String],
-
       shopType: {
         type: String,
         enum: ["petStore", "groomingCenter", "medicalStore", "mixed"],
       },
-
       servicesOffered: [String],
-
       deliveryAvailable: { type: Boolean, default: false },
       deliveryRadius: Number,
-
       groomingAvailable: { type: Boolean, default: false },
       groomingServices: [String],
-
       products: [
         {
           productName: String,
@@ -121,7 +123,6 @@ const userSchema = new mongoose.Schema(
       },
     ],
   },
-
   { timestamps: true }
 );
 

@@ -1,7 +1,7 @@
 .hero {
   position: relative;
   width: 100%;
-  min-height: 100vh;
+  height: auto;
   background: url("https://img.freepik.com/free-photo/top-view-paper-paw-print-bone-with-stethoscope-planet-earth-animal-day_23-2148668868.jpg?semt=ais_hybrid&w=1280&q=80")
     center/cover no-repeat;
   display: flex;

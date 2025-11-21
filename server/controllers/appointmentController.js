@@ -75,10 +75,24 @@ const deleteAppointment = async (req, res) => {
   }
 };
 
+const getProviderAppointments = async (req, res) => {
+  try {
+    const appointments = await Appointment.find({ providerId: req.user._id })
+      .populate("user", "name email phone")
+      .populate("providerId", "name avatar role roleData")
+      .sort({ createdAt: -1 });
+
+    res.json(appointments);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   createAppointment,
   getUserAppointments,
   getAllAppointments,
   updateAppointmentStatus,
   deleteAppointment,
+  getProviderAppointments,
 };

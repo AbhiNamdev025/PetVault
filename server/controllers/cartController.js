@@ -3,7 +3,7 @@ const Product = require("../models/product");
 
 const getCartItems = async (req, res) => {
   try {
-    const cartItems = await Cart.find({ userId: req.user._id });
+    const cartItems = await Cart.find({ userId: req.user._id }).populate("productId");
     res.json({ cartItems });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -35,6 +35,7 @@ const addToCart = async (req, res) => {
       image: product.images[0] || "",
       description: product.description,
       quantity: quantity || 1,
+      shopId: product.shopId, 
     });
 
     res.status(201).json(newItem);

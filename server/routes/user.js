@@ -1,6 +1,5 @@
 const express = require("express");
 const router = express.Router();
-
 const {
   createUserForRole,
   getUsersByRole,
@@ -8,7 +7,6 @@ const {
   updateUser,
   deleteUser,
 } = require("../controllers/roleController");
-
 const { roleUpload } = require("../middleware/upload");
 
 router.post("/", roleUpload, createUserForRole("user"));

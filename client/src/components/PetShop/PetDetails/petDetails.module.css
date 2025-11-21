@@ -1,27 +1,27 @@
 .petDetails {
   background: #f5f1e8;
-  padding: 2rem 0;
+  padding: 1.5rem 0;
 }
 
 .container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 2rem;
+  padding: 0 1.5rem;
 }
 
 .backButton {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.4rem;
   background: white;
-  border: 2px solid #f5f1e8;
-  border-radius: 12px;
-  padding: 0.75rem 1.5rem;
+  border: 1.5px solid #eae7df;
+  border-radius: 10px;
+  padding: 0.55rem 1.2rem;
   cursor: pointer;
-  transition: all 0.3s ease;
-  margin-bottom: 2rem;
+  transition: 0.25s;
+  margin-bottom: 1.5rem;
   font-weight: 600;
-  color: #666;
+  color: #555;
 }
 
 .backButton:hover {
@@ -32,21 +32,21 @@
 .content {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 3rem;
+  gap: 2rem;
   background: white;
-  border-radius: 20px;
+  border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 3px 12px rgba(0,0,0,0.07);
 }
 
 .imageSection {
-  padding: 2rem;
+  padding: 1.5rem;
 }
 
 .mainImage {
   width: 100%;
-  height: 400px;
-  border-radius: 15px;
+  height: 340px;
+  border-radius: 12px;
   overflow: hidden;
   margin-bottom: 1rem;
 }
@@ -54,35 +54,35 @@
 .mainImage img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
+  background: #fafafa;
 }
 
 .noImage {
   width: 100%;
   height: 100%;
-  background: #f5f1e8;
+  background: #f0ede5;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #999;
-  font-size: 1.1rem;
+  color: #888;
+  font-size: 1rem;
 }
 
 .imageThumbnails {
   display: flex;
-  gap: 0.5rem;
-  margin-bottom: 1.5rem;
+  gap: 0.4rem;
   flex-wrap: wrap;
 }
 
 .thumbnail {
-  width: 60px;
-  height: 60px;
+  width: 55px;
+  height: 55px;
   border-radius: 8px;
   overflow: hidden;
   border: 2px solid transparent;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: 0.25s;
 }
 
 .thumbnail.active {
@@ -96,54 +96,54 @@
 }
 
 .characteristics {
-  margin-bottom: 2rem;
-  padding: 1.5rem;
+  margin-top: 1.4rem;
+  padding: 1.2rem;
   background: #faf9f6;
-  border-radius: 15px;
+  border-radius: 12px;
 }
 
 .characteristics h3 {
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   font-weight: 700;
-  margin-bottom: 1rem;
-  color: #000;
+  margin-bottom: 0.8rem;
+  color: #111;
 }
 
 .traits {
   display: flex;
-  gap: 0.5rem;
   flex-wrap: wrap;
+  gap: 0.4rem;
 }
 
 .trait {
-  background: linear-gradient(135deg, #10b981, #059669);
+  background: #059669;
   color: white;
-  padding: 0.5rem 1rem;
-  border-radius: 20px;
-  font-size: 0.9rem;
+  padding: 0.35rem 0.8rem;
+  border-radius: 14px;
+  font-size: 0.75rem;
   font-weight: 600;
 }
 
 .actions {
-  margin-top: 1rem;
+  margin-top: 1.2rem;
 }
 
 .enquiryButton {
   width: 100%;
-  padding: 1rem 2rem;
-  background: #a78bfa;
+  padding: 0.8rem 1rem;
+  background: #7c3aed;
   color: white;
   border: none;
-  border-radius: 12px;
-  font-size: 1.1rem;
+  border-radius: 10px;
+  font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: 0.25s;
 }
 
 .enquiryButton:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(167, 139, 250, 0.4);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(124,58,237,0.3);
 }
 
 .enquiryButton:disabled {
@@ -155,11 +155,11 @@
   text-align: center;
   color: #ef4444;
   font-weight: 600;
-  margin-top: 1rem;
+  margin-top: 0.8rem;
 }
 
 .detailsSection {
-  padding: 2rem 2rem 2rem 0;
+  padding: 1.5rem;
 }
 
 .header {
@@ -170,62 +170,56 @@
 }
 
 .header h1 {
-  font-size: 2.5rem;
-  font-weight: 900;
-  color: #000;
-  margin: 0 0 0.5rem 0;
-  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 2rem;
+  font-weight: 800;
+  margin: 0 0 0.3rem 0;
+  color: #111;
 }
 
 .breed {
-  font-size: 1.2rem;
+  font-size: 1rem;
   color: #666;
-  margin: 0;
 }
 
 .statusBadge {
-  padding: 0.5rem 1rem;
-  border-radius: 20px;
-  font-size: 0.9rem;
+  padding: 0.35rem 0.8rem;
+  border-radius: 18px;
+  font-size: 0.8rem;
   font-weight: 600;
   text-transform: uppercase;
 }
 
 .available {
-  background: linear-gradient(135deg, #10b981, #059669);
+  background: #10b981;
   color: white;
 }
 
 .sold {
-  background: linear-gradient(135deg, #ef4444, #dc2626);
+  background: #ef4444;
   color: white;
 }
 
 .price {
-  font-size: 2.5rem;
+  font-size: 2rem;
   font-weight: 700;
-  color: #000;
-  background: linear-gradient(135deg, #a78bfa, #ec4899);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  margin-bottom: 2rem;
+  color: #7c3aed;
+  margin-bottom: 1.4rem;
 }
 
 .quickInfo {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-  margin-bottom: 2rem;
-  padding: 1.5rem;
+  gap: 0.8rem;
+  margin-bottom: 1.6rem;
+  padding: 1.2rem;
   background: #faf9f6;
-  border-radius: 15px;
+  border-radius: 12px;
 }
 
 .infoItem {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  font-size: 0.9rem;
 }
 
 .label {
@@ -235,18 +229,17 @@
 
 .value {
   font-weight: 600;
-  color: #000;
+  color: #111;
 }
 
 .description {
-  margin-bottom: 2rem;
+  margin-bottom: 1.6rem;
 }
 
 .description h3 {
-  font-size: 1.3rem;
+  font-size: 1.15rem;
   font-weight: 700;
-  margin-bottom: 1rem;
-  color: #000;
+  margin-bottom: 0.7rem;
 }
 
 .descriptionList {
@@ -256,34 +249,32 @@
 }
 
 .descriptionItem {
-  padding: 0.5rem 0;
+  padding: 0.4rem 0 0.4rem 1.2rem;
   color: #666;
-  line-height: 1.6;
+  line-height: 1.55;
   position: relative;
-  padding-left: 1.5rem;
 }
 
 .descriptionItem::before {
   content: "•";
-  color: #a78bfa;
-  font-weight: bold;
   position: absolute;
-  left: 0.5rem;
+  left: 0.4rem;
+  color: #a78bfa;
+  font-size: 1.1rem;
 }
 
 .loading {
+  height: 50vh;
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: center;
-  height: 50vh;
-  text-align: center;
+  align-items: center;
 }
 
 .spinner {
-  width: 50px;
-  height: 50px;
-  border: 3px solid #f5f1e8;
+  width: 45px;
+  height: 45px;
+  border: 3px solid #eee;
   border-top: 3px solid #a78bfa;
   border-radius: 50%;
   animation: spin 1s linear infinite;
@@ -291,30 +282,57 @@
 }
 
 @keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
+  to { transform: rotate(360deg); }
 }
 
 .notFound {
   text-align: center;
-  padding: 4rem 2rem;
+  padding: 3rem 1.5rem;
 }
 
 .notFound h2 {
-  font-size: 2rem;
-  color: #000;
-  margin-bottom: 1rem;
+  font-size: 1.8rem;
+  font-weight: 700;
 }
 
 .notFound p {
+  font-size: 1rem;
   color: #666;
-  font-size: 1.1rem;
 }
 
+.shopSection {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.2s;
+  margin: 14px 0;
+}
+
+.shopSection:hover {
+  background: #e9ecef;
+}
+
+.shopInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.shopName {
+  font-weight: 600;
+  color: #333;
+}
+
+.viewShop {
+  font-size: 13px;
+  color: #3b82f6;
+}
+
+/* MOBILE */
 @media (max-width: 768px) {
   .container {
     padding: 0 1rem;
@@ -326,27 +344,27 @@
   }
 
   .imageSection {
-    padding: 1.5rem;
+    padding: 1.2rem;
   }
 
   .detailsSection {
-    padding: 0 1.5rem 2rem 1.5rem;
+    padding: 1rem 1.2rem 1.5rem;
   }
 
   .header {
     flex-direction: column;
-    gap: 1rem;
+    gap: 0.6rem;
   }
 
   .header h1 {
-    font-size: 2rem;
+    font-size: 1.7rem;
+  }
+
+  .mainImage {
+    height: auto;
   }
 
   .quickInfo {
     grid-template-columns: 1fr;
-  }
-
-  .mainImage {
-    height: 300px;
   }
 }

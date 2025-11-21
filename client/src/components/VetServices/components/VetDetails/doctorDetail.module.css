@@ -25,6 +25,11 @@
   flex-wrap: wrap;
 }
 
+.hospitalBox{
+ width: 90%;
+  margin: 0 auto;
+}
+
 .tabContent {
   width: 90%;
   margin: 0 auto;

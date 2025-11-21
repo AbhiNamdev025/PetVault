@@ -84,3 +84,57 @@
   color: #1db954;
   border-color: #1db954;
 }
+
+@media (max-width: 768px) {
+  .rightInfoBox {
+    margin-top: 1.5rem;
+  }
+
+  .docName {
+    font-size: 1.9rem;
+  }
+
+  .docSpec {
+    font-size: 1.1rem;
+  }
+
+  .actionButtons {
+    gap: 0.8rem;
+  }
+
+  .bookButton,
+  .callButton,
+  .whatsappButton {
+    flex: 1 1 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .rightInfoBox {
+    margin-top: 1.2rem;
+  }
+
+  .docName {
+    font-size: 1.6rem;
+  }
+
+  .docSpec {
+    font-size: 1rem;
+  }
+
+  .infoList span {
+    font-size: 0.9rem;
+  }
+
+  .actionButtons {
+    gap: 0.6rem;
+  }
+
+  .bookButton,
+  .callButton,
+  .whatsappButton {
+    font-size: 0.9rem;
+    padding: 10px;
+  }
+}

@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useLocation } from "react-router-dom";
+import { useParams, useLocation, useNavigate } from "react-router-dom";
 import { API_BASE_URL, BASE_URL } from "../../../../../utils/constants";
 import CaretakerBookingForm from "../CaretakerForm/caretakerBookingForm";
+import LoginPopup from "../../../../LoginPopup/loginPopup";
 import { toast } from "react-toastify";
 
 import ImageGallery from "./components/ImageGallery/imageGallery";
@@ -10,16 +11,19 @@ import Tabs from "./components/Tabs/tabs";
 import Reviews from "./components/Reviews/reviews";
 import ReviewForm from "./components/ReviewForm/reviewForm";
 
+import { MapPin } from "lucide-react";
 import styles from "./careTakerDetails.module.css";
 
 const CaretakerDetails = () => {
   const { id } = useParams();
   const location = useLocation();
+  const navigate = useNavigate();
   const cached = location.state?.caretaker;
 
   const [caretaker, setCaretaker] = useState(cached || null);
   const [tab, setTab] = useState("about");
   const [showForm, setShowForm] = useState(false);
+  const [showLoginPopup, setShowLoginPopup] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
   const [formRating, setFormRating] = useState(0);
@@ -41,6 +45,27 @@ const CaretakerDetails = () => {
 
     fetchOne();
   }, [id]);
+
+  const checkAuth = () => {
+    const token =
+      localStorage.getItem("token") || sessionStorage.getItem("token");
+    return !!token;
+  };
+
+  const handleBookService = () => {
+    if (!checkAuth()) {
+      setShowLoginPopup(true);
+      return;
+    }
+    setShowForm(true);
+  };
+
+  const handleLogin = () => {
+    setShowLoginPopup(false);
+    navigate("/login", {
+      state: { from: location.pathname },
+    });
+  };
 
   if (!caretaker) return <p>Loading...</p>;
 
@@ -121,6 +146,11 @@ const CaretakerDetails = () => {
   const availabilityInfo = getAvailabilityStatus();
 
   const submitReview = async () => {
+    if (!checkAuth()) {
+      toast.error("Please login to submit a review");
+      return;
+    }
+
     if (!formRating) {
       toast.error("Select rating");
       return;
@@ -183,12 +213,26 @@ const CaretakerDetails = () => {
           availabilityInfo={availabilityInfo}
         />
 
-        <InfoSection
-          caretaker={caretaker}
-          avg={avg}
-          setShowForm={setShowForm}
-          availabilityInfo={availabilityInfo}
-        />
+        <div className={styles.infoWrapper}>
+          <InfoSection
+            caretaker={caretaker}
+            avg={avg}
+            setShowForm={handleBookService}
+            availabilityInfo={availabilityInfo}
+          />
+
+          {caretaker.roleData?.daycareId && (
+            <div
+              className={styles.daycareBox}
+              onClick={() =>
+                navigate(`/daycare/${caretaker.roleData.daycareId}`)
+              }
+            >
+              <MapPin size={16} />
+              <span>{caretaker.roleData?.daycareName || "View Daycare"}</span>
+            </div>
+          )}
+        </div>
       </div>
 
       <Tabs tab={tab} setTab={setTab} />
@@ -239,7 +283,7 @@ const CaretakerDetails = () => {
 
             <p>
               Service Radius:{" "}
-              {caretaker.availability?.serviceRadius || "Not specified"}
+              {caretaker.availability?.serviceRadius || "Not specified"}KM
             </p>
           </div>
         )}
@@ -266,6 +310,13 @@ const CaretakerDetails = () => {
           caretaker={caretaker}
           caretakerId={caretaker._id}
           onClose={() => setShowForm(false)}
+        />
+      )}
+
+      {showLoginPopup && (
+        <LoginPopup
+          onClose={() => setShowLoginPopup(false)}
+          onLogin={handleLogin}
         />
       )}
     </div>

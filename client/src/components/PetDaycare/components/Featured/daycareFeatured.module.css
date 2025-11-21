@@ -63,6 +63,7 @@
   .feature {
     flex-direction: column;
     text-align: center;
+    gap: 2.5rem;
   }
 
   .reverse {
@@ -70,15 +71,41 @@
   }
 
   .image {
-    width: 280px;
-    height: 280px;
+    width: 260px;
+    height: 260px;
+    border-radius: 50%;
   }
 
   .title {
-    font-size: 1.6rem;
+    font-size: 1.55rem;
+    line-height: 1.35;
   }
 
   .text {
-    font-size: 1rem;
+    font-size: 0.98rem;
+    line-height: 1.65;
+  }
+}
+
+@media (max-width: 520px) {
+  .featured {
+    padding: 4rem 1.5rem;
+  }
+
+  .feature {
+    gap: 2rem;
+  }
+
+  .image {
+    width: 220px;
+    height: 220px;
+  }
+
+  .title {
+    font-size: 1.4rem;
+  }
+
+  .text {
+    font-size: 0.92rem;
   }
 }

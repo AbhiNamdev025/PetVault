@@ -1,29 +1,20 @@
 .flexGrid {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 2rem;
-  margin-top: 2rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.5rem;
+  padding: 1rem 0;
 }
 
-.loading,
-.empty {
-  text-align: center;
-  padding: 4rem 0;
+@media (max-width: 600px) {
+  .flexGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    padding: 0;
+  }
 }
 
-.spinner {
-  width: 40px;
-  height: 40px;
-  border: 4px solid #a78bfa;
-  border-top-color: transparent;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin: 0 auto 1rem;
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
+@media (max-width: 400px) {
+  .flexGrid {
+    grid-template-columns: repeat(2, minmax(140px, 1fr));
   }
 }

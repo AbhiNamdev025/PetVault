@@ -4,7 +4,9 @@ const Product = require("../models/product");
 
 const getAllProducts = async (req, res) => {
   try {
-    const products = await Product.find().sort({ createdAt: -1 });
+    const products = await Product.find()
+      .populate("shopId", "name businessName")
+      .sort({ createdAt: -1 });
     res.json({ products });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -13,7 +15,10 @@ const getAllProducts = async (req, res) => {
 
 const getProductById = async (req, res) => {
   try {
-    const product = await Product.findById(req.params.id);
+    const product = await Product.findById(req.params.id).populate(
+      "shopId",
+      "name businessName"
+    );
     if (!product) return res.status(404).json({ message: "Product not found" });
     res.json(product);
   } catch (error) {
@@ -49,7 +54,8 @@ const updateProduct = async (req, res) => {
     }
     const { id } = req.params;
     const existing = await Product.findById(id);
-    if (!existing) return res.status(404).json({ message: "Product not found" });
+    if (!existing)
+      return res.status(404).json({ message: "Product not found" });
 
     const uploadedFiles = req.files?.productImages || [];
     const newImageNames = uploadedFiles.map((file) => file.filename);
@@ -107,13 +113,31 @@ const deleteProductImage = async (req, res) => {
     const product = await Product.findById(id);
     if (!product) return res.status(404).json({ message: "Product not found" });
 
-    const imgPath = path.join(__dirname, "..", "uploads", "products", imageName);
+    const imgPath = path.join(
+      __dirname,
+      "..",
+      "uploads",
+      "products",
+      imageName
+    );
     if (fs.existsSync(imgPath)) fs.unlinkSync(imgPath);
 
     product.images = product.images.filter((img) => img !== imageName);
     await product.save();
 
     res.json({ message: "Image deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+const getProductsByShop = async (req, res) => {
+  try {
+    const { shopId } = req.params;
+    const products = await Product.find({ shopId })
+      .populate("shopId", "name businessName email")
+      .sort({ createdAt: -1 });
+    res.json({ products });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -126,4 +150,5 @@ module.exports = {
   updateProduct,
   deleteProduct,
   deleteProductImage,
+  getProductsByShop,
 };

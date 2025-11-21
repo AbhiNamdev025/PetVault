@@ -1,0 +1,26 @@
+.tabRow {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.tab {
+  padding: 10px 16px;
+  background: #f3e8ff;
+  border-radius: 10px;
+  border: none;
+  font-weight: 600;
+  color: #6b21a8;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.tab:hover {
+  background: #ede9fe;
+}
+
+.activeTab {
+  background: linear-gradient(135deg, #6d28d9, #8b5cf6);
+  color: white;
+  box-shadow: 0 4px 15px rgba(124, 58, 237, 0.25);
+}

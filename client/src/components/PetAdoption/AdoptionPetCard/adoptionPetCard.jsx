@@ -1,13 +1,25 @@
 import React from "react";
 import styles from "./adoptionPetCard.module.css";
 import { BASE_URL } from "../../../utils/constants";
+import { Store } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+
 const AdoptionPetCard = ({ pet, onView, onEnquiry }) => {
+  const navigate = useNavigate();
+
+  const handleNgoClick = (e) => {
+    e.stopPropagation();
+    if (pet.ngoId && pet.ngoId._id) {
+      navigate(`/ngo/${pet.ngoId._id}`);
+    }
+  };
+
   return (
     <div className={styles.petCard}>
       <div className={styles.imageContainer}>
         {pet.images && pet.images.length > 0 ? (
           <img
-            src={`${BASE_URL}/uploads/pets/${pet.images?.[0]}`}
+            src={`${BASE_URL}/uploads/pets/${pet.images[0]}`}
             alt={pet.name}
             className={styles.petImage}
           />
@@ -32,17 +44,20 @@ const AdoptionPetCard = ({ pet, onView, onEnquiry }) => {
         <h3 className={styles.petName}>{pet.name}</h3>
         <p className={styles.breed}>{pet.breed}</p>
 
-        <div className={styles.details}>
-          <span className={styles.detailItem}>
-            <span className={styles.type}>{pet.type}</span>
-          </span>
-          <span className={styles.detailItem}>
-            <span className={styles.gender}>{pet.gender}</span>
-          </span>
-          <span className={styles.detailItem}>
-            <span className={styles.age}>
-              {pet.age} {pet.ageUnit}
+        {pet.ngoId && (
+          <div className={styles.shopInfo} onClick={handleNgoClick}>
+            <Store size={14} />
+            <span className={styles.shopName}>
+              {pet.ngoId.businessName || pet.ngoId.name || "NGO"}
             </span>
+          </div>
+        )}
+
+        <div className={styles.details}>
+          <span className={styles.detailItem}>{pet.type}</span>
+          <span className={styles.detailItem}>{pet.gender}</span>
+          <span className={styles.detailItem}>
+            {pet.age} {pet.ageUnit}
           </span>
         </div>
 

@@ -11,6 +11,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
 }
 
 .logo {
@@ -31,7 +33,7 @@
 .navMenu {
   display: flex;
   align-items: center;
-  gap: 2rem;
+  gap: 10px;
 }
 
 .navLink {
@@ -148,11 +150,11 @@
   .mobileDropdown {
     position: fixed;
     top: 85px;
-    left: 50%;
+    left: 75%;
     transform: translateX(-50%);
     width: 85%;
-    max-width: 340px;
-    background: white;
+    max-width: 200px;
+    background: #ffffffdb;
     border-radius: 16px;
     box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
     padding: 1rem 0;
@@ -178,4 +180,12 @@
     background: #ddd;
     margin: 8px auto;
   }
+}
+.avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #fff;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.15);
 }

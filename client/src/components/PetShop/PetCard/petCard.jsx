@@ -1,8 +1,19 @@
 import React from "react";
 import styles from "./petCard.module.css";
 import { API_BASE_URL, BASE_URL } from "../../../utils/constants";
+import { Store } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const PetCard = ({ pet, onView, onEnquiry }) => {
+  const navigate = useNavigate();
+
+  const handleShopClick = (e) => {
+    e.stopPropagation();
+    if (pet.shopId && pet.shopId._id) {
+      navigate(`/shop/${pet.shopId._id}`);
+    }
+  };
+
   return (
     <div className={styles.petCard}>
       <div className={styles.imageContainer}>
@@ -32,6 +43,16 @@ const PetCard = ({ pet, onView, onEnquiry }) => {
       <div className={styles.petInfo}>
         <h3 className={styles.petName}>{pet.name}</h3>
         <p className={styles.breed}>{pet.breed}</p>
+
+        {/* Shop Information */}
+        {pet.shopId && (
+          <div className={styles.shopInfo} onClick={handleShopClick}>
+            <Store size={14} />
+            <span className={styles.shopName}>
+              {pet.shopId.businessName || pet.shopId.name || "Unknown Shop"}
+            </span>
+          </div>
+        )}
 
         <div className={styles.details}>
           <span className={styles.detailItem}>

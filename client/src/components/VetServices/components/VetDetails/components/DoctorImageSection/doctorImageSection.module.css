@@ -29,3 +29,34 @@
   font-weight: 600;
   font-size: 0.9rem;
 }
+
+@media (max-width: 768px) {
+  .leftImageBox {
+    max-width: 100%;
+    padding: 0.8rem;
+  }
+
+  .doctorImage {
+    max-height: 300px;
+  }
+
+  .availabilityBadge {
+    font-size: 0.8rem;
+    padding: 0.4rem 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .leftImageBox {
+    padding: 0.6rem;
+  }
+
+  .doctorImage {
+    max-height: 240px;
+  }
+
+  .availabilityBadge {
+    font-size: 0.75rem;
+    padding: 0.3rem 0.6rem;
+  }
+}

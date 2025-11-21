@@ -4,7 +4,7 @@ import { ArrowLeft } from "lucide-react";
 import { toast } from "react-toastify";
 import EnquiryModal from "../AdoptionEnquiryModal/adoptionEnquiryModal";
 import styles from "./adoptionPetDetails.module.css";
-import { API_BASE_URL } from "../../../utils/constants";
+import { API_BASE_URL, BASE_URL } from "../../../utils/constants";
 
 const AdoptionPetDetails = () => {
   const { id } = useParams();
@@ -15,14 +15,12 @@ const AdoptionPetDetails = () => {
   const [showEnquiryModal, setShowEnquiryModal] = useState(false);
 
   useEffect(() => {
-    if (id) {
-      fetchPetDetails();
-    }
+    if (id) fetchPetDetails();
   }, [id]);
 
   const fetchPetDetails = async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/pets/${id}`);
+      const response = await fetch(`${API_BASE_URL}/pets/${id}?populate=ngoId`);
 
       if (response.ok) {
         const data = await response.json();
@@ -43,14 +41,12 @@ const AdoptionPetDetails = () => {
     try {
       const response = await fetch(`${API_BASE_URL}/enquiries`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...enquiryData,
           petId: pet._id,
-          petName: pet.name,
-        }),
+          petName: pet.name
+        })
       });
 
       if (response.ok) {
@@ -66,13 +62,10 @@ const AdoptionPetDetails = () => {
 
   const formatDescription = (description) => {
     if (!description) return [];
-
-    const points = description
+    return description
       .split(/[•\n,-]/)
       .map((point) => point.trim())
       .filter((point) => point.length > 0);
-
-    return points;
   };
 
   if (loading) {
@@ -88,15 +81,10 @@ const AdoptionPetDetails = () => {
     return (
       <div className={styles.notFound}>
         <h2>Pet Not Found</h2>
-        <p>
-          The pet you're looking for doesn't exist or may have been removed.
-        </p>
-        <button
-          className={styles.backButton}
-          onClick={() => navigate("/pet-adoption")}
-        >
+        <p>The pet you're looking for doesn't exist or may have been removed.</p>
+        <button className={styles.backButton} onClick={() => navigate("/pet-adoption")}>
           <ArrowLeft size={20} />
-          Back to Pet Shop
+          Back to Pets
         </button>
       </div>
     );
@@ -107,10 +95,7 @@ const AdoptionPetDetails = () => {
   return (
     <div className={styles.petDetails}>
       <div className={styles.container}>
-        <button
-          className={styles.backButton}
-          onClick={() => navigate("/pet-adoption")}
-        >
+        <button className={styles.backButton} onClick={() => navigate("/pet-adoption")}>
           <ArrowLeft size={20} />
           Back to Pets
         </button>
@@ -120,7 +105,7 @@ const AdoptionPetDetails = () => {
             <div className={styles.mainImage}>
               {pet.images && pet.images.length > 0 ? (
                 <img
-                  src={`http://localhost:5000/uploads/pets/${pet.images?.[0]}`}
+                  src={`${BASE_URL}/uploads/pets/${pet.images[selectedImage]}`}
                   alt={pet.name}
                 />
               ) : (
@@ -133,13 +118,11 @@ const AdoptionPetDetails = () => {
                 {pet.images.map((image, index) => (
                   <button
                     key={index}
-                    className={`${styles.thumbnail} ${
-                      selectedImage === index ? styles.active : ""
-                    }`}
+                    className={`${styles.thumbnail} ${selectedImage === index ? styles.active : ""}`}
                     onClick={() => setSelectedImage(index)}
                   >
                     <img
-                      src={`${API_BASE_URL}/uploads/pets/${image}`}
+                      src={`${BASE_URL}/uploads/pets/${image}`}
                       alt={`${pet.name} ${index + 1}`}
                     />
                   </button>
@@ -147,22 +130,41 @@ const AdoptionPetDetails = () => {
               </div>
             )}
 
+            {pet.ngoId && (
+              <div
+                className={styles.shopSection}
+                onClick={() => navigate(`/ngo/${pet.ngoId._id}`)}
+              >
+                <div className={styles.shopInfo}>
+                  <span className={styles.shopName}>
+                    {pet.ngoId.businessName || pet.ngoId.name || "NGO / Caretaker"}
+                  </span>
+                  <span className={styles.viewShop}>View NGO →</span>
+                </div>
+              </div>
+            )}
+
             <div className={styles.characteristics}>
               <h3>Health & Care</h3>
               <div className={styles.traits}>
-                {pet.vaccinated && (
-                  <span className={styles.trait}>✓ Vaccinated</span>
-                )}
-                {pet.healthChecked && (
-                  <span className={styles.trait}>✓ Health Checked</span>
-                )}
-                {pet.microchipped && (
-                  <span className={styles.trait}>✓ Microchipped</span>
-                )}
-                {pet.neutered && (
-                  <span className={styles.trait}>✓ Neutered</span>
-                )}
+                {pet.vaccinated && <span className={styles.trait}>✓ Vaccinated</span>}
+                {pet.healthChecked && <span className={styles.trait}>✓ Health Checked</span>}
+                {pet.microchipped && <span className={styles.trait}>✓ Microchipped</span>}
+                {pet.neutered && <span className={styles.trait}>✓ Neutered</span>}
               </div>
+            </div>
+
+            <div className={styles.actions}>
+              <button
+                className={styles.enquiryButton}
+                onClick={() => setShowEnquiryModal(true)}
+                disabled={!pet.available}
+              >
+                Send Enquiry
+              </button>
+              {!pet.available && (
+                <p className={styles.soldText}>This pet is no longer available</p>
+              )}
             </div>
           </div>
 
@@ -178,7 +180,7 @@ const AdoptionPetDetails = () => {
                     pet.available ? styles.available : styles.sold
                   }`}
                 >
-                  {pet.available ? "Available" : "Sold"}
+                  {pet.available ? "Available" : "Adopted"}
                 </span>
               </div>
             </div>
@@ -200,9 +202,7 @@ const AdoptionPetDetails = () => {
               </div>
               <div className={styles.infoItem}>
                 <span className={styles.label}>Color:</span>
-                <span className={styles.value}>
-                  {pet.color || "Not specified"}
-                </span>
+                <span className={styles.value}>{pet.color || "Not specified"}</span>
               </div>
             </div>
 
@@ -218,20 +218,6 @@ const AdoptionPetDetails = () => {
                 </ul>
               </div>
             )}
-            <div className={styles.actions}>
-              <button
-                className={styles.enquiryButton}
-                onClick={() => setShowEnquiryModal(true)}
-                disabled={!pet.available}
-              >
-                Send Enquiry
-              </button>
-              {!pet.available && (
-                <p className={styles.soldText}>
-                  This pet is no longer available
-                </p>
-              )}
-            </div>
           </div>
         </div>
       </div>

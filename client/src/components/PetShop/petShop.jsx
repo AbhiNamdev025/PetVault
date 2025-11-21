@@ -1,12 +1,3 @@
-// import React, { useState, useEffect } from "react";
-// import { useNavigate } from "react-router-dom";
-// import { toast } from "react-toastify";
-// import PetFilters from "../PetShop/PetFilters/petFilters";
-// import PetGrid from "../PetShop/PetGrid/petGrid";
-// import EnquiryModal from "../PetShop/EnquiryModal/enquiryModal";
-// import styles from "./petShop.module.css";
-// import { API_BASE_URL } from "../../utils/constants";
-
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -49,7 +40,7 @@ const PetShop = () => {
 
   const fetchPetsForSale = async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/pets`);
+      const response = await fetch(`${API_BASE_URL}/pets?populate=shopId`);
 
       if (response.ok) {
         const data = await response.json();
@@ -67,6 +58,7 @@ const PetShop = () => {
     }
   };
 
+  // ... rest of the component remains the same
   const filterPets = () => {
     let filtered = pets.filter((pet) => {
       const matchesSearch =

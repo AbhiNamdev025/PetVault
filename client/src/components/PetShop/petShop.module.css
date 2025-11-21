@@ -4,28 +4,28 @@
 }
 
 .heroSection {
-  padding: 4rem 2rem;
+  padding: 2rem 1.5rem;
 }
 
 .heroContent {
   max-width: 1200px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 4rem;
+  grid-template-columns: 1fr 0.9fr;
+  gap: 2rem;
   align-items: center;
 }
 
 .heroText {
-  padding-right: 2rem;
+  padding-right: 1rem;
 }
 
 .heroTitle {
-  font-size: 3.5rem;
+  font-size: 2.6rem;
   font-weight: 800;
   color: #1e293b;
-  margin-bottom: 1.5rem;
-  line-height: 1.1;
+  margin-bottom: 1rem;
+  line-height: 1.15;
   font-family: system-ui, -apple-system, sans-serif;
 }
 
@@ -34,32 +34,31 @@
 }
 
 .heroSubtitle {
-  font-size: 1.25rem;
+  font-size: 1.1rem;
   color: #64748b;
-  line-height: 1.6;
-  margin-bottom: 2.5rem;
+  line-height: 1.55;
+  margin-bottom: 1.8rem;
+  max-width: 90%;
 }
 
 .heroStats {
   display: flex;
-  gap: 2rem;
+  gap: 1.5rem;
 }
 
 .stat {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
 }
 
 .statNumber {
-  font-size: 2rem;
+  font-size: 1.6rem;
   font-weight: 700;
   color: #a78bfa;
-  line-height: 1;
 }
 
 .statLabel {
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   color: #64748b;
   font-weight: 500;
 }
@@ -72,49 +71,45 @@
 
 .imagePlaceholder {
   width: 100%;
-  height: 400px;
-  border-radius: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-size: 1.2rem;
-  font-weight: 600;
+  border-radius: 16px;
+  overflow: hidden;
 }
+
 .imagePlaceholder img {
   width: 100%;
+  height: auto;
+  object-fit: contain;
 }
 
 .categorySection {
-  margin-bottom: 3rem;
+  margin-bottom: 2rem;
 }
 
 .categoryTitle {
-  font-size: 1.5rem;
+  font-size: 1.4rem;
   font-weight: 700;
   color: #1e293b;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
   text-align: center;
-  font-family: system-ui, -apple-system, sans-serif;
 }
 
 .categoryGrid {
   display: flex;
   justify-content: center;
-  gap: 1rem;
+  gap: 0.5rem;
   flex-wrap: wrap;
 }
 
 .categoryButton {
-  padding: 0.75rem 1.5rem;
+  padding: 0.6rem 1.2rem;
   border: 2px solid #e2e8f0;
-  border-radius: 12px;
+  border-radius: 10px;
   background: white;
   color: #64748b;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
-  font-size: 0.95rem;
+  transition: 0.25s;
+  font-size: 0.9rem;
 }
 
 .categoryButton:hover {
@@ -124,51 +119,50 @@
 }
 
 .categoryButton.active {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #667eea;
   color: white;
-  border-color: transparent;
-  box-shadow: 0 8px 25px rgba(167, 139, 250, 0.4);
+  border-color: #667eea;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.35);
 }
 
 .container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 1.25rem;
 }
 
 .resultsInfo {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 2rem;
-  padding: 0 1rem;
+  margin-bottom: 1.6rem;
+  padding: 0 0.5rem;
 }
 
 .resultsInfo h2 {
-  font-size: 2rem;
+  font-size: 1.8rem;
   font-weight: 700;
   color: #1e293b;
   margin: 0;
-  font-family: system-ui, -apple-system, sans-serif;
 }
 
 .resultsCount {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #667eea;
   color: white;
-  padding: 0.5rem 1rem;
-  border-radius: 20px;
+  padding: 0.45rem 1rem;
+  border-radius: 18px;
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
 }
 
 @media (max-width: 768px) {
   .heroSection {
-    padding: 3rem 1.5rem;
+    padding: 1.5rem 1rem;
   }
 
   .heroContent {
     grid-template-columns: 1fr;
-    gap: 2rem;
+    gap: 1.5rem;
     text-align: center;
   }
 
@@ -177,11 +171,12 @@
   }
 
   .heroTitle {
-    font-size: 2.5rem;
+    font-size: 2.1rem;
   }
 
   .heroSubtitle {
-    font-size: 1.1rem;
+    font-size: 1rem;
+    margin: 0 auto 1.3rem;
   }
 
   .heroStats {
@@ -189,53 +184,39 @@
   }
 
   .imagePlaceholder {
-    height: 300px;
-  }
-
-  .categoryGrid {
-    gap: 0.5rem;
-  }
-
-  .categoryButton {
-    padding: 0.6rem 1.2rem;
-    font-size: 0.9rem;
-  }
-
-  .container {
-    padding: 1.5rem;
-  }
-
-  .resultsInfo {
-    flex-direction: column;
-    gap: 1rem;
-    align-items: flex-start;
-  }
-
-  .resultsInfo h2 {
-    font-size: 1.75rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .heroTitle {
-    font-size: 2rem;
-  }
-
-  .heroSubtitle {
-    font-size: 1rem;
-  }
-
-  .heroStats {
-    gap: 1rem;
-    align-items: center;
+    border-radius: 14px;
   }
 
   .container {
     padding: 1rem;
   }
 
+  .resultsInfo {
+    flex-direction: column;
+    gap: 0.7rem;
+    align-items: flex-start;
+  }
+
+  .resultsInfo h2 {
+    font-size: 1.45rem;
+  }
+  .heroTitle {
+    font-size: 1.8rem;
+  }
+
+  .heroSubtitle {
+    font-size: 0.9rem;
+  }
+
   .categoryButton {
-    padding: 0.5rem 1rem;
-    font-size: 0.85rem;
+    padding: 0.2rem 0.5rem;
+    font-size: 0.5rem;
+  }
+  .resultsCount {
+    padding: 0.2rem 0.5rem;
+    font-size: 0.5rem;
+  }
+  .imagePlaceholder img {
+    width: 50%;
   }
 }

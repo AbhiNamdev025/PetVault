@@ -4,135 +4,149 @@ const Pet = require("../models/pet");
 
 const getAllPets = async (req, res) => {
   try {
-    const pets = await Pet.find({});
+    const pets = await Pet.find()
+      .populate("shopId", "name email businessName")
+      .populate("ngoId", "name email businessName")
+      .sort({ createdAt: -1 });
     res.json({ pets });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+  } catch (e) {
+    res.status(500).json({ message: e.message });
   }
 };
 
 const getPetById = async (req, res) => {
   try {
-    const pet = await Pet.findById(req.params.id);
+    const pet = await Pet.findById(req.params.id)
+      .populate("shopId", "name email businessName")
+      .populate("ngoId", "name email businessName");
+
     if (!pet) return res.status(404).json({ message: "Pet not found" });
     res.json(pet);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+  } catch (e) {
+    res.status(500).json({ message: e.message });
   }
 };
 
 const createPet = async (req, res) => {
   try {
-    const uploadedFiles = req.files?.petImages || [];
-    const imageNames = uploadedFiles.map((file) => file.filename);
+    const imgs = (req.files?.petImages || []).map((f) => f.filename);
 
-    const petData = {
+    const pet = await Pet.create({
       ...req.body,
-      age: parseInt(req.body.age),
-      price: parseFloat(req.body.price),
+      age: req.body.age ? parseInt(req.body.age) : 0,
+      price: req.body.price ? parseFloat(req.body.price) : 0,
       vaccinated: req.body.vaccinated === "true",
       available: req.body.available === "true",
-      images: imageNames,
-    };
+      featured: req.body.featured === "true",
+      images: imgs,
+    });
 
-    const pet = await Pet.create(petData);
     res.status(201).json(pet);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+  } catch (e) {
+    res.status(500).json({ message: e.message });
   }
 };
 
 const updatePet = async (req, res) => {
   try {
-    if (!req.params.id || req.params.id === "undefined") {
-      return res.status(400).json({ message: "Invalid or missing pet ID" });
-    }
+    const pet = await Pet.findById(req.params.id);
+    if (!pet) return res.status(404).json({ message: "Pet not found" });
 
-    const { id } = req.params;
-    const existingPet = await Pet.findById(id);
-    if (!existingPet) return res.status(404).json({ message: "Pet not found" });
+    const newImgs = (req.files?.petImages || []).map((f) => f.filename);
+    let finalImgs = pet.images;
 
-    const uploadedFiles = req.files?.petImages || [];
-    const newImageNames = uploadedFiles.map((file) => file.filename);
-
-    let updatedImages = existingPet.images;
     if (req.body.replaceImages === "true") {
-      existingPet.images.forEach((img) => {
-        const imgPath = path.join(__dirname, "..", "uploads", "pets", img);
-        if (fs.existsSync(imgPath)) fs.unlinkSync(imgPath);
+      pet.images.forEach((img) => {
+        const file = path.join(__dirname, "..", "uploads", "pets", img);
+        if (fs.existsSync(file)) fs.unlinkSync(file);
       });
-      updatedImages = newImageNames;
-    } else if (newImageNames.length > 0) {
-      updatedImages = [...existingPet.images, ...newImageNames];
+      finalImgs = newImgs;
+    } else if (newImgs.length > 0) {
+      finalImgs = [...pet.images, ...newImgs];
     }
 
     const updateData = {
       ...req.body,
-      images: updatedImages,
+      age: req.body.age ? parseInt(req.body.age) : pet.age,
+      price: req.body.price ? parseFloat(req.body.price) : pet.price,
+      vaccinated: req.body.vaccinated === "true",
+      available: req.body.available === "true",
+      featured: req.body.featured === "true",
+      images: finalImgs,
     };
 
-    if (req.body.age !== undefined && req.body.age !== "")
-      updateData.age = parseInt(req.body.age);
-    if (req.body.price !== undefined && req.body.price !== "")
-      updateData.price = parseFloat(req.body.price);
+    await Pet.findByIdAndUpdate(req.params.id, updateData);
+    const refreshed = await Pet.findById(req.params.id)
+      .populate("shopId", "name email businessName")
+      .populate("ngoId", "name email businessName");
 
-    if (req.body.available !== undefined)
-      updateData.available =
-        req.body.available === "true" || req.body.available === true;
-    if (req.body.vaccinated !== undefined)
-      updateData.vaccinated =
-        req.body.vaccinated === "true" || req.body.vaccinated === true;
-
-    const updatedPet = await Pet.findByIdAndUpdate(id, updateData, {
-      new: true,
-      runValidators: true,
-    });
-
-    res.json(updatedPet);
-  } catch (error) {
-    console.error("Update error:", error);
-    res.status(500).json({ message: error.message });
+    res.json(refreshed);
+  } catch (e) {
+    res.status(500).json({ message: e.message });
   }
 };
 
 const deletePet = async (req, res) => {
   try {
-    if (!req.params.id || req.params.id === "undefined") {
-      return res.status(400).json({ message: "Invalid or missing pet ID" });
-    }
-
     const pet = await Pet.findById(req.params.id);
     if (!pet) return res.status(404).json({ message: "Pet not found" });
 
-    if (pet.images && pet.images.length > 0) {
-      pet.images.forEach((img) => {
-        const imgPath = path.join(__dirname, "..", "uploads", "pets", img);
-        if (fs.existsSync(imgPath)) fs.unlinkSync(imgPath);
-      });
-    }
+    pet.images.forEach((img) => {
+      const file = path.join(__dirname, "..", "uploads", "pets", img);
+      if (fs.existsSync(file)) fs.unlinkSync(file);
+    });
 
     await pet.deleteOne();
     res.json({ message: "Pet deleted successfully" });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+  } catch (e) {
+    res.status(500).json({ message: e.message });
   }
 };
 
 const deletePetImage = async (req, res) => {
   try {
-    const { id, imageName } = req.params;
-    const pet = await Pet.findById(id);
+    const pet = await Pet.findById(req.params.id);
     if (!pet) return res.status(404).json({ message: "Pet not found" });
 
-    const imgPath = path.join(__dirname, "..", "uploads", "pets", imageName);
-    if (fs.existsSync(imgPath)) fs.unlinkSync(imgPath);
+    const file = path.join(
+      __dirname,
+      "..",
+      "uploads",
+      "pets",
+      req.params.imageName
+    );
+    if (fs.existsSync(file)) fs.unlinkSync(file);
 
-    pet.images = pet.images.filter((img) => img !== imageName);
+    pet.images = pet.images.filter((i) => i !== req.params.imageName);
     await pet.save();
 
     res.json({ message: "Image deleted successfully" });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+  } catch (e) {
+    res.status(500).json({ message: e.message });
+  }
+};
+
+const getPetsByShop = async (req, res) => {
+  try {
+    const pets = await Pet.find({ shopId: req.params.shopId })
+      .populate("shopId", "name email businessName")
+      .sort({ createdAt: -1 });
+
+    res.json({ pets });
+  } catch (e) {
+    res.status(500).json({ message: e.message });
+  }
+};
+
+const getPetsByNgo = async (req, res) => {
+  try {
+    const pets = await Pet.find({ ngoId: req.params.id })
+      .populate("ngoId", "name email")
+      .sort({ createdAt: -1 });
+
+    res.json({ pets });
+  } catch (e) {
+    res.status(500).json({ message: e.message });
   }
 };
 
@@ -143,4 +157,6 @@ module.exports = {
   updatePet,
   deletePet,
   deletePetImage,
+  getPetsByShop,
+  getPetsByNgo,
 };

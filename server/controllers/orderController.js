@@ -11,6 +11,7 @@ exports.createOrder = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
 exports.deleteOrder = async (req, res) => {
   try {
     const order = await Order.findById(req.params.id);

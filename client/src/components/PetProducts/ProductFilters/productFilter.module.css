@@ -1,12 +1,12 @@
 .filtersContainer {
   background: white;
-  padding: 2rem;
-  border-radius: 20px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  margin-bottom: 2rem;
+  padding: 1rem;
+  border-radius: 14px;
+  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.05);
+  margin-bottom: 1.5rem;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1rem;
 }
 
 .searchBox {
@@ -16,103 +16,72 @@
 
 .searchIcon {
   position: absolute;
-  left: 1rem;
+  left: 0.8rem;
   top: 50%;
   transform: translateY(-50%);
   color: #666;
+  font-size: 0.85rem;
 }
 
 .searchInput {
   width: 100%;
-  padding: 0.7rem 0.7rem 0.7rem 3rem;
-  border: 2px solid #f5f1e8;
-  border-radius: 12px;
-  font-size: 1rem;
-  transition: all 0.3s ease;
-  background: #faf9f6;
+  padding: 0.6rem 0.7rem 0.6rem 2.3rem;
+  border: 1.5px solid #e6e6e6;
+  border-radius: 10px;
+  background: #fafafa;
+  font-size: 0.8rem;
+  transition: 0.2s;
 }
 
 .searchInput:focus {
-  outline: none;
   border-color: #a78bfa;
-  background: white;
-  box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.1);
+  background: #fff;
+  box-shadow: 0 0 0 2px rgba(167, 139, 250, 0.15);
 }
 
 .filterRow {
   display: flex;
-  gap: 1.5rem;
   flex-wrap: wrap;
+  gap: 1rem;
 }
 
 .filterBox {
   position: relative;
   flex: 1;
-  min-width: 180px;
+  min-width: 140px;
 }
 
 .filterIcon {
   position: absolute;
-  left: 0.75rem;
+  left: 0.8rem;
   top: 50%;
   transform: translateY(-50%);
   color: #666;
-  z-index: 1;
+  font-size: 0.85rem;
 }
 
 .filterSelect {
   width: 100%;
-  padding: 1rem 1rem 1rem 2.5rem;
-  border: 2px solid #f5f1e8;
-  border-radius: 12px;
-  font-size: 1rem;
-  background: #faf9f6;
+  padding: 0.6rem 0.7rem 0.6rem 2.3rem;
+  border: 1.5px solid #e6e6e6;
+  border-radius: 10px;
+  background: #fafafa;
+  font-size: 0.8rem;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: 0.2s;
   appearance: none;
 }
 
-.filterSelect:hover {
-  border-color: #ddd6fe;
-}
-
 .filterSelect:focus {
-  outline: none;
   border-color: #a78bfa;
   background: white;
-  box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.1);
+  box-shadow: 0 0 0 2px rgba(167, 139, 250, 0.15);
 }
 
-@media (max-width: 768px) {
-  .filtersContainer {
-    padding: 1.5rem;
-  }
-
+@media (max-width: 600px) {
   .filterRow {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
-  }
-
-  .filterBox {
-    width: 100%;
-  }
-  .filterSelect {
-    width: 85%;
-  }
-}
-
-@media (max-width: 480px) {
-  .filtersContainer {
-    padding: 1.25rem;
-  }
-
-  .filterRow {
-    grid-template-columns: 1fr 1fr;
-    gap: 0.75rem;
-  }
-
-  .filterSelect {
-    padding: 0.8rem 0.8rem 0.8rem 2.2rem;
+    gap: 0.7rem;
   }
 }

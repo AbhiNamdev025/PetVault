@@ -39,7 +39,7 @@ const Products = () => {
 
   const fetchProducts = async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/products`);
+      const response = await fetch(`${API_BASE_URL}/products?populate=shopId`);
       const data = await response.json();
       setProducts(data.products || []);
     } catch {

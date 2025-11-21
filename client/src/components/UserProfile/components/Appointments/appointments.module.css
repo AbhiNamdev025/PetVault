@@ -1,0 +1,89 @@
+.card {
+  width: 100%;
+  max-width: 1100px;
+  background: white;
+  border-radius: 18px;
+  padding: 18px;
+  box-shadow: 0 8px 30px rgba(99, 102, 241, 0.06);
+}
+
+.sectionTitle {
+  color: #4c1d95;
+  margin-bottom: 1.5rem;
+  font-size: 1.4rem;
+  font-weight: 800;
+  text-align: center;
+  position: relative;
+  padding-bottom: 0.5rem;
+}
+
+.sectionTitle::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(135deg, #6d28d9, #8b5cf6);
+  border-radius: 2px;
+}
+
+.appointmentsList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.emptyState {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: #6b7280;
+}
+
+.emptyIcon {
+  margin: 0 auto 1.5rem;
+  color: #d1d5db;
+  opacity: 0.7;
+}
+
+.emptyState p {
+  margin-bottom: 2rem;
+  font-size: 1.1rem;
+  color: #4b5563;
+}
+
+.primaryButton {
+  background: linear-gradient(135deg, #6d28d9, #8b5cf6);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+  margin: 0 auto;
+}
+
+.primaryButton:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+}
+
+@media (max-width: 768px) {
+  .card {
+    padding: 14px;
+  }
+  
+  .sectionTitle {
+    font-size: 1.2rem;
+  }
+  
+  .emptyState {
+    padding: 3rem 1rem;
+  }
+}

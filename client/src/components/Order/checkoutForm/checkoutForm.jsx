@@ -22,9 +22,17 @@ const CheckoutForm = ({ cartItems, totalAmount, onSuccess }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const { customerName, mobileNumber, street, city, state, zipCode } = formData;
+    const { customerName, mobileNumber, street, city, state, zipCode } =
+      formData;
 
-    if (!customerName || !mobileNumber || !street || !city || !state || !zipCode) {
+    if (
+      !customerName ||
+      !mobileNumber ||
+      !street ||
+      !city ||
+      !state ||
+      !zipCode
+    ) {
       toast.warn("Please fill in all required fields");
       return;
     }
@@ -34,7 +42,9 @@ const CheckoutForm = ({ cartItems, totalAmount, onSuccess }) => {
       return;
     }
 
-    const token = localStorage.getItem("token") || sessionStorage.getItem("token");
+    const token =
+      JSON.parse(localStorage.getItem("token")) ||
+      JSON.parse(sessionStorage.getItem("token"));
     if (!token) {
       toast.info("Please login to continue checkout");
       return;
@@ -44,11 +54,13 @@ const CheckoutForm = ({ cartItems, totalAmount, onSuccess }) => {
       customerName,
       mobileNumber,
       items: cartItems.map((item) => ({
-        product: item.product?._id || item.product,
-        pet: item.pet?._id || item.pet,
+        product: item.productId?._id || item.productId,
         name: item.name,
         price: item.price,
         quantity: item.quantity,
+        shopId: item.shopId, // Add shopId from cart
+        image: item.image,
+        brand: item.productId?.brand || "",
       })),
       totalAmount,
       paymentMethod: formData.paymentMethod,
@@ -171,7 +183,9 @@ const CheckoutForm = ({ cartItems, totalAmount, onSuccess }) => {
       </div>
 
       <button type="submit" className={styles.submitBtn} disabled={loading}>
-        {loading ? "Placing order..." : `Place Order • ₹${totalAmount.toFixed(2)}`}
+        {loading
+          ? "Placing order..."
+          : `Place Order • ₹${totalAmount.toFixed(2)}`}
       </button>
     </form>
   );

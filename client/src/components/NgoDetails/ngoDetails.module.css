@@ -1,0 +1,276 @@
+.ngoDetails {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  min-height: 100vh;
+}
+
+.backBtn {
+  background: none;
+  border: none;
+  color: #667eea;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  transition: 0.2s;
+}
+
+.backBtn:hover {
+  background: #f8f9fa;
+}
+
+.ngoHeader {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+.ngoAvatar {
+  width: 110px;
+  height: 110px;
+  object-fit: cover;
+  border-radius: 12px;
+  flex-shrink: 0;
+}
+
+.ngoInfo {
+  flex: 1;
+}
+
+.ngoName {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: #333;
+}
+
+.ngoType {
+  color: #666;
+  text-transform: capitalize;
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+}
+
+.description {
+  color: #555;
+  line-height: 1.6;
+  margin-top: 1rem;
+  font-style: italic;
+}
+
+.location,
+.rating {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #666;
+  margin-bottom: 0.5rem;
+}
+
+.reviewCount {
+  color: #999;
+  font-size: 0.9rem;
+}
+
+.petsSection {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+}
+
+.petsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.5rem;
+  width: 100%;
+  padding: 0.5rem;
+  box-sizing: border-box;
+}
+
+.noPets,
+.noReviews {
+  text-align: center;
+  padding: 3rem;
+  color: #666;
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+
+.reviewsSection {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.sectionTitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #333;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.reviewFormBox {
+  background: #f8f9fa;
+  padding: 2rem;
+  border-radius: 12px;
+  border: 1px solid #e9ecef;
+  margin-bottom: 1.5rem;
+}
+
+.starRow {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.starActive {
+  color: #facc15;
+}
+
+.starInactive {
+  color: #d1d5db;
+}
+
+.reviewTextarea {
+  width: 100%;
+  padding: 1rem;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  background: white;
+  margin-bottom: 1rem;
+  resize: vertical;
+}
+
+.submitReviewButton {
+  padding: 0.75rem 2rem;
+  background: #667eea;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+}
+
+.submitReviewButton:hover:not(:disabled) {
+  background: #5a67d8;
+}
+
+.submitReviewButton:disabled {
+  background: #a0aec0;
+  cursor: not-allowed;
+}
+
+.reviewsGrid {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(350px, 1fr);
+  gap: 1.5rem;
+  padding: 0.5rem;
+  width: auto;
+  min-width: 100%;
+  overflow-x: auto;
+ scrollbar-width: none;
+}
+
+.reviewCard {
+  background: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 12px;
+  border: 1px solid #e9ecef;
+  scroll-snap-align: start;
+  min-width: 350px;
+  box-sizing: border-box;
+  transition: 0.2s;
+}
+
+.reviewCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.reviewHeader {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  gap: 1rem;
+}
+
+.reviewerInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.reviewerName {
+  font-weight: 600;
+  color: #333;
+}
+
+.reviewDate {
+  color: #666;
+  font-size: 0.875rem;
+}
+
+.reviewText {
+  color: #555;
+  line-height: 1.5;
+}
+
+@media (max-width: 768px) {
+  .ngoHeader {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .ngoAvatar {
+    width: 90px;
+    height: 90px;
+  }
+
+  .petsGrid {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  }
+
+  .reviewsGrid {
+    grid-auto-columns: minmax(260px, 1fr);
+  }
+
+  .reviewCard {
+    min-width: 260px;
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .petsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .reviewCard {
+    min-width: 220px;
+  }
+}

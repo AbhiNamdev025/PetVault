@@ -1,0 +1,237 @@
+.container {
+  padding: 1rem;
+  background: #f8f4ff;
+  min-height: 100vh;
+}
+
+.topRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.title {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #4c1d95;
+}
+
+.addBtn {
+  background: #6d28d9;
+  color: white;
+  padding: 0.6rem 1.1rem;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.searchBox {
+  position: relative;
+  margin-bottom: 1.5rem;
+  max-width: 400px;
+}
+
+.searchBox input {
+  width: 100%;
+  padding: 0.85rem 1rem 0.85rem 2.5rem;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  background: #fafafa;
+  font-size: 0.95rem;
+}
+
+.searchBox svg {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #6b7280;
+}
+
+.grid {
+  display: grid;
+  gap: 1.2rem;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+}
+
+.card {
+  background: white;
+  padding: 1.2rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+  text-align: center;
+  transition: 0.25s;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+}
+
+.imageBox {
+  width: 100%;
+  height: 140px;
+  border-radius: 12px;
+  background: #f6efff;
+  margin-bottom: 12px;
+  overflow: hidden;
+}
+
+.imageBox img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.noImage {
+  width: 100%;
+  height: 100%;
+  color: #9a7bd8;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.name {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #4c1d95;
+}
+
+.brand {
+  color: #6b6b6b;
+  font-size: 0.9rem;
+  margin-top: 3px;
+}
+
+.price {
+  font-weight: 700;
+  color: #6d28d9;
+  margin-top: 6px;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.editBtn,
+.delBtn {
+  flex: 1;
+  padding: 0.6rem;
+  border-radius: 10px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.editBtn {
+  background: #ede9fe;
+  color: #4c1d95;
+}
+
+.editBtn:hover {
+  background: #ddd6fe;
+}
+
+.delBtn {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.delBtn:hover {
+  background: #fecaca;
+}
+
+.noData {
+  margin-top: 2rem;
+  text-align: center;
+  font-size: 1rem;
+  color: #777;
+}
+
+.loading {
+  text-align: center;
+  padding: 40px 0;
+  font-size: 18px;
+}
+
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+  z-index: 99999;
+  overflow: hidden;
+  scrollbar-width: none;
+}
+
+.modalBox {
+  background: white;
+  padding: 1.8rem;
+  width: 100%;
+  max-width: 480px;
+  border-radius: 16px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  scrollbar-width: none;
+}
+
+.modalBox input,
+.modalBox select,
+.modalBox textarea {
+  width: 100%;
+  padding: 0.85rem;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+  background: #fafafa;
+  font-size: 0.95rem;
+  transition: 0.25s;
+}
+
+.modalBox input:focus,
+.modalBox select:focus,
+.modalBox textarea:focus {
+  border-color: #6d28d9;
+  background: #fff;
+  outline: none;
+}
+
+.modalActions {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.modalActions button {
+  flex: 1;
+  padding: 0.85rem;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.modalActions button:first-child {
+  background: #6d28d9;
+  color: white;
+}
+
+.modalActions button:last-child {
+  background: #e5e7eb;
+  color: #374151;
+}

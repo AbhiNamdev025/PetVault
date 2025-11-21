@@ -27,12 +27,19 @@ const orderSchema = new mongoose.Schema(
           type: mongoose.Schema.Types.ObjectId,
           ref: "Pet",
         },
+        shopId: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "User",
+          required: true,
+        },
         name: String,
         price: Number,
         quantity: {
           type: Number,
           default: 1,
         },
+        image: String,
+        brand: String,
       },
     ],
     totalAmount: {

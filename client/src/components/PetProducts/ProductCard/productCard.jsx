@@ -1,9 +1,12 @@
 import React from "react";
-import { Star } from "lucide-react";
+import { Star, Store } from "lucide-react";
 import styles from "./productCard.module.css";
 import { BASE_URL } from "../../../utils/constants";
+import { useNavigate } from "react-router-dom";
 
 const ProductCard = ({ product, onView, onAddToCart }) => {
+  const navigate = useNavigate();
+  
   const ratingStars = Array.from({ length: 5 }, (_, i) => (
     <Star
       key={i}
@@ -12,6 +15,13 @@ const ProductCard = ({ product, onView, onAddToCart }) => {
       stroke="#facc15"
     />
   ));
+
+  const handleShopClick = (e) => {
+    e.stopPropagation();
+    if (product.shopId && product.shopId._id) {
+      navigate(`/shop/${product.shopId._id}`);
+    }
+  };
 
   return (
     <div className={styles.productCard}>
@@ -33,6 +43,15 @@ const ProductCard = ({ product, onView, onAddToCart }) => {
       <div className={styles.productInfo}>
         <h3 className={styles.productName}>{product.name}</h3>
         <p className={styles.brand}>{product.brand || "Generic"}</p>
+
+        {product.shopId && (
+          <div className={styles.shopInfo} onClick={handleShopClick}>
+            <Store size={14} />
+            <span className={styles.shopName}>
+              {product.shopId.businessName || product.shopId.name || "Unknown Shop"}
+            </span>
+          </div>
+        )}
 
         <div className={styles.rating}>{ratingStars}</div>
 

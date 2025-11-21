@@ -26,7 +26,7 @@
 
 @keyframes spin {
   0% {
-    transform: rotate(0deg);
+    transform: rotate(0);
   }
   100% {
     transform: rotate(360deg);
@@ -36,7 +36,6 @@
 .loadingContainer p {
   color: #666;
   font-size: 1.1rem;
-  margin: 0;
 }
 
 .emptyState {
@@ -72,9 +71,16 @@
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 600px) {
   .petGrid {
-    grid-template-columns: 1fr;
-    gap: 1rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    padding: 0;
+  }
+}
+
+@media (max-width: 400px) {
+  .petGrid {
+    grid-template-columns: repeat(2, minmax(140px, 1fr));
   }
 }

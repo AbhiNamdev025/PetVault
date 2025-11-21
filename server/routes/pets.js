@@ -6,17 +6,21 @@ const {
   updatePet,
   deletePet,
   deletePetImage,
+  getPetsByShop,
+  getPetsByNgo,
 } = require("../controllers/petController");
-const { protect, admin } = require("../middleware/authMiddleware");
+const { protect } = require("../middleware/authMiddleware");
 const { uploadPetImages } = require("../middleware/upload");
 
 const router = express.Router();
 
 router.get("/", getAllPets);
+router.get("/shop/:shopId", getPetsByShop);
+router.get("/ngo/:ngoId", getPetsByNgo);
 router.get("/:id", getPetById);
-router.post("/create", protect, admin, uploadPetImages, createPet);
-router.put("/:id", protect, admin, uploadPetImages, updatePet);
-router.delete("/:id", protect, admin, deletePet);
-router.delete("/:id/image/:imageName", protect, admin, deletePetImage);
+router.post("/create", protect, uploadPetImages, createPet);
+router.put("/:id", protect, uploadPetImages, updatePet);
+router.delete("/:id", protect, deletePet);
+router.delete("/:id/image/:imageName", protect, deletePetImage);
 
 module.exports = router;

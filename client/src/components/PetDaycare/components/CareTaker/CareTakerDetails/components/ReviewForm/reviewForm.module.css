@@ -34,3 +34,13 @@
   font-weight: 600;
   cursor: pointer;
 }
+
+.starActive {
+  color: #facc15;
+  cursor: pointer;
+}
+
+.starInactive {
+  color: #d1d5db;
+  cursor: pointer;
+}

@@ -1,44 +1,84 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useLocation } from "react-router-dom";
+import { useParams, useLocation, useNavigate } from "react-router-dom";
 import { API_BASE_URL } from "../../../../utils/constants";
 
-
 import VetAppointmentForm from "../VetAppointment/vetAppointmentForm";
+import LoginPopup from "../../../LoginPopup/loginPopup";
 import { toast } from "react-toastify";
-
 
 import DoctorImageSection from "./components/DoctorImageSection/doctorImageSection";
 import DoctorInfoSection from "./components/DoctorInfoSection/doctorInfoSection";
 import DoctorTabs from "./components/DoctorTabs/doctorTabs";
 import DoctorReviews from "./components/DoctorReviews/doctorReviews";
 import DoctorReviewForm from "./components/DoctorReviewForm/doctorReviewForm";
+
+import HospitalInfoSection from "./components/HospitalInfoSection/hospitalInfoSection";
+
 import styles from "./doctorDetail.module.css";
 
 const DoctorDetails = () => {
   const { id } = useParams();
   const location = useLocation();
+  const navigate = useNavigate();
   const cachedDoctor = location.state?.doctor;
 
   const [doctor, setDoctor] = useState(cachedDoctor || null);
+  const [hospital, setHospital] = useState(null);
+
   const [showForm, setShowForm] = useState(false);
+  const [showLoginPopup, setShowLoginPopup] = useState(false);
   const [tab, setTab] = useState("about");
   const [formRating, setFormRating] = useState(0);
   const [formReview, setFormReview] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
-    if (cachedDoctor) return;
+    if (cachedDoctor) {
+      loadHospital(cachedDoctor?.roleData?.hospitalId);
+      return;
+    }
+
     const fetchDoctor = async () => {
       try {
         const res = await fetch(`${API_BASE_URL}/doctor/${id}`);
         const data = await res.json();
         setDoctor(data);
+        loadHospital(data.roleData?.hospitalId);
       } catch {
         toast.error("Failed to load doctor");
       }
     };
+
     fetchDoctor();
   }, [id]);
+
+  const loadHospital = async (hospitalId) => {
+    if (!hospitalId) return;
+
+    try {
+      const res = await fetch(`${API_BASE_URL}/hospital/${hospitalId}`);
+      const data = await res.json();
+      setHospital(data);
+    } catch {
+      console.log("Hospital fetch failed");
+    }
+  };
+
+  const checkAuth = () =>
+    !!(localStorage.getItem("token") || sessionStorage.getItem("token"));
+
+  const handleBookAppointment = () => {
+    if (!checkAuth()) {
+      setShowLoginPopup(true);
+      return;
+    }
+    setShowForm(true);
+  };
+
+  const handleLogin = () => {
+    setShowLoginPopup(false);
+    navigate("/login", { state: { from: location.pathname } });
+  };
 
   if (!doctor) return <p className={styles.loading}>Loading...</p>;
 
@@ -66,13 +106,13 @@ const DoctorDetails = () => {
       const now = new Date();
       const current = now.getHours() * 60 + now.getMinutes();
 
-      const parseTime = (t) => {
+      const parse = (t) => {
         const [h, m] = t.split(":").map(Number);
         return h * 60 + (m || 0);
       };
 
-      const start = parseTime(doctor.availability.startTime);
-      const end = parseTime(doctor.availability.endTime);
+      const start = parse(doctor.availability.startTime);
+      const end = parse(doctor.availability.endTime);
 
       if (current >= start && current <= end)
         return { text: "Available Now", color: "#10b981" };
@@ -86,10 +126,10 @@ const DoctorDetails = () => {
   const availabilityInfo = getAvailabilityStatus();
 
   const submitReview = async () => {
-    if (!formRating) {
-      toast.error("Select a rating");
-      return;
-    }
+    if (!checkAuth()) return toast.error("Please login");
+
+    if (!formRating) return toast.error("Select a rating");
+
     try {
       setSubmitting(true);
 
@@ -108,16 +148,14 @@ const DoctorDetails = () => {
       const data = await res.json();
 
       if (res.ok) {
-        setDoctor((p) => ({
-          ...p,
-          ratings: [...p.ratings, data.newRating],
+        setDoctor((prev) => ({
+          ...prev,
+          ratings: [...prev.ratings, data.newRating],
         }));
         setFormRating(0);
         setFormReview("");
         toast.success("Review submitted");
-      } else {
-        toast.error(data.message);
-      }
+      } else toast.error(data.message);
     } catch {
       toast.error("Error submitting review");
     } finally {
@@ -132,13 +170,20 @@ const DoctorDetails = () => {
           doctor={doctor}
           availabilityInfo={availabilityInfo}
         />
+
         <DoctorInfoSection
           doctor={doctor}
           avgRating={avgRating}
-          setShowForm={setShowForm}
+          setShowForm={handleBookAppointment}
           availabilityInfo={availabilityInfo}
         />
       </div>
+
+      {hospital && (
+        <div className={styles.hospitalBox}>
+          <HospitalInfoSection hospital={hospital} />
+        </div>
+      )}
 
       <DoctorTabs tab={tab} setTab={setTab} />
 
@@ -212,6 +257,35 @@ const DoctorDetails = () => {
                 </div>
               )}
             </div>
+
+            {/* Current Time Status */}
+            <div className={styles.currentStatus}>
+              <h4>Current Status</h4>
+              <div className={styles.statusIndicator}>
+                <div
+                  className={styles.statusDot}
+                  style={{ backgroundColor: availabilityInfo.color }}
+                ></div>
+                <span>{availabilityInfo.text}</span>
+              </div>
+              {availabilityInfo.text === "Outside Working Hours" && (
+                <p className={styles.statusNote}>
+                  The doctor is currently outside of their working hours. You
+                  can still book an appointment for their available days.
+                </p>
+              )}
+              {availabilityInfo.text === "Not Working Today" && (
+                <p className={styles.statusNote}>
+                  The doctor is not working today. Please check their working
+                  days for available slots.
+                </p>
+              )}
+              {availabilityInfo.text === "Currently Unavailable" && (
+                <p className={styles.statusNote}>
+                  The doctor is currently unavailable. Please check back later.
+                </p>
+              )}
+            </div>
           </div>
         )}
 
@@ -236,6 +310,13 @@ const DoctorDetails = () => {
         <VetAppointmentForm
           doctorId={doctor._id}
           onClose={() => setShowForm(false)}
+        />
+      )}
+
+      {showLoginPopup && (
+        <LoginPopup
+          onClose={() => setShowLoginPopup(false)}
+          onLogin={handleLogin}
         />
       )}
     </div>

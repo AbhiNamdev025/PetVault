@@ -1,0 +1,337 @@
+.card {
+  width: 100%;
+  max-width: 1100px;
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  border: 1px solid rgba(124, 58, 237, 0.15);
+  box-shadow: 0 4px 18px rgba(124, 58, 237, 0.06);
+}
+
+.profileHeader {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 32px;
+  margin-bottom: 32px;
+}
+
+.left {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.avatarSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.avatarWrapper {
+  width: 140px;
+  height: 140px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #faf7ff;
+  border: 2px solid rgba(124, 58, 237, 0.25);
+}
+
+.avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.availabilityBadge {
+  padding: 6px 16px;
+  border-radius: 20px;
+  color: white;
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-align: center;
+  min-width: 120px;
+}
+
+.basicInfo {
+  text-align: center;
+}
+
+.name {
+  font-size: 1.5rem;
+  color: #4c1d95;
+  font-weight: 700;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.nameIcon {
+  width: 20px;
+  height: 20px;
+  color: #6d28d9;
+}
+
+.roleBadge {
+  display: inline-block;
+  background: #6d28d9;
+  color: white;
+  padding: 4px 12px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.75rem;
+  margin-bottom: 16px;
+  text-transform: uppercase;
+}
+
+.contactInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.contactItem {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: #6b7280;
+  font-size: 0.9rem;
+}
+
+.contactIcon {
+  width: 14px;
+  height: 14px;
+  color: #7c3aed;
+}
+
+.right {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.roleSection {
+  padding: 20px;
+  background: #faf7ff;
+  border-radius: 8px;
+  border: 1px solid rgba(124, 58, 237, 0.15);
+}
+
+.qualificationsSection {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(124, 58, 237, 0.15);
+}
+
+.addressSection,
+.availabilitySection {
+  padding: 20px;
+  background: #faf7ff;
+  border-radius: 8px;
+  border: 1px solid rgba(124, 58, 237, 0.15);
+}
+
+.sectionTitle {
+  color: #4c1d95;
+  margin-bottom: 16px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.subSectionTitle {
+  color: #6d28d9;
+  margin-bottom: 16px;
+  font-size: 1rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.titleIcon {
+  width: 18px;
+  height: 18px;
+  color: #6d28d9;
+}
+
+.infoGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 12px;
+}
+
+.infoCard {
+  padding: 12px;
+  background: #ffffff;
+  border-radius: 6px;
+  border: 1px solid rgba(124, 58, 237, 0.15);
+}
+
+.infoLabel {
+  font-size: 0.8rem;
+  color: #6d28d9;
+  font-weight: 600;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.labelIcon {
+  width: 14px;
+  height: 14px;
+  color: #7c3aed;
+}
+
+.infoValue {
+  font-size: 0.95rem;
+  color: #1f2937;
+  font-weight: 500;
+}
+
+.servicesList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.serviceTag {
+  background: rgba(124, 58, 237, 0.12);
+  color: #4c1d95;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.certificationsList {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.certificationItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  background: white;
+  border-radius: 4px;
+  border: 1px solid rgba(124, 58, 237, 0.15);
+}
+
+.certIcon {
+  width: 14px;
+  height: 14px;
+  color: #059669;
+}
+
+.daysTabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.dayTab {
+  padding: 6px 12px;
+  border: 1px solid rgba(124, 58, 237, 0.25);
+  background: white;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 0.8rem;
+  cursor: pointer;
+  min-width: 50px;
+  text-align: center;
+  color: #4c1d95;
+}
+
+.dayTab:hover {
+  background: rgba(124, 58, 237, 0.08);
+}
+
+.scheduleGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+}
+
+.noSchedule {
+  font-size: 0.9rem;
+  color: #6d28d9;
+  text-align: center;
+  padding: 20px;
+  background: white;
+  border-radius: 6px;
+  border: 1px dashed rgba(124, 58, 237, 0.4);
+}
+
+.available {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #059669;
+  font-weight: 500;
+}
+
+.notAvailable {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #dc2626;
+  font-weight: 500;
+}
+
+.statusIcon {
+  width: 14px;
+  height: 14px;
+}
+
+/* Tablet */
+@media (max-width: 900px) {
+  .profileHeader {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .avatarWrapper {
+    width: 120px;
+    height: 120px;
+  }
+
+  .name {
+    font-size: 1.3rem;
+  }
+
+  .infoGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  .card {
+    padding: 16px;
+  }
+
+  .avatarWrapper {
+    width: 100px;
+    height: 100px;
+  }
+
+  .name {
+    font-size: 1.2rem;
+  }
+
+  .dayTab {
+    min-width: 45px;
+    padding: 5px 10px;
+    font-size: 0.75rem;
+  }
+}

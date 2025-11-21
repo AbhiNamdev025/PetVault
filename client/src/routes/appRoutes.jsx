@@ -30,6 +30,10 @@ import Profile from "../components/UserProfile/userProfile";
 import ScrollToTop from "./scrollToTop";
 import DoctorDetails from "../components/VetServices/components/VetDetails/doctorDetailPage";
 import CaretakerDetails from "../components/PetDaycare/components/CareTaker/CareTakerDetails/caretakerDetails";
+import ShopDetails from "../components/ShopDetails/shopDetails";
+import NgoDetails from "../components/NgoDetails/ngoDetails";
+import HospitalDetails from "../components/VetServices/HospitalDetails/hospitalDetails";
+import DaycareDetails from "../components/PetDaycare/components/DaycareDetails/daycareDetails";
 
 const PublicRoute = ({ children }) => {
   const token =
@@ -88,8 +92,14 @@ const AppRoutes = () => {
         <Route path="/checkout" element={<CheckoutPage />} />
         <Route path="/confirmation" element={<Confirmation />} />
 
+        {/* Details Pages */}
+
         <Route path="/doctor/:id" element={<DoctorDetails />} />
         <Route path="/caretaker/:id" element={<CaretakerDetails />} />
+        <Route path="/shop/:id" element={<ShopDetails />} />
+        <Route path="/ngo/:id" element={<NgoDetails />} />
+        <Route path="/hospital/:id" element={<HospitalDetails />} />
+        <Route path="/daycare/:id" element={<DaycareDetails /> } />
 
         {/* Admin Protected */}
         <Route

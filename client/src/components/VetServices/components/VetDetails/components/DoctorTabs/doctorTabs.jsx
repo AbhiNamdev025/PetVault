@@ -17,7 +17,6 @@ export default function DoctorTabs({ tab, setTab }) {
       >
         Services
       </button>
-
       <button
         className={tab === "availability" ? styles.activeTab : ""}
         onClick={() => setTab("availability")}

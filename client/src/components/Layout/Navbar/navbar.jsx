@@ -10,6 +10,7 @@ import {
   LogOut,
 } from "lucide-react";
 import styles from "./navbar.module.css";
+import { BASE_URL } from "../../../utils/constants";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -93,12 +94,16 @@ const Navbar = () => {
                 className={styles.userButton}
                 onClick={() => setDropdownOpen((prev) => !prev)}
               >
-                <User size={18} />
-                <span className={styles.userName}>
-                  {user.name.length > 10
-                    ? `${user.name.slice(0, 10)}...`
-                    : user.name}
-                </span>
+                <img
+                  src={
+                    user.avatar
+                      ? `${BASE_URL}/uploads/avatars/${user.avatar}`
+                      : "https://i.pinimg.com/236x/d5/ef/b5/d5efb56c3aff04b52ef374e9ae99eb39.jpg"
+                  }
+                  className={styles.avatar}
+                  alt="avatar"
+                />
+
                 <ChevronDown size={16} />
               </button>
 

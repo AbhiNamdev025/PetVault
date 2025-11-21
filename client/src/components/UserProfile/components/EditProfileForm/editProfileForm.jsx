@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import styles from "../userProfile.module.css";
-import { API_BASE_URL } from "../../../utils/constants";
+import styles from "./editProfileForm.module.css";
+import { API_BASE_URL } from "../../../../utils/constants";
 import { toast } from "react-toastify";
 
-// Simple field configuration - easier to understand
 const getRoleFields = (role) => {
   const fields = {
     doctor: [
@@ -16,6 +15,7 @@ const getRoleFields = (role) => {
         type: "number",
       },
       { name: "hospitalName", label: "Hospital Name", type: "text" },
+      { name: "doctorCertificates", label: "Certificates", type: "textarea" },
     ],
     hospital: [
       { name: "hospitalName", label: "Hospital Name", type: "text" },
@@ -31,6 +31,7 @@ const getRoleFields = (role) => {
         type: "textarea",
       },
       { name: "hourlyRate", label: "Hourly Rate (₹)", type: "number" },
+      { name: "serviceType", label: "Service Type", type: "text" },
     ],
     daycare: [
       { name: "daycareName", label: "Daycare Name", type: "text" },
@@ -51,6 +52,7 @@ const getRoleFields = (role) => {
         type: "checkbox",
       },
       { name: "deliveryRadius", label: "Delivery Radius (km)", type: "number" },
+      { name: "servicesOffered", label: "Services Offered", type: "text" },
     ],
     ngo: [
       { name: "ngoName", label: "NGO Name", type: "text" },
@@ -59,6 +61,23 @@ const getRoleFields = (role) => {
   };
   return fields[role] || [];
 };
+
+const getQualificationFields = () => [
+  { name: "degree", label: "Degree", type: "text" },
+  { name: "institution", label: "Institution", type: "text" },
+  { name: "yearOfCompletion", label: "Year of Completion", type: "number" },
+  { name: "licenseNumber", label: "License Number", type: "text" },
+  { name: "certifications", label: "Certifications", type: "text" },
+  { name: "skills", label: "Skills", type: "text" },
+  { name: "languages", label: "Languages", type: "text" },
+];
+
+const normalize = (val) =>
+  Array.isArray(val)
+    ? val
+    : typeof val === "string"
+    ? val.split(",").map((v) => v.trim())
+    : [];
 
 const daysOfWeek = [
   "Monday",
@@ -71,18 +90,24 @@ const daysOfWeek = [
 ];
 
 const EditProfileForm = ({ user, onUpdate }) => {
-  // Simple state management
   const [formData, setFormData] = useState({
     name: user.name || "",
     email: user.email || "",
     phone: user.phone || "",
-    address: user.address || {
-      street: "",
-      city: "",
-      state: "",
-      zipCode: "",
+    address: user.address || { street: "", city: "", state: "", zipCode: "" },
+    roleData: {
+      ...user.roleData,
+      hospitalServices: normalize(user.roleData?.hospitalServices),
+      servicesOffered: normalize(user.roleData?.servicesOffered),
+      doctorQualifications: {
+        ...user.roleData?.doctorQualifications,
+        certifications: normalize(
+          user.roleData?.doctorQualifications?.certifications
+        ),
+        skills: normalize(user.roleData?.doctorQualifications?.skills),
+        languages: normalize(user.roleData?.doctorQualifications?.languages),
+      },
     },
-    roleData: user.roleData || {},
     availability: user.availability || {
       available: false,
       days: [],
@@ -97,7 +122,6 @@ const EditProfileForm = ({ user, onUpdate }) => {
   const [roleImages, setRoleImages] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  // Get the correct API endpoint based on user role
   const getUpdateURL = () => {
     const endpoints = {
       doctor: `${API_BASE_URL}/doctor/${user._id}`,
@@ -110,184 +134,212 @@ const EditProfileForm = ({ user, onUpdate }) => {
     return endpoints[user.role] || `${API_BASE_URL}/user/${user._id}`;
   };
 
-  // Handle input changes - SIMPLIFIED
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
 
     if (name.startsWith("address.")) {
       const field = name.split(".")[1];
-      setFormData((prev) => ({
-        ...prev,
-        address: { ...prev.address, [field]: value },
+      setFormData((p) => ({ ...p, address: { ...p.address, [field]: value } }));
+    } else if (name.startsWith("roleData.doctorQualifications.")) {
+      const field = name.split(".")[2];
+      setFormData((p) => ({
+        ...p,
+        roleData: {
+          ...p.roleData,
+          doctorQualifications: {
+            ...p.roleData.doctorQualifications,
+            [field]: value,
+          },
+        },
       }));
     } else if (name.startsWith("roleData.")) {
       const field = name.split(".")[1];
-      setFormData((prev) => ({
-        ...prev,
-        roleData: {
-          ...prev.roleData,
-          [field]: type === "checkbox" ? checked : value,
-        },
+      setFormData((p) => ({
+        ...p,
+        roleData: { ...p.roleData, [field]: value },
       }));
     } else if (name.startsWith("availability.")) {
       const field = name.split(".")[1];
-      setFormData((prev) => ({
-        ...prev,
+      setFormData((p) => ({
+        ...p,
         availability: {
-          ...prev.availability,
+          ...p.availability,
           [field]: type === "checkbox" ? checked : value,
         },
       }));
     } else {
-      setFormData((prev) => ({
-        ...prev,
-        [name]: type === "checkbox" ? checked : value,
+      setFormData((p) => ({ ...p, [name]: value }));
+    }
+  };
+
+  const handleArrayFieldChange = (fullName, value) => {
+    const values = value
+      .split(",")
+      .map((v) => v.trim())
+      .filter((v) => v);
+    if (fullName.startsWith("roleData.doctorQualifications.")) {
+      const field = fullName.split(".")[2];
+      setFormData((p) => ({
+        ...p,
+        roleData: {
+          ...p.roleData,
+          doctorQualifications: {
+            ...p.roleData.doctorQualifications,
+            [field]: values,
+          },
+        },
+      }));
+    } else if (fullName.startsWith("roleData.")) {
+      const field = fullName.split(".")[1];
+      setFormData((p) => ({
+        ...p,
+        roleData: { ...p.roleData, [field]: values },
       }));
     }
   };
 
-  // Handle multiple select for days
   const handleDaysChange = (e) => {
-    const selectedDays = Array.from(
-      e.target.selectedOptions,
-      (option) => option.value
-    );
-    setFormData((prev) => ({
-      ...prev,
-      availability: { ...prev.availability, days: selectedDays },
+    const selected = Array.from(e.target.selectedOptions, (o) => o.value);
+    setFormData((p) => ({
+      ...p,
+      availability: { ...p.availability, days: selected },
     }));
   };
 
-  // Submit form - SIMPLIFIED
   const handleSubmit = async () => {
     setLoading(true);
     try {
       const token = localStorage.getItem("token");
       const form = new FormData();
 
-      // 1. Add basic info
       form.append("name", formData.name);
       form.append("email", formData.email);
       form.append("phone", formData.phone);
-
-      // 2. Add address as JSON
       form.append("address", JSON.stringify(formData.address));
 
-      // 3. Add role data as JSON
       form.append("roleData", JSON.stringify(formData.roleData));
-
-      // 4. Add availability as JSON
       form.append("availability", JSON.stringify(formData.availability));
 
-      // 5. Add files
       if (avatar) form.append("avatar", avatar);
       roleImages.forEach((img) => form.append("roleImages", img));
 
-      const response = await fetch(getUpdateURL(), {
+      const res = await fetch(getUpdateURL(), {
         method: "PUT",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
         body: form,
       });
 
-      if (!response.ok) {
-        throw new Error("Failed to update profile");
-      }
+      if (!res.ok) throw new Error();
 
-      const updatedUser = await response.json();
+      const updatedUser = await res.json();
       toast.success("Profile updated successfully!");
       onUpdate(updatedUser);
-    } catch (error) {
-      console.error("Update error:", error);
+    } catch {
       toast.error("Failed to update profile");
     } finally {
       setLoading(false);
     }
   };
 
-  // Render input field based on type
-  const renderInput = (field) => {
+  const renderInput = (field, prefix = "roleData") => {
     const { name, label, type, options } = field;
-    const value = formData.roleData[name] || "";
+    const fullName = `${prefix}.${name}`;
 
-    switch (type) {
-      case "textarea":
-        return (
-          <div className={styles.fieldGroup} key={name}>
-            <label className={styles.label}>{label}</label>
-            <textarea
-              className={styles.textarea}
-              name={`roleData.${name}`}
-              value={value}
-              onChange={handleChange}
-              placeholder={`Enter ${label.toLowerCase()}`}
-              rows={3}
-            />
-          </div>
-        );
+    let value =
+      prefix === "roleData.doctorQualifications"
+        ? formData.roleData.doctorQualifications?.[name]
+        : formData.roleData[name];
 
-      case "select":
-        return (
-          <div className={styles.fieldGroup} key={name}>
-            <label className={styles.label}>{label}</label>
-            <select
-              className={styles.select}
-              name={`roleData.${name}`}
-              value={value}
-              onChange={handleChange}
-            >
-              <option value="">Select {label}</option>
-              {options?.map((option) => (
-                <option key={option} value={option}>
-                  {option}
-                </option>
-              ))}
-            </select>
-          </div>
-        );
+    if (Array.isArray(value)) value = value.join(", ");
 
-      case "checkbox":
-        return (
-          <div className={styles.fieldGroup} key={name}>
-            <label className={styles.checkboxLabel}>
-              <input
-                type="checkbox"
-                name={`roleData.${name}`}
-                checked={!!value}
-                onChange={handleChange}
-                className={styles.checkbox}
-              />
-              {label}
-            </label>
-          </div>
-        );
+    const isArrayField = [
+      "certifications",
+      "skills",
+      "languages",
+      "hospitalServices",
+      "servicesOffered",
+    ].includes(name);
 
-      default:
-        return (
-          <div className={styles.fieldGroup} key={name}>
-            <label className={styles.label}>{label}</label>
+    if (type === "textarea")
+      return (
+        <div className={styles.fieldGroup} key={fullName}>
+          <label className={styles.label}>{label}</label>
+          <textarea
+            className={styles.textarea}
+            name={fullName}
+            value={value || ""}
+            onChange={(e) =>
+              isArrayField
+                ? handleArrayFieldChange(fullName, e.target.value)
+                : handleChange(e)
+            }
+            rows={3}
+          />
+        </div>
+      );
+
+    if (type === "select")
+      return (
+        <div className={styles.fieldGroup} key={fullName}>
+          <label className={styles.label}>{label}</label>
+          <select
+            className={styles.select}
+            name={fullName}
+            value={value || ""}
+            onChange={handleChange}
+          >
+            <option value="">Select {label}</option>
+            {options?.map((opt) => (
+              <option key={opt} value={opt}>
+                {opt}
+              </option>
+            ))}
+          </select>
+        </div>
+      );
+
+    if (type === "checkbox")
+      return (
+        <div className={styles.fieldGroup} key={fullName}>
+          <label className={styles.checkboxLabel}>
             <input
-              className={styles.input}
-              type={type}
-              name={`roleData.${name}`}
-              value={value}
+              type="checkbox"
+              name={fullName}
+              checked={!!value}
               onChange={handleChange}
-              placeholder={`Enter ${label.toLowerCase()}`}
             />
-          </div>
-        );
-    }
+            {label}
+          </label>
+        </div>
+      );
+
+    return (
+      <div className={styles.fieldGroup} key={fullName}>
+        <label className={styles.label}>{label}</label>
+        <input
+          className={styles.input}
+          type={type}
+          name={fullName}
+          value={value || ""}
+          onChange={(e) =>
+            isArrayField
+              ? handleArrayFieldChange(fullName, e.target.value)
+              : handleChange(e)
+          }
+        />
+      </div>
+    );
   };
 
   const roleFields = getRoleFields(user.role);
+  const qualificationFields =
+    user.role === "doctor" ? getQualificationFields() : [];
   const isServiceProvider = !["user", "admin"].includes(user.role);
 
   return (
     <div className={styles.card}>
       <h3 className={styles.sectionTitle}>Edit Profile</h3>
 
-      {/* Basic Information */}
       <div className={styles.section}>
         <h4 className={styles.subsectionTitle}>Basic Information</h4>
         <div className={styles.grid}>
@@ -299,7 +351,6 @@ const EditProfileForm = ({ user, onUpdate }) => {
               name="name"
               value={formData.name}
               onChange={handleChange}
-              placeholder="Enter your full name"
             />
           </div>
 
@@ -311,7 +362,6 @@ const EditProfileForm = ({ user, onUpdate }) => {
               name="email"
               value={formData.email}
               onChange={handleChange}
-              placeholder="Enter your email"
             />
           </div>
 
@@ -323,13 +373,11 @@ const EditProfileForm = ({ user, onUpdate }) => {
               name="phone"
               value={formData.phone}
               onChange={handleChange}
-              placeholder="Enter your phone number"
             />
           </div>
         </div>
       </div>
 
-      {/* Address Information */}
       <div className={styles.section}>
         <h4 className={styles.subsectionTitle}>Address</h4>
         <div className={styles.grid}>
@@ -341,7 +389,6 @@ const EditProfileForm = ({ user, onUpdate }) => {
               name="address.street"
               value={formData.address.street}
               onChange={handleChange}
-              placeholder="Enter street address"
             />
           </div>
 
@@ -353,7 +400,6 @@ const EditProfileForm = ({ user, onUpdate }) => {
               name="address.city"
               value={formData.address.city}
               onChange={handleChange}
-              placeholder="Enter city"
             />
           </div>
 
@@ -365,7 +411,6 @@ const EditProfileForm = ({ user, onUpdate }) => {
               name="address.state"
               value={formData.address.state}
               onChange={handleChange}
-              placeholder="Enter state"
             />
           </div>
 
@@ -377,25 +422,31 @@ const EditProfileForm = ({ user, onUpdate }) => {
               name="address.zipCode"
               value={formData.address.zipCode}
               onChange={handleChange}
-              placeholder="Enter zip code"
             />
           </div>
         </div>
       </div>
 
-      {/* Role Specific Information */}
       {roleFields.length > 0 && (
         <div className={styles.section}>
-          <h4 className={styles.subsectionTitle}>
-            {user.role.charAt(0).toUpperCase() + user.role.slice(1)} Information
-          </h4>
+          <h4 className={styles.subsectionTitle}>{user.role} Information</h4>
           <div className={styles.roleFields}>
-            {roleFields.map((field) => renderInput(field))}
+            {roleFields.map((f) => renderInput(f))}
           </div>
         </div>
       )}
 
-      {/* Availability for Service Providers */}
+      {qualificationFields.length > 0 && (
+        <div className={styles.section}>
+          <h4 className={styles.subsectionTitle}>Qualifications</h4>
+          <div className={styles.roleFields}>
+            {qualificationFields.map((f) =>
+              renderInput(f, "roleData.doctorQualifications")
+            )}
+          </div>
+        </div>
+      )}
+
       {isServiceProvider && (
         <div className={styles.section}>
           <h4 className={styles.subsectionTitle}>Availability</h4>
@@ -407,9 +458,8 @@ const EditProfileForm = ({ user, onUpdate }) => {
                   name="availability.available"
                   checked={formData.availability.available}
                   onChange={handleChange}
-                  className={styles.checkbox}
                 />
-                Available for Services
+                Available
               </label>
             </div>
 
@@ -428,9 +478,6 @@ const EditProfileForm = ({ user, onUpdate }) => {
                   </option>
                 ))}
               </select>
-              <small className={styles.helperText}>
-                Hold Ctrl to select multiple days
-              </small>
             </div>
 
             <div className={styles.fieldGroup}>
@@ -463,7 +510,6 @@ const EditProfileForm = ({ user, onUpdate }) => {
                 name="availability.serviceRadius"
                 value={formData.availability.serviceRadius}
                 onChange={handleChange}
-                placeholder="Service radius in km"
               />
             </div>
 
@@ -475,14 +521,12 @@ const EditProfileForm = ({ user, onUpdate }) => {
                 name="availability.statusNote"
                 value={formData.availability.statusNote}
                 onChange={handleChange}
-                placeholder="Any special notes"
               />
             </div>
           </div>
         </div>
       )}
 
-      {/* File Uploads */}
       <div className={styles.section}>
         <h4 className={styles.subsectionTitle}>Images</h4>
         <div className={styles.grid}>
@@ -490,8 +534,8 @@ const EditProfileForm = ({ user, onUpdate }) => {
             <label className={styles.label}>Profile Picture</label>
             <input
               type="file"
+              accept="image/*"
               onChange={(e) => setAvatar(e.target.files[0])}
-              className={styles.fileInput}
             />
           </div>
 
@@ -499,13 +543,10 @@ const EditProfileForm = ({ user, onUpdate }) => {
             <label className={styles.label}>Role Images</label>
             <input
               type="file"
+              accept="image/*"
               multiple
               onChange={(e) => setRoleImages([...e.target.files])}
-              className={styles.fileInput}
             />
-            <small className={styles.helperText}>
-              Upload multiple images for your profile
-            </small>
           </div>
         </div>
       </div>
