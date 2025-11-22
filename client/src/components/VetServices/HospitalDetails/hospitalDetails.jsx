@@ -3,8 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft, Star, MapPin, Hospital } from "lucide-react";
 import { API_BASE_URL, BASE_URL } from "../../../utils/constants";
 import styles from "./hospitalDetails.module.css";
-import { toast } from "react-toastify";
-
+import toast from "react-hot-toast";
 const HospitalDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -126,7 +125,7 @@ const HospitalDetails = () => {
               ? `${BASE_URL}/uploads/avatars/${hospital.avatar}`
               : hospital.roleData?.hospitalImages?.[0]
               ? `${BASE_URL}/uploads/roles/${hospital.roleData.hospitalImages[0]}`
-              : "https://cdn-icons-png.flaticon.com/512/1995/1995574.png"
+              : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS5gmlF6Ui768IGJDxuurDQjrhd782B21TmYw&s"
           }
           alt={hospital.roleData?.hospitalName || hospital.name}
         />

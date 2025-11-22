@@ -1,13 +1,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Star } from "lucide-react";
+import { Star, Heart } from "lucide-react";
 import styles from "./heroSection.module.css";
 
 const HeroSection = () => {
   return (
     <section className={styles.hero}>
       <div className={styles.container}>
-        {/* Dog Image Behind Text */}
         <div className={styles.dogImageOverlay}>
           <img
             src="https://png.pngtree.com/png-vector/20250111/ourmid/pngtree-golden-retriever-dog-pictures-png-image_15147078.png"
@@ -15,15 +14,17 @@ const HeroSection = () => {
           />
         </div>
 
-        {/* Title  */}
         <h1 className={styles.heroTitle}>
           <span className={styles.titleLine}>
             Adopt l
             <span className={`${styles.badge} ${styles.petsBadge}`}>
-              <span className={styles.badgeContent}>
-                Pets
-                <span className={styles.badgeNumber}>5k+</span>
-              </span>
+              <div className={styles.heartContainer}>
+                <Heart size={130} fill="#a78bfa" color="#a78bfa" />
+                <div className={styles.heartContent}>
+                  <span className={styles.heartText}>Pets</span>
+                  <span className={styles.heartNumber}>5k+</span>
+                </div>
+              </div>
             </span>
             ve,
           </span>
@@ -40,9 +41,7 @@ const HeroSection = () => {
           </span>
         </h1>
 
-        {/* Content */}
         <div className={styles.heroContent}>
-          {/* Left Reviews */}
           <div className={styles.reviewsSection}>
             <div className={styles.reviewLabel}>Our happy pet owners</div>
             <div className={styles.rating}>
@@ -50,7 +49,6 @@ const HeroSection = () => {
               <span className={styles.ratingText}>4.8</span>
               <span className={styles.reviewCount}>(1.5k Reviews)</span>
             </div>
-            {/* Avatars */}
             <div className={styles.avatars}>
               <div className={styles.avatarGroup}>
                 <img
@@ -68,7 +66,6 @@ const HeroSection = () => {
                   alt="User"
                   className={styles.avatar}
                 />
-
                 <div className={styles.avatarMore}>+3k</div>
               </div>
             </div>
@@ -76,7 +73,6 @@ const HeroSection = () => {
 
           <div className={styles.heroImage}></div>
 
-          {/* Right  - Description */}
           <div className={styles.description}>
             <h3 className={styles.descriptionTitle}>WHAT WE DO?</h3>
             <p className={styles.descriptionText}>

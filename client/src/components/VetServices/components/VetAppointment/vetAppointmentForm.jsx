@@ -11,9 +11,9 @@ import {
   X,
   MessageCircleCode,
   Hospital,
-  PawPrint as PawIcon
+  PawPrint as PawIcon,
 } from "lucide-react";
-import { toast } from "react-toastify";
+import toast from "react-hot-toast";
 import styles from "./vetAppointmentForm.module.css";
 import { API_BASE_URL, BASE_URL } from "../../../../utils/constants";
 
@@ -21,7 +21,7 @@ const petOptions = [
   { value: "Dog", label: "Dog", icon: "PawPrint" },
   { value: "Cat", label: "Cat", icon: "Cat" },
   { value: "Bird", label: "Bird", icon: "Feather" },
-  { value: "Others", label: "Others", icon: "HelpCircle" }
+  { value: "Others", label: "Others", icon: "HelpCircle" },
 ];
 
 const VetAppointmentForm = ({ doctorId, onClose }) => {
@@ -40,7 +40,7 @@ const VetAppointmentForm = ({ doctorId, onClose }) => {
     date: "",
     time: "",
     reason: "",
-    healthIssues: ""
+    healthIssues: "",
   });
 
   useEffect(() => {
@@ -76,15 +76,13 @@ const VetAppointmentForm = ({ doctorId, onClose }) => {
     try {
       const token = localStorage.getItem("token");
       const fd = new FormData();
-      Object.entries(formData).forEach(([key, value]) =>
-        fd.append(key, value)
-      );
+      Object.entries(formData).forEach(([key, value]) => fd.append(key, value));
       petImageFiles.forEach((file) => fd.append("petImages", file));
 
       const response = await fetch(`${API_BASE_URL}/appointments`, {
         method: "POST",
         headers: { Authorization: `Bearer ${token}` },
-        body: fd
+        body: fd,
       });
 
       const data = await response.json();
@@ -111,7 +109,11 @@ const VetAppointmentForm = ({ doctorId, onClose }) => {
   return (
     <div className={styles.overlay}>
       <div className={styles.modal}>
-        <button className={styles.closeButton} onClick={onClose} aria-label="Close">
+        <button
+          className={styles.closeButton}
+          onClick={onClose}
+          aria-label="Close"
+        >
           <X size={22} />
         </button>
 
@@ -173,14 +175,20 @@ const VetAppointmentForm = ({ doctorId, onClose }) => {
           <div className={styles.formGroup}>
             <label className={styles.label}>Pet Type</label>
 
-            <div className={styles.petOptionsRow} role="radiogroup" aria-label="Pet Type">
+            <div
+              className={styles.petOptionsRow}
+              role="radiogroup"
+              aria-label="Pet Type"
+            >
               {petOptions.map((opt) => {
                 const selected = formData.petType === opt.value;
                 return (
                   <button
                     type="button"
                     key={opt.value}
-                    className={`${styles.petOption} ${selected ? styles.petOptionActive : ""}`}
+                    className={`${styles.petOption} ${
+                      selected ? styles.petOptionActive : ""
+                    }`}
                     onClick={() => handleSelectPet(opt.value)}
                     aria-pressed={selected}
                   >
@@ -194,7 +202,9 @@ const VetAppointmentForm = ({ doctorId, onClose }) => {
             </div>
 
             <div className={styles.placeholderRow}>
-              {!formData.petType && <span className={styles.placeholderText}>Select Pet Type</span>}
+              {!formData.petType && (
+                <span className={styles.placeholderText}>Select Pet Type</span>
+              )}
             </div>
           </div>
 
@@ -305,9 +315,15 @@ const VetAppointmentForm = ({ doctorId, onClose }) => {
           <button
             type="submit"
             disabled={isLoading}
-            className={`${styles.submitButton} ${isLoading ? styles.loading : ""}`}
+            className={`${styles.submitButton} ${
+              isLoading ? styles.loading : ""
+            }`}
           >
-            {isLoading ? <div className={styles.buttonSpinner}></div> : "Book Appointment"}
+            {isLoading ? (
+              <div className={styles.buttonSpinner}></div>
+            ) : (
+              "Book Appointment"
+            )}
           </button>
 
           <div className={styles.divider}></div>

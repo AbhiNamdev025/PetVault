@@ -2,8 +2,7 @@ import React, { useState, useEffect } from "react";
 import styles from "./shopOrders.module.css";
 import { Package, Truck, CheckCircle, XCircle, Eye } from "lucide-react";
 import { API_BASE_URL, BASE_URL } from "../../../../../../utils/constants";
-import { toast } from "react-toastify";
-
+import toast from "react-hot-toast";
 const ShopOrders = ({ user }) => {
   const [orders, setOrders] = useState([]);
   const [selectedOrder, setSelectedOrder] = useState(null);

@@ -5,8 +5,7 @@ import { API_BASE_URL } from "../../utils/constants";
 import ProductCard from "../PetProducts/ProductCard/productCard";
 import PetCard from "../PetShop/PetCard/petCard";
 import styles from "./shopDetails.module.css";
-import { toast } from "react-toastify";
-
+import toast from "react-hot-toast";
 const ShopDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();

@@ -22,12 +22,6 @@ const FeaturesSection = () => {
       description:
         "Round-the-clock veterinary services available whenever you need",
     },
-    {
-      icon: <Users size={40} strokeWidth={2} />,
-      title: "Expert Team",
-      description:
-        "Licensed veterinarians and trained specialists at your service",
-    },
   ];
 
   return (

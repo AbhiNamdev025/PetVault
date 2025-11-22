@@ -1,8 +1,9 @@
 .features {
   background: #f5f1e8;
-  padding-bottom: 6rem ;
+  padding-bottom: 6rem;
   position: relative;
   overflow: hidden;
+  font-family: 'Poppins', sans-serif;
 }
 
 .features::before {
@@ -38,7 +39,7 @@
 .container {
   max-width: 1200px;
   margin: 0 auto;
-
+  padding: 0 20px;
   position: relative;
   z-index: 1;
 }
@@ -53,7 +54,7 @@
   font-weight: 900;
   color: #000;
   margin-bottom: 1rem;
-  font-family: system-ui, -apple-system, sans-serif;
+  font-family: 'Poppins', sans-serif;
 }
 
 .sectionSubtitle {
@@ -61,12 +62,12 @@
   color: #666;
   max-width: 600px;
   margin: 0 auto;
+  font-family: 'Poppins', sans-serif;
 }
 
 .featuresGrid {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 1.5rem;
 }
 
@@ -79,8 +80,6 @@
   border: 2px solid transparent;
   position: relative;
   overflow: hidden;
-  flex: 1 1 280px;
-  max-width: 320px;
 }
 
 .featureCard:hover {
@@ -112,13 +111,14 @@
   font-weight: 700;
   margin-bottom: 1rem;
   color: #000;
-  font-family: system-ui, -apple-system, sans-serif;
+  font-family: 'Poppins', sans-serif;
 }
 
 .featureDescription {
   color: #666;
   line-height: 1.7;
   font-size: 1rem;
+  font-family: 'Poppins', sans-serif;
 }
 
 @media (max-width: 768px) {
@@ -131,11 +131,28 @@
   }
 
   .featuresGrid {
+    grid-template-columns: repeat(2, 1fr);
     gap: 1rem;
   }
 
   .featureCard {
-    padding: 2.5rem 2rem;
+    padding: 2rem 1.5rem;
+  }
+
+  .featureIcon {
+    width: 70px;
+    height: 70px;
+    margin-bottom: 1rem;
+  }
+
+  .featureTitle {
+    font-size: 1.3rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .featureDescription {
+    font-size: 0.9rem;
+    line-height: 1.5;
   }
 }
 
@@ -144,8 +161,17 @@
     font-size: 2rem;
   }
 
-  .featureIcon {
-    width: 70px;
-    height: 70px;
+  .featuresGrid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
   }
-}
+
+  .featureCard {
+    padding: 1.8rem 1.2rem;
+  }
+
+  .featureIcon {
+    width: 60px;
+    height: 60px;
+  }
+}   

@@ -4,8 +4,7 @@ import { API_BASE_URL, BASE_URL } from "../../../../../../utils/constants";
 import { Plus, Edit, Trash2 } from "lucide-react";
 import AddCaretakerModal from "./addCaretakerModal";
 import EditCaretakerModal from "./editCaretakerModal";
-import { toast } from "react-toastify";
-
+import toast from "react-hot-toast";
 const DaycareManagement = () => {
   const token =
     localStorage.getItem("token") || sessionStorage.getItem("token");

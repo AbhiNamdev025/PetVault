@@ -40,12 +40,19 @@ const UserProfile = () => {
         console.error("Error fetching user:", error);
       }
     };
-
     const fetchAppointments = async () => {
       try {
         let endpoint = `${API_BASE_URL}/appointments/my-appointments`;
 
-        if (["caretaker", "daycare", "doctor", "hospital"].includes(userRole)) {
+        const currentShopType = savedUser?.roleData?.shopType;
+
+        if (
+          ["caretaker", "daycare", "doctor", "hospital", "ngo"].includes(
+            userRole
+          ) ||
+          (userRole === "shop" && currentShopType === "petStore" ||
+          currentShopType === "mixed" ) 
+        ) {
           endpoint = `${API_BASE_URL}/appointments/provider-appointments`;
         }
 
@@ -142,7 +149,13 @@ const UserProfile = () => {
       tabs.push({ id: "management", label: "Management" });
     }
 
-    if (!["shop", "ngo", "admin", "hospital", "daycare"].includes(userRole)) {
+    const currentShopType = savedUser?.roleData?.shopType;
+
+    if (
+      !["admin", "hospital", "daycare", "shop"].includes(userRole) ||
+      (userRole === "shop" && currentShopType === "petStore") ||
+      currentShopType === "mixed"
+    ) {
       tabs.push({ id: "appointments", label: "Appointments" });
     }
 

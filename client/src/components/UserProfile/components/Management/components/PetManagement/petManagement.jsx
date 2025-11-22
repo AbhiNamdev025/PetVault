@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import styles from "./petManagement.module.css";
 import { API_BASE_URL } from "../../../../../../utils/constants";
 import { Plus, Search, Edit, Trash2 } from "lucide-react";
-import { toast } from "react-toastify";
+import toast from "react-hot-toast";
 import AddPetModal from "./addPetModal";
 import EditPetModal from "./editPetModal";
 import ConfirmationModal from "../../../../../ConfirmationModal/ConfirmationModal";
@@ -17,8 +17,11 @@ const PetManagement = ({ user }) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [petToDelete, setPetToDelete] = useState(null);
 
-  const token = localStorage.getItem("token") || sessionStorage.getItem("token");
-  const savedUser = JSON.parse(localStorage.getItem("user") || sessionStorage.getItem("user") || "null");
+  const token =
+    localStorage.getItem("token") || sessionStorage.getItem("token");
+  const savedUser = JSON.parse(
+    localStorage.getItem("user") || sessionStorage.getItem("user") || "null"
+  );
   const shopId = savedUser?._id || user?._id;
 
   const loadPets = async () => {
@@ -30,7 +33,7 @@ const PetManagement = ({ user }) => {
 
     try {
       const res = await fetch(`${API_BASE_URL}/pets/shop/${shopId}`, {
-        headers: { Authorization: `Bearer ${token}` }
+        headers: { Authorization: `Bearer ${token}` },
       });
 
       if (!res.ok) throw new Error();
@@ -60,7 +63,7 @@ const PetManagement = ({ user }) => {
     try {
       const res = await fetch(`${API_BASE_URL}/pets/${petToDelete._id}`, {
         method: "DELETE",
-        headers: { Authorization: `Bearer ${token}` }
+        headers: { Authorization: `Bearer ${token}` },
       });
 
       if (!res.ok) throw new Error();
@@ -84,8 +87,8 @@ const PetManagement = ({ user }) => {
     <div className={styles.container}>
       <div className={styles.topRow}>
         <h2 className={styles.title}>Manage Pets</h2>
-        <button 
-          className={styles.addBtn} 
+        <button
+          className={styles.addBtn}
           onClick={() => {
             if (!token) {
               toast.error("Please login to add pets");
@@ -117,10 +120,9 @@ const PetManagement = ({ user }) => {
               <div className={styles.imageBox}>
                 {p.images?.[0] ? (
                   <img
-                    src={`${API_BASE_URL.replace(
-                      "/api",
-                      ""
-                    )}/uploads/pets/${p.images[0]}`}
+                    src={`${API_BASE_URL.replace("/api", "")}/uploads/pets/${
+                      p.images[0]
+                    }`}
                     alt=""
                   />
                 ) : (
@@ -149,8 +151,8 @@ const PetManagement = ({ user }) => {
                   <Edit size={16} />
                 </button>
 
-                <button 
-                  className={styles.delBtn} 
+                <button
+                  className={styles.delBtn}
                   onClick={() => {
                     if (!token) {
                       toast.error("Please login to delete pets");
@@ -168,10 +170,7 @@ const PetManagement = ({ user }) => {
       )}
 
       {showAdd && (
-        <AddPetModal 
-          onClose={() => setShowAdd(false)} 
-          onAdded={loadPets} 
-        />
+        <AddPetModal onClose={() => setShowAdd(false)} onAdded={loadPets} />
       )}
 
       {showEdit && selectedPet && (
@@ -191,7 +190,7 @@ const PetManagement = ({ user }) => {
             title: "Delete Pet",
             message: `Are you sure you want to delete "${petToDelete?.name}"? This action cannot be undone.`,
             confirmText: "Yes, Delete",
-            type: "cancel"
+            type: "cancel",
           }}
           onConfirm={remove}
           onCancel={() => {

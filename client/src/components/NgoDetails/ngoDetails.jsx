@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft, Star, MapPin, PawPrint } from "lucide-react";
 import { API_BASE_URL, BASE_URL } from "../../utils/constants";
 import styles from "./ngoDetails.module.css";
-import { toast } from "react-toastify";
+import toast from "react-hot-toast";
 import AdoptionPetCard from "../PetAdoption/AdoptionPetCard/adoptionPetCard";
 
 const NgoDetails = () => {

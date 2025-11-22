@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styles from "./appointmentManagement.module.css";
 import { API_BASE_URL } from "../../../utils/constants";
-import { toast } from "react-toastify";
+import toast from "react-hot-toast";
 import AppointmentCard from "./AppointmentCards/appointmentCard";
 import DeleteConfirmationModal from "../DeleteConfirmationModal/deleteConfirmationModal";
 import { Filter } from "lucide-react";

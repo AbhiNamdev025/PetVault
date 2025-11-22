@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styles from "./order.module.css";
 import { API_BASE_URL } from "../../../utils/constants";
-import { toast } from "react-toastify";
+import toast from "react-hot-toast";
 import { Package, CheckCircle, Clock, XCircle, X } from "lucide-react";
 
 const Order = () => {

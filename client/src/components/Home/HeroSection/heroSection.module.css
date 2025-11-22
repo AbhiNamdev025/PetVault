@@ -60,9 +60,49 @@
   top: -10px;
 }
 
-.petsBadge {
+.heartBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 1rem;
+  vertical-align: middle;
+  position: relative;
+  top: -10px;
+}
+
+.heartShape {
+  width: 110px;
+  height: 110px;
+  position: relative;
+  transform: rotate(-45deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.heartShape:before,
+.heartShape:after {
+  content: "";
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  position: absolute;
+}
+
+.heartShape:before {
+  top: -55px;
+  left: 0;
+}
+
+.heartShape:after {
+  top: 0;
+  left: 55px;
+}
+
+.petsBadge .heartShape,
+.petsBadge .heartShape:before,
+.petsBadge .heartShape:after {
   background: #a78bfa;
-  color: white;
 }
 
 .doctorsBadge {
@@ -80,6 +120,8 @@
   line-height: 1.2;
   font-size: 1.5rem;
   font-weight: 700;
+  color: white;
+  position: relative;
 }
 
 .badgeNumber {
@@ -214,6 +256,35 @@
   transform: translateY(-2px);
 }
 
+.heartContainer {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.heartContent {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: white;
+  line-height: 1.2;
+}
+
+.heartText {
+  font-size: 1.2rem;
+  font-weight: 700;
+  display: block;
+}
+
+.heartNumber {
+  font-size: 1.8rem;
+  font-weight: 700;
+  display: block;
+}
+
 @media (max-width: 1024px) {
   .heroTitle {
     font-size: 7rem;
@@ -227,6 +298,25 @@
   .badge {
     width: 100px;
     height: 100px;
+  }
+
+  .heartShape {
+    width: 100px;
+    height: 100px;
+  }
+
+  .heartShape:before,
+  .heartShape:after {
+    width: 100px;
+    height: 100px;
+  }
+
+  .heartShape:before {
+    top: -50px;
+  }
+
+  .heartShape:after {
+    left: 50px;
   }
 
   .badgeContent {
@@ -257,6 +347,25 @@
     width: 80px;
     height: 80px;
     margin: 0 0.5rem;
+  }
+
+  .heartShape {
+    width: 80px;
+    height: 80px;
+  }
+
+  .heartShape:before,
+  .heartShape:after {
+    width: 80px;
+    height: 80px;
+  }
+
+  .heartShape:before {
+    top: -40px;
+  }
+
+  .heartShape:after {
+    left: 40px;
   }
 
   .badgeContent {
@@ -301,11 +410,40 @@
     height: 60px;
   }
 
+  .heartShape {
+    width: 60px;
+    height: 60px;
+  }
+
+  .heartShape:before,
+  .heartShape:after {
+    width: 60px;
+    height: 60px;
+  }
+
+  .heartShape:before {
+    top: -30px;
+  }
+
+  .heartShape:after {
+    left: 30px;
+  }
+
   .badgeContent {
     font-size: 0.7rem;
   }
 
   .badgeNumber {
     font-size: 1rem;
+  }
+  .heartNumber {
+    font-size: 1.2rem;
+  }
+  .heartText {
+    font-size: 0.8rem;
+  }
+  .heartContainer svg {
+    width: 80px;
+    height: 80px;
   }
 }

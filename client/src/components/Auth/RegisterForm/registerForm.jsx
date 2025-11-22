@@ -10,7 +10,7 @@ import {
   PawPrint,
   UserCog,
 } from "lucide-react";
-import { toast } from "react-toastify";
+import toast from "react-hot-toast";
 import styles from "./registerForm.module.css";
 import { API_BASE_URL } from "../../../utils/constants";
 

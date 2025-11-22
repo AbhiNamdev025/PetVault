@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import styles from "./ngoManagement.module.css";
 import { API_BASE_URL, BASE_URL } from "../../../../../../utils/constants";
 import { Plus, Search, Edit, Trash2 } from "lucide-react";
-import { toast } from "react-toastify";
+import toast from "react-hot-toast";
 import AddPetModal from "../PetManagement/addPetModal";
 import EditPetModal from "../PetManagement/editPetModal";
 import ConfirmationModal from "../../../../../ConfirmationModal/ConfirmationModal";
@@ -32,7 +32,7 @@ const NgoManagement = ({ user }) => {
     }
 
     try {
-      const res = await fetch(`${API_BASE_URL}/pets/ngo/${ngoId}`, {
+      const res = await fetch(`${API_BASE_URL}/ngo/${ngoId}/pets`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 

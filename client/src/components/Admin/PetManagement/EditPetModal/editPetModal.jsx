@@ -2,8 +2,7 @@ import React, { useState, useEffect } from "react";
 import { X, Upload } from "lucide-react";
 import styles from "./editPetModal.module.css";
 import { API_BASE_URL } from "../../../../utils/constants";
-import { toast } from "react-toastify";
-
+import toast from "react-hot-toast";
 const EditPetModal = ({ pet, onClose }) => {
   if (!pet) return null;
 

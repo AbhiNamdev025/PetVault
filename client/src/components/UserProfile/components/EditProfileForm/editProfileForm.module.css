@@ -240,3 +240,56 @@
     font-size: 1rem;
   }
 }
+.daysCheckboxGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.dayCheckboxLabel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: white;
+  border: 1px solid #e8e6f9;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+}
+
+.dayCheckboxLabel:hover {
+  border-color: #8b5cf6;
+  background: #faf7ff;
+}
+
+.dayCheckbox {
+  width: 16px;
+  height: 16px;
+  accent-color: #6d28d9;
+}
+
+.dayText {
+  font-weight: 500;
+  color: #374151;
+}
+
+@media (max-width: 768px) {
+  .daysCheckboxGrid {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+
+  .dayCheckboxLabel {
+    padding: 6px 10px;
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .daysCheckboxGrid {
+    grid-template-columns: 1fr;
+  }
+}

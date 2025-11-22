@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styles from "./orderManagement.module.css";
 import { API_BASE_URL } from "../../../utils/constants";
-import { toast } from "react-toastify";
+import toast from "react-hot-toast";
 import {
   Package,
   CheckCircle,
@@ -19,7 +19,11 @@ const OrderManagement = () => {
   const [filteredOrders, setFilteredOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState("all");
-  const [popup, setPopup] = useState({ open: false, orderId: null, newStatus: "" });
+  const [popup, setPopup] = useState({
+    open: false,
+    orderId: null,
+    newStatus: "",
+  });
   const [updatingId, setUpdatingId] = useState(null);
 
   const fetchOrders = async () => {
@@ -70,9 +74,7 @@ const OrderManagement = () => {
       if (res.ok) {
         toast.success(`Order marked as ${newStatus}`);
         setOrders((prev) =>
-          prev.map((o) =>
-            o._id === orderId ? { ...o, status: newStatus } : o
-          )
+          prev.map((o) => (o._id === orderId ? { ...o, status: newStatus } : o))
         );
       } else {
         toast.error("Failed to update order status");
@@ -107,7 +109,9 @@ const OrderManagement = () => {
 
   const renderStatusIcon = (status) => {
     if (status === "confirmed")
-      return <CheckCircle className={`${styles.statusIcon} ${styles.confirmed}`} />;
+      return (
+        <CheckCircle className={`${styles.statusIcon} ${styles.confirmed}`} />
+      );
     else if (status === "shipped")
       return <Truck className={`${styles.statusIcon} ${styles.shipped}`} />;
     else if (status === "delivered")
@@ -161,7 +165,9 @@ const OrderManagement = () => {
                 </button>
                 <div className={styles.status}>
                   {renderStatusIcon(order.status)}
-                  <span className={`${styles.statusText} ${styles[order.status]}`}>
+                  <span
+                    className={`${styles.statusText} ${styles[order.status]}`}
+                  >
                     {order.status}
                   </span>
                 </div>

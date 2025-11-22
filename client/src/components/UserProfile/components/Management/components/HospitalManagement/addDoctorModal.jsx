@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import styles from "./hospitalManagement.module.css";
 import { API_BASE_URL } from "../../../../../../utils/constants";
-import { toast } from "react-toastify";
-
+import toast from "react-hot-toast";
 const AddDoctorModal = ({ hospitalId, onClose, onAdded }) => {
   const [form, setForm] = useState({
     name: "",
@@ -75,19 +74,35 @@ const AddDoctorModal = ({ hospitalId, onClose, onAdded }) => {
         <input name="password" placeholder="Enter password" onChange={change} />
 
         <label>Doctor Display Name</label>
-        <input name="doctorName" placeholder="Enter doctor name" onChange={change} />
+        <input
+          name="doctorName"
+          placeholder="Enter doctor name"
+          onChange={change}
+        />
 
         <label>Specialization</label>
-        <input name="doctorSpecialization" placeholder="e.g. Cardiologist" onChange={change} />
+        <input
+          name="doctorSpecialization"
+          placeholder="e.g. Cardiologist"
+          onChange={change}
+        />
 
         <label>Experience (Years)</label>
         <input name="doctorExperience" placeholder="e.g. 5" onChange={change} />
 
         <label>Consultation Fee</label>
-        <input name="consultationFee" placeholder="e.g. 400" onChange={change} />
+        <input
+          name="consultationFee"
+          placeholder="e.g. 400"
+          onChange={change}
+        />
 
         <label>Certificates</label>
-        <input name="doctorCertificates" placeholder="Enter certificates" onChange={change} />
+        <input
+          name="doctorCertificates"
+          placeholder="Enter certificates"
+          onChange={change}
+        />
 
         <label>Upload Avatar</label>
         <input type="file" onChange={(e) => setAvatar(e.target.files[0])} />

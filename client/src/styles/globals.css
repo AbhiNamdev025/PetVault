@@ -20,3 +20,19 @@ body {
   margin: 0 auto;
   padding: 0 20px;
 }
+/* Mobile toast optimization */
+@media (max-width: 768px) {
+  [data-react-hot-toast] {
+    width: 90% !important;
+    left: 5% !important;
+    right: 5% !important;
+  }
+}
+
+@media (max-width: 480px) {
+  [data-react-hot-toast] {
+    width: 95% !important;
+    left: 2.5% !important;
+    right: 2.5% !important;
+  }
+}

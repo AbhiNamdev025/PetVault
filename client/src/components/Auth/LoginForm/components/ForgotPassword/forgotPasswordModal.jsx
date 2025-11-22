@@ -2,8 +2,7 @@ import React, { useState } from "react";
 import { X, Eye, EyeOff } from "lucide-react";
 import styles from "./ForgotPasswordModal.module.css";
 import { API_BASE_URL } from "../../../../../utils/constants";
-import { toast } from "react-toastify";
-
+import toast from "react-hot-toast";
 const ForgotPasswordModal = ({ onClose }) => {
   const [step, setStep] = useState("forgot");
   const [email, setEmail] = useState("");

@@ -15,7 +15,6 @@ const CaretakerCards = () => {
         const res = await fetch(`${API_BASE_URL}/caretaker`);
         const data = await res.json();
         
-        // Fetch daycare details for caretakers who have daycareId
         const caretakersWithDaycare = await Promise.all(
           (Array.isArray(data) ? data : []).map(async (caretaker) => {
             if (caretaker.roleData?.daycareId) {
@@ -59,7 +58,7 @@ const CaretakerCards = () => {
   const goToDetails = (c) => navigate(`/caretaker/${c._id}`, { state: { caretaker: c } });
   
   const goToDaycare = (id, e) => {
-    e.stopPropagation(); // Prevent card click
+    e.stopPropagation(); 
     navigate(`/daycare/${id}`);
   };
 

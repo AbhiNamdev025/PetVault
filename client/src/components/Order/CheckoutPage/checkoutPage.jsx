@@ -3,8 +3,7 @@ import CheckoutForm from "../checkoutForm/checkoutForm";
 import OrderConfirmation from "../Confirmation/confirmation";
 import { getCart, clearCart } from "../../Cart/cartServices";
 import styles from "./checkoutPage.module.css";
-import { toast } from "react-toastify";
-
+import toast from "react-hot-toast";
 const CheckoutPage = () => {
   const [cartItems, setCartItems] = useState([]);
   const [loadingCart, setLoadingCart] = useState(true);

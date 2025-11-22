@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import styles from "./hospitalManagement.module.css";
 import { API_BASE_URL } from "../../../../../../utils/constants";
-import { toast } from "react-toastify";
-
+import toast from "react-hot-toast";
 const EditDoctorModal = ({ doctor, onClose, onUpdated }) => {
   const [form, setForm] = useState({
     doctorName: doctor.roleData?.doctorName || "",

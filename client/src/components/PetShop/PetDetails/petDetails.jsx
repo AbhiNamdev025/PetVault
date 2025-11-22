@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft, Store } from "lucide-react";
-import { toast } from "react-toastify";
+import toast from "react-hot-toast";
 import EnquiryModal from "../EnquiryModal/enquiryModal";
 import styles from "./petDetails.module.css";
 import { API_BASE_URL, BASE_URL } from "../../../utils/constants";
@@ -51,25 +51,76 @@ const PetDetails = () => {
 
   const handleEnquirySubmit = async (enquiryData) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/enquiries`, {
+      const token =
+        localStorage.getItem("token") || sessionStorage.getItem("token");
+      const user =
+        JSON.parse(localStorage.getItem("user")) ||
+        JSON.parse(sessionStorage.getItem("user"));
+
+      if (!token || !user) {
+        toast.error("Please login first");
+        return;
+      }
+
+      if (!pet || !pet.shopId) {
+        toast.error("Shop ID missing");
+        return;
+      }
+
+      const shopId =
+        typeof pet.shopId === "string" ? pet.shopId : pet.shopId._id;
+
+      const formatPetType = (t) =>
+        t.charAt(0).toUpperCase() + t.slice(1).toLowerCase();
+
+      const shopRes = await fetch(`${API_BASE_URL}/user/${shopId}`);
+      const shop = await shopRes.json();
+
+      const appointmentBody = {
+        providerType: "shop",
+        providerId: shopId,
+        service: "shop",
+        petName: pet.name,
+        petType: formatPetType(pet.type),
+        parentPhone: enquiryData.phone,
+        date: enquiryData.preferredDate,
+        time: enquiryData.preferredTime,
+        reason: enquiryData.message,
+        healthIssues: "N/A",
+        userName: enquiryData.name,
+        userEmail: enquiryData.email,
+      };
+
+      const appointmentRes = await fetch(`${API_BASE_URL}/appointments`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
+        body: JSON.stringify(appointmentBody),
+      });
+
+      const appointment = await appointmentRes.json();
+
+      await fetch(`${API_BASE_URL}/enquiries`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          ...enquiryData,
+          name: enquiryData.name,
+          email: enquiryData.email,
+          phone: enquiryData.phone,
+          message: enquiryData.message,
           petId: pet._id,
           petName: pet.name,
+          shopEmail: shop.email,
+          shopName: shop.name,
+          appointmentId: appointment._id,
         }),
       });
 
-      if (response.ok) {
-        toast.success("Enquiry sent successfully!");
-        setShowEnquiryModal(false);
-      } else {
-        toast.error("Failed to send enquiry");
-      }
-    } catch (error) {
+      toast.success("Enquiry sent");
+      setShowEnquiryModal(false);
+    } catch (err) {
       toast.error("Failed to send enquiry");
     }
   };

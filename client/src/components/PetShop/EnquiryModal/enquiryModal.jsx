@@ -9,6 +9,9 @@ const EnquiryModal = ({ pet, onClose, onSubmit }) => {
     email: "",
     phone: "",
     message: "",
+    preferredDate: "",
+    preferredTime: "",
+    service: "shop"
   });
 
   const [loading, setLoading] = useState(false);
@@ -26,6 +29,13 @@ const EnquiryModal = ({ pet, onClose, onSubmit }) => {
       [e.target.name]: e.target.value,
     });
   };
+
+  // Generate time slots
+  const timeSlots = [];
+  for (let hour = 9; hour <= 17; hour++) {
+    timeSlots.push(`${hour.toString().padStart(2, "0")}:00`);
+    timeSlots.push(`${hour.toString().padStart(2, "0")}:30`);
+  }
 
   return (
     <div className={styles.modalOverlay}>
@@ -97,14 +107,45 @@ const EnquiryModal = ({ pet, onClose, onSubmit }) => {
           </div>
 
           <div className={styles.formGroup}>
-            <label htmlFor="message">Message</label>
+            <label htmlFor="preferredDate">Preferred Date *</label>
+            <input
+              type="date"
+              id="preferredDate"
+              name="preferredDate"
+              value={formData.preferredDate}
+              onChange={handleChange}
+              required
+              min={new Date().toISOString().split("T")[0]}
+            />
+          </div>
+
+          <div className={styles.formGroup}>
+            <label htmlFor="preferredTime">Preferred Time *</label>
+            <select
+              id="preferredTime"
+              name="preferredTime"
+              value={formData.preferredTime}
+              onChange={handleChange}
+              required
+            >
+              <option value="">Select a time</option>
+              {timeSlots.map((time) => (
+                <option key={time} value={time}>
+                  {time}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className={styles.formGroup}>
+            <label htmlFor="message">Message *</label>
             <textarea
               id="message"
               name="message"
               rows="4"
               value={formData.message}
               onChange={handleChange}
-              placeholder="Tell us about your interest in this pet..."
+              placeholder="Tell us about your interest in this pet and any specific requirements..."
               minLength={10}
               required
               style={{ resize: "none" }}

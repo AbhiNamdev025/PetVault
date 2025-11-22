@@ -4,8 +4,7 @@ import { API_BASE_URL } from "../../../../utils/constants";
 
 import VetAppointmentForm from "../VetAppointment/vetAppointmentForm";
 import LoginPopup from "../../../LoginPopup/loginPopup";
-import { toast } from "react-toastify";
-
+import toast from "react-hot-toast";
 import DoctorImageSection from "./components/DoctorImageSection/doctorImageSection";
 import DoctorInfoSection from "./components/DoctorInfoSection/doctorInfoSection";
 import DoctorTabs from "./components/DoctorTabs/doctorTabs";

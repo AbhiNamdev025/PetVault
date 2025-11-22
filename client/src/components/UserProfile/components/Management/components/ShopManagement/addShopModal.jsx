@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import styles from "./shopManagement.module.css";
 import { API_BASE_URL } from "../../../../../../utils/constants";
-import { toast } from "react-toastify";
-
+import toast from "react-hot-toast";
 const AddProductModal = ({ onClose, onAdded }) => {
   const [form, setForm] = useState({
     name: "",
@@ -18,8 +17,7 @@ const AddProductModal = ({ onClose, onAdded }) => {
   const [loading, setLoading] = useState(false);
 
   const token =
-    JSON.parse(localStorage.getItem("token")) ||
-    JSON.parse(sessionStorage.getItem("token"));
+    localStorage.getItem("token") || sessionStorage.getItem("token");
   const savedUser = JSON.parse(
     localStorage.getItem("user") || sessionStorage.getItem("user") || "null"
   );

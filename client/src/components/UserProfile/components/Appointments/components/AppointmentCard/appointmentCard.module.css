@@ -260,3 +260,25 @@
     font-size: 0.85rem;
   }
 }
+
+
+
+.rescueBadge {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: linear-gradient(135deg, #fef3c7, #fde68a);
+  color: #d97706;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  border: 1px solid #fcd34d;
+}
+
+.serviceName {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}

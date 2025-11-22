@@ -9,8 +9,7 @@ import {
 } from "lucide-react";
 import { API_BASE_URL } from "../../../../utils/constants";
 import styles from "./daycareDetails.module.css";
-import { toast } from "react-toastify";
-
+import toast from "react-hot-toast";
 const DaycareDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();

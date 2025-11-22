@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Mail, Lock, Eye, EyeOff, PawPrint } from "lucide-react";
-import { toast } from "react-toastify";
+import toast from "react-hot-toast";
 import { API_BASE_URL } from "../../../utils/constants";
 import styles from "./loginForm.module.css";
 import ForgotPasswordModal from "./components/ForgotPassword/forgotPasswordModal";

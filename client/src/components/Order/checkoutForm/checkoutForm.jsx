@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { toast } from "react-toastify";
+import toast from "react-hot-toast";
 import styles from "./checkoutForm.module.css";
 import { API_BASE_URL } from "../../../utils/constants";
 
@@ -43,8 +43,7 @@ const CheckoutForm = ({ cartItems, totalAmount, onSuccess }) => {
     }
 
     const token =
-      JSON.parse(localStorage.getItem("token")) ||
-      JSON.parse(sessionStorage.getItem("token"));
+      localStorage.getItem("token") || sessionStorage.getItem("token");
     if (!token) {
       toast.info("Please login to continue checkout");
       return;

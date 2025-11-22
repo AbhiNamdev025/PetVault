@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import styles from "./shopManagement.module.css";
 import { API_BASE_URL } from "../../../../../../utils/constants";
-import { toast } from "react-toastify";
-
+import toast from "react-hot-toast";
 const EditProductModal = ({ product, onClose, onUpdated }) => {
   const [form, setForm] = useState({
     name: product.name || "",

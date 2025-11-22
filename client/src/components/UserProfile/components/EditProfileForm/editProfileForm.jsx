@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styles from "./editProfileForm.module.css";
 import { API_BASE_URL } from "../../../../utils/constants";
-import { toast } from "react-toastify";
+import toast from "react-hot-toast";
 
 const getRoleFields = (role) => {
   const fields = {
@@ -198,12 +198,18 @@ const EditProfileForm = ({ user, onUpdate }) => {
     }
   };
 
-  const handleDaysChange = (e) => {
-    const selected = Array.from(e.target.selectedOptions, (o) => o.value);
-    setFormData((p) => ({
-      ...p,
-      availability: { ...p.availability, days: selected },
-    }));
+  const handleDayCheckboxChange = (day) => {
+    setFormData((p) => {
+      const currentDays = p.availability.days || [];
+      const newDays = currentDays.includes(day)
+        ? currentDays.filter((d) => d !== day)
+        : [...currentDays, day];
+      
+      return {
+        ...p,
+        availability: { ...p.availability, days: newDays },
+      };
+    });
   };
 
   const handleSubmit = async () => {
@@ -465,19 +471,19 @@ const EditProfileForm = ({ user, onUpdate }) => {
 
             <div className={styles.fieldGroup}>
               <label className={styles.label}>Working Days</label>
-              <select
-                multiple
-                className={styles.select}
-                value={formData.availability.days}
-                onChange={handleDaysChange}
-                size={4}
-              >
+              <div className={styles.daysCheckboxGrid}>
                 {daysOfWeek.map((day) => (
-                  <option key={day} value={day}>
-                    {day}
-                  </option>
+                  <label key={day} className={styles.dayCheckboxLabel}>
+                    <input
+                      type="checkbox"
+                      checked={formData.availability.days?.includes(day) || false}
+                      onChange={() => handleDayCheckboxChange(day)}
+                      className={styles.dayCheckbox}
+                    />
+                    <span className={styles.dayText}>{day}</span>
+                  </label>
                 ))}
-              </select>
+              </div>
             </div>
 
             <div className={styles.fieldGroup}>

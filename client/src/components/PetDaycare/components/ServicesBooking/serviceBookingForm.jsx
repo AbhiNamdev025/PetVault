@@ -11,7 +11,7 @@ import {
   X,
   MessageCircleCode,
 } from "lucide-react";
-import { toast } from "react-toastify";
+import toast from "react-hot-toast";
 import styles from "./serviceBookingForm.module.css";
 import { API_BASE_URL } from "../../../../utils/constants";
 

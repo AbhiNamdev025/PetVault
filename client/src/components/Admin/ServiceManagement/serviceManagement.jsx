@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Plus, Search, Filter, Edit, Trash2, Image } from "lucide-react";
-import { toast } from "react-toastify";
+import toast from "react-hot-toast";
 import AddServiceModal from "./AddServiceModal/addServiceModal";
 import EditServiceModal from "./EditServiceModal/editServiceModal";
 import DeleteConfirmationModal from "../DeleteConfirmationModal/deleteConfirmationModal";

@@ -12,7 +12,7 @@ import {
   Handshake,
   Star,
 } from "lucide-react";
-import { toast } from "react-toastify";
+import toast from "react-hot-toast";
 import styles from "./caretakerBookingForm.module.css";
 import { API_BASE_URL, BASE_URL } from "../../../../../utils/constants";
 

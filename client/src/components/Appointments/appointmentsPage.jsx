@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { PawPrint, FileText, Loader2 } from "lucide-react";
-import { toast } from "react-toastify";
+import toast from "react-hot-toast";
 import styles from "./appointmentsPage.module.css";
 import { API_BASE_URL } from "../../utils/constants";
 import AppointmentCard from "./Appointment Card/appointmentsCard";

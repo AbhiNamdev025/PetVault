@@ -15,7 +15,9 @@ const Appointments = ({ list, onUpdateStatus, userRole }) => {
     "caretaker",
     "daycare",
     "doctor",
+    "ngo",
     "hospital",
+    "shop",
   ].includes(userRole);
 
   const handleStatusUpdate = async (appointmentId, newStatus) => {

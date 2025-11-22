@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
+import toast from "react-hot-toast";
 import PetFilters from "../PetShop/PetFilters/petFilters";
 import PetGrid from "./AdoptionPetGrid/adoptionPetGrid";
 import EnquiryModal from "./AdoptionEnquiryModal/adoptionEnquiryModal";
@@ -82,23 +82,85 @@ const PetAdoption = () => {
 
   const handleEnquirySubmit = async (enquiryData) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/enquiries`, {
+      const token =
+        localStorage.getItem("token") || sessionStorage.getItem("token");
+      const user =
+        JSON.parse(localStorage.getItem("user")) ||
+        JSON.parse(sessionStorage.getItem("user"));
+
+      if (!token || !user) {
+        toast.error("Please login first");
+        return;
+      }
+
+      if (!selectedPet || !selectedPet.ngoId) {
+        toast.error("NGO ID missing");
+        return;
+      }
+
+      // NGO ID (same as shopId logic)
+      const ngoId =
+        typeof selectedPet.ngoId === "string"
+          ? selectedPet.ngoId
+          : selectedPet.ngoId._id;
+
+      // FETCH NGO DETAILS
+      const ngoRes = await fetch(`${API_BASE_URL}/user/${ngoId}`);
+      const ngo = await ngoRes.json();
+
+      if (!ngo || !ngo.email) {
+        toast.error("NGO email not found");
+        return;
+      }
+
+      // Create appointment
+      const appointmentBody = {
+        providerType: "ngo",
+        providerId: ngoId,
+        service: "pet_adoption",
+        petName: selectedPet.name,
+        petType: selectedPet.type,
+        parentPhone: enquiryData.phone,
+        date: enquiryData.preferredDate,
+        time: enquiryData.preferredTime,
+        reason: enquiryData.message,
+        healthIssues: "N/A",
+        userName: enquiryData.name,
+        userEmail: enquiryData.email,
+      };
+
+      const appointmentRes = await fetch(`${API_BASE_URL}/appointments`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(appointmentBody),
+      });
+
+      const appointment = await appointmentRes.json();
+
+      // SEND ENQUIRY TO BACKEND
+      await fetch(`${API_BASE_URL}/enquiries`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          ...enquiryData,
+          name: enquiryData.name,
+          email: enquiryData.email,
+          phone: enquiryData.phone,
+          message: enquiryData.message,
           petId: selectedPet._id,
           petName: selectedPet.name,
+          providerEmail: ngo.email,
+          providerName: ngo.name || ngo.businessName,
+          providerType: "ngo",
+          appointmentId: appointment._id,
         }),
       });
 
-      if (response.ok) {
-        toast.success("Enquiry sent successfully!");
-        setShowEnquiryModal(false);
-        setSelectedPet(null);
-      } else {
-        toast.error("Failed to send enquiry");
-      }
+      toast.success("Enquiry sent");
+      setShowEnquiryModal(false);
+      setSelectedPet(null);
     } catch (error) {
       toast.error("Failed to send enquiry");
     }

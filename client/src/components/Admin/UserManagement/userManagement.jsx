@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styles from "./userManagement.module.css";
 import { API_BASE_URL } from "../../../utils/constants";
-import { toast } from "react-toastify";
+import toast from "react-hot-toast";
 import UserCard from "./UserCards/userCard";
 
 function UserManagement() {

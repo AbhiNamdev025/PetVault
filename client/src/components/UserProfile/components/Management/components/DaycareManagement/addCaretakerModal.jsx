@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import styles from "./daycareManagement.module.css";
 import { API_BASE_URL } from "../../../../../../utils/constants";
-import { toast } from "react-toastify";
-
+import toast from "react-hot-toast";
 const AddCaretakerModal = ({ daycareId, onClose, onAdded }) => {
   const [form, setForm] = useState({
     name: "",

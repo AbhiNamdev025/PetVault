@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styles from "./petManagement.module.css";
 import { API_BASE_URL } from "../../../../../../utils/constants";
-import { toast } from "react-toastify";
-
+import toast from "react-hot-toast";
 const EditPetModal = ({ pet, onClose, onUpdated }) => {
   const savedUser = JSON.parse(localStorage.getItem("user"));
   const isNgo = savedUser?.role === "ngo";

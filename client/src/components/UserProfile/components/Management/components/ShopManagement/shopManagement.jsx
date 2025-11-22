@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import styles from "./shopManagement.module.css";
 import { API_BASE_URL } from "../../../../../../utils/constants";
 import { Plus, Search, Edit, Trash2 } from "lucide-react";
-import { toast } from "react-toastify";
+import toast from "react-hot-toast";
 import AddProductModal from "./addShopModal";
 import EditProductModal from "./editShopModal";
 import ConfirmationModal from "../../../../../ConfirmationModal/ConfirmationModal";

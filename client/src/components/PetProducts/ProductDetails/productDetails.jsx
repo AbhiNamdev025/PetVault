@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Star, ArrowLeft, CheckCircle, Store } from "lucide-react";
-import { toast } from "react-toastify";
+import toast from "react-hot-toast";
 import { API_BASE_URL } from "../../../utils/constants";
 import styles from "./productDetails.module.css";
 

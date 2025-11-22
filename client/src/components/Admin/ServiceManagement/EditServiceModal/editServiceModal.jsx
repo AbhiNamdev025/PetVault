@@ -2,8 +2,7 @@ import React, { useState, useEffect } from "react";
 import { X, Upload } from "lucide-react";
 import styles from "./editServiceModal.module.css";
 import { API_BASE_URL } from "../../../../utils/constants";
-import { toast } from "react-toastify";
-
+import toast from "react-hot-toast";
 const EditServiceModal = ({ service, onClose, onSave }) => {
   if (!service || !service._id) return null;
 

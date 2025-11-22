@@ -3,8 +3,7 @@ import { useParams, useLocation, useNavigate } from "react-router-dom";
 import { API_BASE_URL, BASE_URL } from "../../../../../utils/constants";
 import CaretakerBookingForm from "../CaretakerForm/caretakerBookingForm";
 import LoginPopup from "../../../../LoginPopup/loginPopup";
-import { toast } from "react-toastify";
-
+import toast from "react-hot-toast";
 import ImageGallery from "./components/ImageGallery/imageGallery";
 import InfoSection from "./components/InfoSection/infoSection";
 import Tabs from "./components/Tabs/tabs";
