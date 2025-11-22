@@ -15,9 +15,9 @@ const { roleUpload } = require("../middleware/upload");
 
 router.post("/", roleUpload, createUserForRole("shop"));
 router.get("/", getUsersByRole("shop"));
-router.get("/:id", getUserById);
 router.put("/:id", roleUpload, updateUser);
 router.delete("/:id", deleteUser);
+router.get("/:id", getUserById);
 
 router.post("/:id/rate", protect, rateShop);
 

@@ -4,14 +4,32 @@ const createAppointment = async (req, res) => {
   try {
     const petImages = req.files?.petImages?.map((f) => f.filename) || [];
 
-    const appointment = await Appointment.create({
-      ...req.body,
+    const appointmentData = {
+      providerId: req.body.providerId,
+      providerType: req.body.providerType, // <-- IMPORTANT FOR ADOPTION
+      service: req.body.service, // <-- IMPORTANT FOR ADOPTION
+      petName: req.body.petName,
+      petType: req.body.petType,
+      parentPhone: req.body.parentPhone,
+      date: req.body.date,
+      time: req.body.time,
+      reason: req.body.reason,
+      healthIssues: req.body.healthIssues,
+      userName: req.body.userName,
+      userEmail: req.body.userEmail,
       user: req.user._id,
       petImages,
-    });
+    };
 
-    res.status(201).json(appointment);
+    const appointment = await Appointment.create(appointmentData);
+
+    const populated = await Appointment.findById(appointment._id)
+      .populate("providerId", "name email avatar role roleData")
+      .populate("user", "name email");
+
+    res.status(201).json(populated);
   } catch (error) {
+    console.log("APPOINTMENT ERROR:", error);
     res.status(500).json({ message: error.message });
   }
 };

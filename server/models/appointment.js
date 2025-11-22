@@ -10,7 +10,7 @@ const appointmentSchema = new mongoose.Schema(
     providerType: {
       type: String,
       required: true,
-      enum: ["doctor", "caretaker"],
+      enum: ["doctor", "caretaker", "ngo", "shop"],
     },
     providerId: {
       type: mongoose.Schema.Types.ObjectId,
@@ -20,7 +20,16 @@ const appointmentSchema = new mongoose.Schema(
     service: {
       type: String,
       required: true,
-      enum: ["vet", "daycare", "grooming", "training", "boarding", "others"],
+      enum: [
+        "vet",
+        "daycare",
+        "grooming",
+        "training",
+        "boarding",
+        "pet_adoption",
+        "shop",
+        "others",
+      ],
     },
     petName: {
       type: String,
@@ -29,8 +38,22 @@ const appointmentSchema = new mongoose.Schema(
     petType: {
       type: String,
       required: true,
-      enum: ["Dog", "Cat", "Bird", "Others"],
+      enum: [
+        "Dog",
+        "dog",
+        "Cat",
+        "cat",
+        "Bird",
+        "bird",
+        "Rabbit",
+        "rabbit",
+        "Fish",
+        "fish",
+        "Other",
+        "other",
+      ],
     },
+
     parentPhone: {
       type: String,
       required: true,
@@ -60,6 +83,12 @@ const appointmentSchema = new mongoose.Schema(
       type: String,
       enum: ["pending", "confirmed", "completed", "cancelled"],
       default: "pending",
+    },
+    userEmail: {
+      type: String,
+    },
+    userName: {
+      type: String,
     },
   },
   { timestamps: true }

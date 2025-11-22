@@ -1,8 +1,26 @@
 const nodemailer = require("nodemailer");
+const Appointment = require("../models/appointment");
 
 const sendEnquiryEmail = async (req, res) => {
   try {
-    const { name, email, phone, message, petId, petName } = req.body;
+    const {
+      name,
+      email,
+      phone,
+      message,
+      petId,
+      petName,
+      appointmentId,
+      providerEmail,
+      providerName,
+      providerType,
+    } = req.body;
+
+    const toEmail =
+      providerEmail ||
+      req.body.shopEmail ||
+      req.body.ngoEmail ||
+      process.env.EMAIL_USER;
 
     const transporter = nodemailer.createTransport({
       service: "gmail",
@@ -12,106 +30,100 @@ const sendEnquiryEmail = async (req, res) => {
       },
     });
 
-    const mailOptions = {
-      from: email,
-      to: process.env.EMAIL_USER,
-      subject: `Pet Enquiry - ${petName}`,
-      text: `
-New Pet Enquiry
+    let appointment = null;
+    let appointmentInfoHTML = "";
+    let appointmentInfoText = "";
 
-Pet Details:
-Pet Name: ${petName}
+    let serviceTypeLabel =
+      providerType === "ngo" ? "Pet Adoption" : "Shop Appointment";
+
+    if (appointmentId) {
+      appointment = await Appointment.findById(appointmentId).populate(
+        "providerId",
+        "name"
+      );
+
+      if (appointment) {
+        const formattedDate = new Date(appointment.date).toLocaleDateString();
+
+        serviceTypeLabel =
+          appointment.service === "pet_adoption"
+            ? "Pet Adoption"
+            : "Shop Appointment";
+
+        appointmentInfoHTML = `
+          <div>
+            <strong>Date:</strong> ${formattedDate}<br/>
+            <strong>Time:</strong> ${appointment.time}<br/>
+            <strong>Service:</strong> ${serviceTypeLabel}
+          </div>
+        `;
+
+        appointmentInfoText = `
+Date: ${formattedDate}
+Time: ${appointment.time}
+Service: ${serviceTypeLabel}
+`;
+      }
+    }
+
+    const subject =
+      serviceTypeLabel === "Pet Adoption"
+        ? `New Pet Adoption Enquiry - ${petName}`
+        : `New Shop Appointment Enquiry - ${petName}`;
+
+    const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: toEmail,
+      replyTo: email,
+      subject,
+      text: `
+${serviceTypeLabel} Enquiry
+
+Pet: ${petName}
 Pet ID: ${petId}
 
-Contact Information:
-Name: ${name}
+Customer: ${name}
 Email: ${email}
 Phone: ${phone}
 
-Customer Message:
+Message:
 ${message}
 
-Enquiry received: ${new Date().toLocaleString()}
-
-Please respond to the customer within 24 hours.
-
-Best regards,
-PetShop Team
+${appointmentInfoText}
       `,
       html: `
-<!DOCTYPE html>
-<html>
-<head>
-  <style>
-    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 20px; }
-    .container { max-width: 600px; margin: 0 auto; background: white; }
-    .section { margin-bottom: 20px; padding: 15px; border: 1px solid #ddd; border-radius: 5px; }
-    .section-title { font-weight: bold; margin-bottom: 10px; color: #2d3748; }
-    .field { margin-bottom: 8px; }
-    .label { font-weight: bold; color: #4a5568; }
-    .footer { margin-top: 20px; padding-top: 15px; border-top: 1px solid #e2e8f0; color: #718096; font-size: 14px; }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <h2>New Pet Enquiry</h2>
-    
-    <div class="section">
-      <div class="section-title">Pet Details</div>
-      <div class="field">
-        <span class="label">Pet Name:</span> ${petName}
-      </div>
-      <div class="field">
-        <span class="label">Pet ID:</span> ${petId}
-      </div>
-    </div>
+      <html>
+      <body>
+        <h2>${serviceTypeLabel} Enquiry</h2>
 
-    <div class="section">
-      <div class="section-title">Contact Information</div>
-      <div class="field">
-        <span class="label">Name:</span> ${name}
-      </div>
-      <div class="field">
-        <span class="label">Email:</span> ${email}
-      </div>
-      <div class="field">
-        <span class="label">Phone:</span> ${phone}
-      </div>
-    </div>
+        <h3>Provider</h3>
+        <p>${providerName}<br/>${providerEmail}</p>
 
-    <div class="section">
-      <div class="section-title">Customer Message</div>
-      <div>${message.replace(/\n/g, "<br>")}</div>
-    </div>
+        <h3>Pet Details</h3>
+        <p>${petName} (ID: ${petId})</p>
 
-    <div class="footer">
-      <div>Enquiry received: ${new Date().toLocaleString()}</div>
-      <div><strong>Please respond to the customer within 24 hours.</strong></div>
-      <div>Best regards,<br>PetShop Team</div>
-    </div>
-  </div>
-</body>
-</html>
+        <h3>Customer</h3>
+        <p>${name}<br/>${email}<br/>${phone}</p>
+
+        ${appointmentInfoHTML}
+
+        <h3>Message</h3>
+        <p>${message}</p>
+
+        <hr/>
+        <p>Received at ${new Date().toLocaleString()}</p>
+      </body>
+      </html>
       `,
     };
 
     await transporter.sendMail(mailOptions);
 
-    res.status(200).json({
-      success: true,
-      message: "Enquiry sent successfully!",
-    });
-    console.log(
-      "Enquiry of Buying Product Sent By ",
-      mailOptions.from,
-      mailOptions.subject
-    );
+    res.status(200).json({ success: true, message: "Enquiry sent successfully!" });
   } catch (error) {
     console.error("Error sending enquiry email:", error);
-    res.status(500).json({
-      success: false,
-      message: "Failed to send enquiry.",
-    });
+    res.status(500).json({ success: false, message: "Failed to send email." });
   }
 };
 
