@@ -1,0 +1,66 @@
+.quantityControl {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-bg-secondary);
+  border-radius: var(--radius-full);
+  padding: var(--space-1);
+  border: 1px solid var(--color-border-medium);
+  width: fit-content;
+  min-height: 40px;
+  height: 40px;
+  overflow: hidden;
+}
+
+.qtyBtn {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: transparent !important;
+  border: none !important;
+  color: var(--color-primary-600) !important;
+  cursor: pointer;
+  width: 34px !important;
+  height: 34px !important;
+  min-width: 34px !important;
+  padding: 0 !important;
+  border-radius: var(--radius-full) !important;
+  transition: all var(--transition-fast) !important;
+}
+
+.qtyBtn:hover:not(:disabled) {
+  background: var(--color-primary-100) !important;
+  color: var(--color-primary-700) !important;
+}
+
+.qtyBtn:disabled {
+  color: var(--color-text-tertiary) !important;
+  cursor: not-allowed !important;
+  opacity: 0.3 !important;
+}
+
+.quantity {
+  font-family: var(--font-family);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-base);
+  margin: 0 var(--space-2);
+  color: var(--color-text-primary);
+  min-width: 24px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

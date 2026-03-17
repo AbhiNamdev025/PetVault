@@ -1,235 +1,244 @@
 .serviceSection {
-  padding: 2.5rem 1.5rem;
-  background: #faf8ff;
-  text-align: center;
-}
-
-.title {
-  font-size: 1.9rem;
-  font-weight: 800;
-  color: #5b21b6;
-  margin-bottom: 0.4rem;
-}
-
-.subtitle {
-  color: #6b7280;
-  font-size: 0.9rem;
-  margin-bottom: 2rem;
-}
-
-.cardGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 1.2rem;
-}
-
-.card {
-  background: white;
-  border-radius: 16px;
-  overflow: hidden;
-  box-shadow: 0 2px 14px rgba(0, 0, 0, 0.06);
-  transition: 0.25s ease;
-  display: flex;
-  flex-direction: column;
-}
-
-.card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 30px rgba(91, 33, 182, 0.18);
-}
-
-.imageContainer {
-  width: 100%;
-  height: 180px;
-  overflow: hidden;
-  position: relative;
-}
-
-.cardImage {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: 0.3s ease;
-}
-
-.card:hover .cardImage {
-  transform: scale(1.05);
-}
-
-.noImage {
+  padding: var(--ui-section-padding-y) var(--ui-page-padding-x);
+  background: var(--color-bg-secondary);
   display: flex;
   justify-content: center;
-  align-items: center;
-  height: 100%;
-  background: #eee6ff;
-  color: #7c3aed;
+}
+
+.container {
+  max-width: var(--ui-page-max-width);
+  width: 100%;
+}
+
+.headerArea {
+  margin-bottom: var(--ui-section-gap);
+}
+
+.badgeWrapper {
+  margin-bottom: var(--space-5);
 }
 
 .badge {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  padding: 4px 10px;
-  font-size: 0.7rem;
-  border-radius: 14px;
-  color: white;
-  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  background: var(--color-primary-100);
+  color: var(--color-primary-600);
+  padding: var(--space-2) var(--space-5);
+  border-radius: var(--radius-3xl);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
   text-transform: uppercase;
+  letter-spacing: 0.8px;
+  border: 1px solid var(--color-primary-100);
 }
 
-.available {
-  background: #6d28d9;
+.dot {
+  font-size: var(--font-size-xs);
+  color: var(--color-primary-600);
 }
 
-.unavailable {
-  background: #dc2626;
+.title {
+  color: var(--color-text-primary);
 }
 
-.cardContent {
-  padding: 1.2rem;
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-  text-align: left;
+.brandText {
+  color: var(--color-primary-600);
+  background: linear-gradient(
+    135deg,
+    var(--color-primary-600) 0%,
+    var(--color-secondary-500) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
-.cardTitle {
-  font-size: 1.05rem;
-  font-weight: 700;
-  color: #1e1e1e;
-  margin-bottom: 0.4rem;
+.subtitle {
+  color: var(--color-text-secondary);
+  max-width: 64ch;
 }
 
-.description {
-  font-size: 0.85rem;
-  color: #6b7280;
-  margin-bottom: 0.8rem;
-}
-
-.features {
-  display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
-  margin-bottom: 0.8rem;
-}
-
-.featureItem {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  color: #5b21b6;
-  font-size: 0.8rem;
-}
-
-.details {
-  display: flex;
-  justify-content: space-between;
-  color: #6b7280;
-  font-weight: 600;
-  margin-bottom: 1rem;
-  font-size: 0.8rem;
-}
-
-.detail {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.bookButton {
-  background: #7c3aed;
-  color: white;
-  border: none;
-  padding: 10px 14px;
-  border-radius: 10px;
-  font-weight: 600;
-  font-size: 0.85rem;
-  cursor: pointer;
-  transition: 0.22s ease;
-}
-
-.bookButton:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 18px rgba(91, 33, 182, 0.25);
-}
-
-.overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(17, 17, 17, 0.55);
-  backdrop-filter: blur(8px);
-  display: flex;
+.cardList {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 350px), 1fr));
+  gap: var(--space-6);
   justify-content: center;
-  align-items: center;
-  padding: 1.5rem;
-  z-index: 9999;
-}
-
-.modal {
-  background: white;
-  border-radius: 16px;
-  padding: 1.5rem;
-  max-width: 420px;
   width: 100%;
-  box-shadow: 0 18px 45px rgba(91, 33, 182, 0.25);
-  position: relative;
-  max-height: 85vh;
-  overflow-y: auto;
+}
+
+.card {
+  background: var(--color-bg-primary);
+  border-radius: var(--radius-2xl);
+  overflow: hidden;
   display: flex;
   flex-direction: column;
+  border: 1px solid var(--color-border-medium);
+  transition: border-color var(--transition-base);
+  height: 100%;
 }
 
-.closeButton {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  background: rgba(91, 33, 182, 0.1);
-  border: none;
-  color: #5b21b6;
-  font-size: 1.1rem;
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  transition: 0.2s ease;
+.card:hover {
+  border-color: var(--color-primary-500);
 }
 
-.closeButton:hover {
-  background: rgba(91, 33, 182, 0.25);
-  transform: rotate(90deg);
-}
-
-body.modal-open {
+.imageSection {
+  position: relative;
+  height: 280px;
+  width: 100%;
+  background: var(--color-bg-tertiary);
   overflow: hidden;
 }
 
-@media (max-width: 600px) {
+.cardImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card:hover .cardImg {
+  transform: scale(1.1);
+}
+
+.noImagePlaceholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-bg-tertiary);
+}
+
+.categoryOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    0deg,
+    color-mix(in srgb, var(--color-neutral-900) 70%, transparent) 0%,
+    color-mix(in srgb, var(--color-neutral-900) 20%, transparent) 50%,
+    transparent 100%
+  );
+  display: flex;
+  align-items: flex-end;
+  padding: var(--space-7) var(--space-8);
+}
+
+.categoryOverlay h3 {
+  color: var(--color-text-inverse);
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  margin: 0;
+}
+
+.cardContent {
+  padding: var(--space-6);
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.cardHeader {
+  display: flex;
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+  align-items: flex-start;
+}
+
+.iconCircle {
+  width: 52px;
+  height: 52px;
+  background: var(--color-primary-50);
+  color: var(--color-primary-600);
+  border-radius: var(--radius-xl);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.titleGroup h4 {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  margin: 0 0 var(--space-2) 0;
+}
+
+.titleGroup p {
+  font-size: var(--font-size-base);
+  color: var(--color-text-secondary);
+  margin: 0;
+  line-height: var(--line-height-normal);
+}
+
+.features {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 var(--space-8) 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.features li {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  font-size: var(--font-size-base);
+  color: var(--color-text-secondary);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-normal);
+}
+
+.checkWrapper {
+  margin-top: 1px;
+}
+
+.checkIcon {
+  color: var(--color-primary-600);
+  flex-shrink: 0;
+}
+
+.ctaBtn {
+  margin-top: auto;
+}
+
+.ctaIcon {
+  transition: transform 0.3s ease;
+}
+
+.ctaBtn:hover .ctaIcon {
+  transform: translateX(4px);
+}
+
+@media (max-width: 640px) {
+  .container {
+    padding: 0 var(--space-2);
+  }
   .serviceSection {
-    padding: 2rem 1rem;
+    padding: var(--ui-section-padding-y) var(--space-4);
   }
-
-  .cardGrid {
-    gap: 0.8rem;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+  .cardList {
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
   }
-
   .card {
-    border-radius: 14px;
+    border-radius: var(--radius-xl);
   }
-
-  .cardTitle {
-    font-size: 0.9rem;
+  .imageSection {
+    height: 200px;
   }
-
-  .description {
-    font-size: 0.75rem;
+  .cardContent {
+    padding: var(--space-4);
   }
-
-  .bookButton {
-    font-size: 0.75rem;
-    padding: 8px 10px;
+  .categoryOverlay {
+    padding: var(--space-4) var(--space-5);
+  }
+  .iconCircle {
+    width: 44px;
+    height: 44px;
+  }
+  .titleGroup h4 {
+    font-size: var(--font-size-lg);
   }
 }

@@ -1,6 +1,13 @@
 import React from "react";
-import { Shield, Heart, Clock, Users } from "lucide-react";
+import {
+  Shield,
+  Heart,
+  Clock,
+  Users,
+  BadgeCheck,
+} from "lucide-react";
 import styles from "./featuresSection.module.css";
+import { SectionHeader } from "../../common";
 
 const FeaturesSection = () => {
   const features = [
@@ -22,17 +29,25 @@ const FeaturesSection = () => {
       description:
         "Round-the-clock veterinary services available whenever you need",
     },
+    {
+      icon: <Users size={40} strokeWidth={2} />,
+      title: "Expert Team",
+      description:
+        "Highly qualified professionals dedicated to your pet's well-being",
+    },
   ];
 
   return (
     <section className={styles.features}>
       <div className={styles.container}>
-        <div className={styles.sectionHeader}>
-          <h2 className={styles.sectionTitle}>Why Choose Us?</h2>
-          <p className={styles.sectionSubtitle}>
-            We provide the best care and support for your furry friends
-          </p>
-        </div>
+        <SectionHeader
+          className={styles.sectionHeader}
+          align="center"
+          level="section"
+          icon={<BadgeCheck size={32} className={styles.titleIcon} />}
+          title="Why Choose Us?"
+          subtitle="We provide the best care and support for your furry friends."
+        />
 
         <div className={styles.featuresGrid}>
           {features.map((feature, index) => (

@@ -1,0 +1,325 @@
+.userListContainer {
+  background: var(--color-bg-primary);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-bg-tertiary);
+  box-shadow: var(--shadow-sm);
+}
+
+.listHeader {
+  display: grid;
+  grid-template-columns: 2.5fr 1fr 1fr 1.2fr 1.2fr var(--space-10);
+  gap: var(--space-4);
+  padding: var(--space-4) var(--space-6);
+  background: var(--color-bg-secondary);
+  border-bottom: 1px solid var(--color-bg-tertiary);
+  color: var(--color-text-tertiary);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-xs);
+  text-transform: uppercase;
+}
+
+.userRow {
+  display: grid;
+  grid-template-columns: 2.5fr 1fr 1fr 1.2fr 1.2fr var(--space-10);
+  gap: var(--space-4);
+  padding: var(--space-3) var(--space-6);
+  border-bottom: 1px solid var(--color-bg-secondary);
+  align-items: center;
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+
+.userRow:hover {
+  background: var(--color-bg-secondary);
+}
+
+.userRow:last-child {
+  border-bottom: none;
+}
+
+.loadingState,
+.emptyState {
+  padding: var(--space-8);
+  text-align: center;
+  color: var(--color-text-secondary);
+  font-style: italic;
+}
+
+/* Columns */
+.colUser,
+.colRole,
+.colStatus,
+.colMobile,
+.colDate {
+  min-width: 0;
+  font-size: var(--font-size-sm);
+}
+
+.userInfo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.avatar,
+.avatarPlaceholder {
+  width: var(--space-9);
+  height: var(--space-9);
+  border-radius: var(--radius-md);
+  flex-shrink: 0;
+  object-fit: cover;
+}
+
+.avatarPlaceholder {
+  background: var(--color-primary-50);
+  color: var(--color-primary-500);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: var(--font-weight-bold);
+}
+
+.userText {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.userName {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.userEmail {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-tertiary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.roleCell {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+}
+
+.roleDot {
+  width: var(--space-2);
+  height: var(--space-2);
+  border-radius: var(--radius-full);
+  display: inline-block;
+}
+
+.colRole {
+  display: flex;
+  align-items: center;
+}
+
+.badge {
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  display: inline-block;
+}
+
+.badge.approved {
+  background: var(--color-success-light);
+  color: var(--color-success-dark);
+}
+.badge.pending {
+  background: var(--color-warning-light);
+  color: var(--color-warning-dark);
+}
+.badge.rejected {
+  background: var(--color-error-light);
+  color: var(--color-error-dark);
+}
+.badge.archived {
+  background: var(--color-bg-tertiary);
+  color: var(--color-text-secondary);
+}
+
+.dateCell {
+  display: flex;
+  flex-direction: column;
+  font-size: var(--font-size-sm);
+}
+
+.dateCell .time {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-tertiary);
+}
+
+.colActions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.actionWrapper {
+  position: relative;
+}
+
+.miniAction {
+  background: none;
+  border: none;
+  color: var(--color-text-tertiary);
+  cursor: pointer;
+  padding: var(--space-2);
+  border-radius: var(--radius-md);
+  display: flex;
+  transition: all var(--transition-fast);
+  border: none !important;
+  background: transparent !important;
+  cursor: pointer;
+}
+
+.miniAction:hover {
+  background: var(--color-bg-tertiary) !important;
+  color: var(--color-text-primary);
+}
+
+/* Mini Menu Dropdown */
+.miniMenu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: var(--color-bg-primary);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--color-bg-tertiary);
+  z-index: var(--z-dropdown);
+  min-width: 160px;
+  padding: var(--space-2);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.miniMenu div {
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-secondary);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  border-radius: var(--radius-md);
+  transition: all var(--transition-fast);
+  cursor: pointer;
+}
+
+.miniMenu div:hover {
+  background: var(--color-bg-secondary);
+  color: var(--color-primary-500);
+}
+
+.miniMenu .approve:hover {
+  color: var(--color-success);
+  background: var(--color-success-light);
+}
+.miniMenu .reject:hover {
+  color: var(--color-error);
+  background: var(--color-error-light);
+}
+
+/* Mobile Overhaul */
+@media (max-width: 992px) {
+  .colMobile,
+  .mobileHide {
+    display: none;
+  }
+  .listHeader,
+  .userRow {
+    grid-template-columns: 2fr 1fr 1fr var(--space-10);
+  }
+}
+
+@media (max-width: 768px) {
+  .listHeader {
+    display: none;
+  }
+  .userListContainer {
+    background: var(--color-bg-primary);
+    border-radius: 0;
+    border: none;
+    box-shadow: none;
+    padding: 0;
+  }
+
+  .userRow {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    padding: var(--space-4);
+    border-bottom: 1px solid var(--color-bg-tertiary);
+    gap: var(--space-3);
+    background: var(--color-bg-primary);
+    border-radius: 0;
+    margin-bottom: 0;
+    box-shadow: none;
+    justify-content: space-between;
+  }
+
+  .userInfo {
+    width: 100%;
+    border: none;
+    padding-bottom: 0;
+    margin-bottom: 0;
+  }
+
+  .colUser,
+  .colRole,
+  .colStatus,
+  .colDate,
+  .colActions {
+    display: flex;
+    width: auto;
+    padding: 0;
+    font-size: var(--font-size-xs);
+  }
+
+  /* Remove labels as requested */
+  .colUser::before,
+  .colRole::before,
+  .colStatus::before,
+  .colDate::before,
+  .colActions::before {
+    display: none;
+  }
+
+  .roleCell {
+    font-size: var(--font-size-xs);
+    background: var(--color-bg-secondary);
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--radius-sm);
+  }
+
+  .dateCell {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-tertiary);
+    margin-left: auto;
+  }
+
+  .miniAction {
+    padding: var(--space-2);
+  }
+
+  .miniMenu {
+    min-width: 140px;
+    top: 100%;
+    bottom: auto;
+    right: 0;
+    left: auto;
+  }
+}

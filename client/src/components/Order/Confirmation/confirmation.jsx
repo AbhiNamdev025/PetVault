@@ -2,17 +2,17 @@ import React from "react";
 import { CheckCircle } from "lucide-react";
 import styles from "./confirmation.module.css";
 import { useNavigate } from "react-router-dom";
-
+import { Button } from "../../common";
 const OrderConfirmation = ({ order }) => {
   const navigate = useNavigate();
-
   return (
     <div className={styles.confirmationContainer}>
       <div className={styles.card}>
         <CheckCircle className={styles.icon} size={72} />
         <h2>Order Placed Successfully!</h2>
         <p>
-          Thank you for shopping with <span>PetVault</span>. Your order has been received and is being processed.
+          Thank you for shopping with <span>PetVault</span>. Your order has been
+          received and is being processed.
         </p>
 
         {order && (
@@ -26,6 +26,12 @@ const OrderConfirmation = ({ order }) => {
                 <strong>Items:</strong>
                 <span>{order.items.length}</span>
               </div>
+              {order.coinsValue > 0 && (
+                <div className={styles.summaryRow}>
+                  <strong>Coins Discount:</strong>
+                  <span>-₹{order.coinsValue.toFixed(2)}</span>
+                </div>
+              )}
               <div className={styles.summaryRow}>
                 <strong>Total:</strong>
                 <span>₹{order.totalAmount.toFixed(2)}</span>
@@ -39,16 +45,25 @@ const OrderConfirmation = ({ order }) => {
         )}
 
         <div className={styles.buttons}>
-          <button className={styles.primaryBtn} onClick={() => navigate("/my-orders")}>
+          <Button
+            className={styles.primaryBtn}
+            onClick={() => navigate("/my-orders")}
+            variant="primary"
+            size="md"
+          >
             View My Orders
-          </button>
-          <button className={styles.secondaryBtn} onClick={() => navigate("/products")}>
+          </Button>
+          <Button
+            className={styles.secondaryBtn}
+            onClick={() => navigate("/pet-products")}
+            variant="secondary"
+            size="md"
+          >
             Continue Shopping
-          </button>
+          </Button>
         </div>
       </div>
     </div>
   );
 };
-
 export default OrderConfirmation;

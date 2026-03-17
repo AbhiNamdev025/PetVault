@@ -1,0 +1,50 @@
+.cartBtn {
+  background: color-mix(in srgb, var(--color-text-inverse) 15%, transparent);
+  border: none;
+  height: 42px !important;
+  width: 42px !important;
+  padding: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: var(--radius-md) !important;
+  color: var(--color-text-inverse);
+  position: relative;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  overflow: visible !important;
+  min-height: 42px;
+  min-width: 42px;
+}
+
+.cartBtn:hover {
+  background: color-mix(in srgb, var(--color-text-inverse) 25%, transparent);
+}
+
+.cartCount {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: var(--color-error);
+  color: var(--color-text-inverse);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  min-width: var(--space-5);
+  height: var(--space-5);
+  padding: 0 var(--space-1);
+  border-radius: var(--radius-full);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 2px var(--space-1)
+    color-mix(in srgb, var(--color-neutral-900) 20%, transparent);
+  border: 2px solid var(--color-bg-primary);
+}
+
+@media (min-width: 769px) and (max-width: 1150px) {
+  .cartBtn {
+    height: 38px !important;
+    width: 38px !important;
+    font-size: var(--font-size-sm);
+  }
+}

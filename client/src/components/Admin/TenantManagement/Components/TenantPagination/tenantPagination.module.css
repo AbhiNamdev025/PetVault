@@ -1,0 +1,16 @@
+.paginationWrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--space-8);
+  width: 100%;
+}
+
+.paginationControl {
+  margin-top: 0 !important;
+}
+
+@media (max-width: 992px) {
+  .paginationWrapper {
+    margin-top: var(--space-6);
+  }
+}

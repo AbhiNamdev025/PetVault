@@ -1,52 +1,86 @@
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap");
+/* ========================================
+   FOOTER STYLES
+   ======================================== */
 
 .footer {
-  background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
-  color: white;
+  background: linear-gradient(
+    135deg,
+    var(--color-neutral-800) 0%,
+    var(--color-neutral-700) 100%
+  );
+  color: var(--color-text-inverse);
   margin-top: auto;
-  padding: 3rem 2rem 1rem;
-  font-family: "Poppins", sans-serif;
-  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.2);
+  padding: var(--space-12) var(--space-8);
+  font-family: var(--font-family);
+  box-shadow: 0 -4px var(--space-5)
+    color-mix(in srgb, var(--color-neutral-900) 20%, transparent);
 }
 
 .footerContent {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-bottom: var(--space-8);
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   flex-wrap: wrap;
-  gap: 3rem;
-  padding-bottom: 2.5rem;
+  gap: var(--space-12);
 }
 
 .footerSection {
   flex: 1 1 250px;
   min-width: 250px;
+  padding: var(--space-4);
+  border-radius: var(--radius-lg);
+  transition: all var(--transition-base);
 }
 
 .footerSection h3 {
-  font-size: 1.7rem;
-  margin-bottom: 1rem;
-  font-weight: 700;
+  font-family: var(--font-family);
+  color: var(--color-text-inverse);
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--space-4);
 }
 
 .footerSection h4 {
-  font-size: 1.15rem;
-  margin-bottom: 1.2rem;
-  color: #ffd700;
-  font-weight: 600;
+  font-family: var(--font-family);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--space-5);
+  color: var(--color-warning);
   letter-spacing: 0.5px;
+  text-transform: uppercase;
+  position: relative;
+  padding-bottom: var(--space-2);
+}
+
+.footerSection h4::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: var(--space-10);
+  height: 2px;
+  background: linear-gradient(90deg, var(--color-warning), transparent);
 }
 
 .brand {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 1rem;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+
+.brand h3 {
+  margin: 0;
+  line-height: var(--line-height-tight);
+  padding-top: var(--space-1);
 }
 
 .footerLogo {
-  color: #ffd700;
-  transition: transform 0.3s ease;
+  color: var(--color-warning);
+  transition: transform var(--transition-base);
 }
 
 .brand:hover .footerLogo {
@@ -54,95 +88,331 @@
 }
 
 .tagline {
-  color: #cbd5e0;
-  margin-bottom: 1.5rem;
-  line-height: 1.5;
-  font-size: 0.95rem;
-}
-
-.socialLinks {
-  display: flex;
-  gap: 0.8rem;
-  flex-wrap: wrap;
-}
-
-.socialLink {
-  display: flex;
-  align-items: center;
-  color: #cbd5e0;
-  background: rgba(255, 255, 255, 0.1);
-  padding: 8px;
-  border-radius: 8px;
-  transition: all 0.3s ease;
+  color: var(--color-border-dark);
+  margin-bottom: var(--space-6);
+  line-height: var(--line-height-normal);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-normal);
 }
 
 .socialLink:hover {
-  color: white;
-  background: rgba(255, 255, 255, 0.2);
+  color: var(--color-text-inverse);
+  background: color-mix(in srgb, var(--color-text-inverse) 20%, transparent);
   transform: translateY(-3px);
 }
 
 .middleGroup {
   display: flex;
-  gap: 2rem;
+  gap: var(--space-8);
   flex: 1 1 300px;
 }
 
 .links {
   display: flex;
   flex-direction: column;
-  gap: 0.6rem;
+  gap: var(--space-2);
 }
 
 .links a {
-  color: #cbd5e0;
+  font-family: var(--font-family);
+  color: var(--color-border-dark);
   text-decoration: none;
-  transition: all 0.3s ease;
+  transition: all var(--transition-base);
+  font-weight: var(--font-weight-normal);
 }
 
 .links a:hover {
-  color: #ffd700;
+  color: var(--color-warning);
   transform: translateX(4px);
 }
 
 .contactInfo {
   display: flex;
   flex-direction: column;
-  gap: 0.8rem;
+  gap: var(--space-3);
 }
 
 .contactItem {
   display: flex;
   align-items: center;
-  gap: 10px;
-  color: #cbd5e0;
-  transition: all 0.3s ease;
+  gap: var(--space-2);
+  color: var(--color-border-dark);
+  transition: all var(--transition-base);
+  font-family: var(--font-family);
+  font-weight: var(--font-weight-normal);
+  padding: var(--space-1) 0;
 }
 
 .contactItem:hover {
-  color: #ffd700;
+  color: var(--color-warning);
   transform: translateX(4px);
 }
 
-.footerBottom {
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 1.2rem 0;
-  text-align: center;
-  color: #cbd5e0;
-  font-size: 0.85rem;
-  letter-spacing: 0.3px;
+/* Removed bottomGroup and copyrightSection */
+
+.copyrightItem {
+  color: var(--color-border-dark);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-normal);
+  font-family: var(--font-family);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  hyphens: auto;
+  min-width: 0;
 }
 
-.footerBottom p {
-  margin: 0;
-  color: #e2e8f0;
+.copyrightItem a {
+  color: var(--color-warning);
+  font-weight: var(--font-weight-normal);
+  text-decoration: none;
+  transition: all var(--transition-fast);
 }
 
-/* Responsive */
+.copyrightItem a:hover {
+  color: var(--color-warning);
+  text-decoration: underline;
+}
+
+.bottomBar {
+  border-top: 1px solid
+    color-mix(in srgb, var(--color-text-inverse) 10%, transparent);
+  padding: var(--space-6) var(--space-16);
+  margin-top: var(--space-8);
+}
+
+.bottomContent {
+  max-width: 1440px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-6);
+}
+
+.copyrightSectionRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.separatorDesktop {
+  color: color-mix(in srgb, var(--color-text-inverse) 30%, transparent);
+  font-weight: var(--font-weight-light);
+}
+
+.separatorSmall {
+  color: color-mix(in srgb, var(--color-text-inverse) 30%, transparent);
+  display: none;
+}
+
+.copyright {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-normal);
+  color: var(--color-border-dark);
+  font-family: var(--font-family);
+}
+
+.link {
+  color: var(--color-border-dark);
+  cursor: pointer;
+  transition: color var(--transition-fast);
+  white-space: nowrap;
+  font-family: var(--font-family);
+}
+
+.link:hover {
+  color: var(--color-warning);
+}
+
+.separator {
+  color: color-mix(in srgb, var(--color-text-inverse) 30%, transparent);
+  font-weight: var(--font-weight-light);
+}
+
+.copyrightText {
+  color: var(--color-border-dark);
+  white-space: nowrap;
+  font-family: var(--font-family);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.copyrightText a {
+  color: var(--color-warning);
+  font-weight: var(--font-weight-normal);
+  text-decoration: none;
+  transition: all var(--transition-fast);
+}
+
+.copyrightText a:hover {
+  color: var(--color-warning);
+  text-decoration: underline;
+}
+
+.newsletterDesc {
+  color: var(--color-border-dark);
+  font-size: var(--font-size-sm);
+  margin-bottom: var(--space-4);
+  line-height: var(--line-height-relaxed);
+  max-width: 320px;
+}
+
+.newsletterForm {
+  position: relative;
+  width: 100%;
+  max-width: 320px;
+}
+
+.newsletterInput {
+  width: 100%;
+}
+
+.newsletterInput div > input {
+  background: var(--color-neutral-900);
+  border: 1px solid
+    color-mix(in srgb, var(--color-text-inverse) 10%, transparent);
+  border-radius: var(--radius-lg);
+  color: var(--color-text-inverse);
+  height: 42px;
+  min-height: 42px;
+  padding-left: var(--space-10) !important;
+  transition:
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.newsletterInput div > input:focus {
+  border-color: var(--color-warning) !important;
+  box-shadow: 0 0 0 2px
+    color-mix(in srgb, var(--color-warning) 20%, transparent) !important;
+}
+
+.mailIcon {
+  color: var(--color-border-dark);
+}
+
+.newsletterInput div > input:-webkit-autofill,
+.newsletterInput div > input:-webkit-autofill:hover,
+.newsletterInput div > input:-webkit-autofill:focus,
+.newsletterInput div > input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px var(--color-neutral-900) inset !important;
+  -webkit-text-fill-color: var(--color-text-inverse) !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+.newsletterInput div > input::placeholder {
+  color: var(--color-border-dark);
+}
+
+.spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.submitButton {
+  background: transparent;
+  border: none;
+  color: var(--color-text-inverse);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-2);
+  transition: all var(--transition-fast);
+}
+
+.submitButton:hover {
+  color: var(--color-warning);
+}
+
+.submitButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.socialIcons {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+}
+
+.iconWrapper {
+  background: color-mix(in srgb, var(--color-text-inverse) 5%, transparent);
+  border-radius: var(--radius-full);
+  padding: var(--space-2);
+  width: var(--space-11);
+  height: var(--space-11);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-base);
+  cursor: pointer;
+  border: 1px solid
+    color-mix(in srgb, var(--color-text-inverse) 10%, transparent);
+}
+
+.iconWrapper:hover {
+  background: var(--color-warning);
+  border-color: var(--color-warning);
+  transform: translateY(-4px) scale(1.1);
+  box-shadow: 0 var(--space-2) var(--space-4)
+    color-mix(in srgb, var(--color-warning) 30%, transparent);
+}
+
+.iconWrapper:hover .icon {
+  filter: brightness(0) invert(0);
+}
+
+.icon {
+  width: var(--space-5);
+  height: var(--space-5);
+  object-fit: contain;
+  filter: brightness(0) invert(1);
+}
+
+.socialLink {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--color-border-dark);
+  padding: var(--space-2);
+  border-radius: var(--radius-md);
+  transition: all var(--transition-base);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  font-family: var(--font-family);
+  text-decoration: none;
+}
+
+.socialLink span {
+  line-height: var(--line-height-tight);
+}
+
+/* ===== RESPONSIVE ===== */
 @media (max-width: 1024px) {
   .footerContent {
     justify-content: center;
-    gap: 2.5rem;
+    gap: var(--space-10);
   }
 
   .footerSection {
@@ -150,24 +420,38 @@
   }
 
   .middleGroup {
+    justify-content: center;
     text-align: center;
   }
 
   .socialLinks {
     justify-content: center;
   }
+
+  .socialLink {
+    justify-content: center;
+  }
+
+  .copyrightSectionRow {
+    justify-content: center;
+  }
+
+  .newsletterForm {
+    margin-right: var(--space-4);
+  }
 }
 
 @media (max-width: 768px) {
   .footer {
-    padding: 2rem 1.5rem 1rem;
+    padding: var(--space-8) var(--space-2);
+    overflow-x: hidden;
   }
 
   .footerContent {
-    flex-direction: column;
     align-items: center;
     text-align: center;
-    gap: 2rem;
+    gap: var(--space-8);
+    padding: 0 var(--space-2);
   }
 
   .brand {
@@ -175,87 +459,154 @@
   }
 
   .tagline {
-    font-size: 0.9rem;
+    font-size: var(--font-size-sm);
   }
 
   .middleGroup {
-    flex-direction: row;
+    flex-direction: column;
     justify-content: center;
-    align-items: flex-start;
-    gap: 2rem;
+    align-items: center;
+    gap: var(--space-8);
   }
 
   .middleGroup .footerSection {
     flex: 1 1 45%;
-    min-width: 140px;
+    min-width: 160px;
   }
 
   .footerSection h4 {
-    font-size: 1rem;
+    font-size: var(--font-size-base);
+    margin-bottom: var(--space-4);
+  }
+
+  .footerSection h4::after {
+    width: 30px;
+  }
+
+  .footerSection {
+    padding: var(--space-3);
   }
 
   .links a {
-    font-size: 0.9rem;
+    font-size: var(--font-size-sm);
   }
 
   .contactInfo {
-    align-items: center;
-    gap: 0.6rem;
+    align-items: flex-start;
+    gap: var(--space-2);
   }
 
   .contactItem {
-    justify-content: center;
-    font-size: 0.9rem;
+    justify-content: flex-start;
+    font-size: var(--font-size-xs);
   }
 
-  .footerBottom {
-    font-size: 0.8rem;
-    padding: 1rem 0;
+  .bottomContent {
+    flex-direction: column-reverse;
+    justify-content: center;
+    gap: var(--space-4);
+  }
+
+  .copyrightSectionRow {
+    justify-content: center;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .separatorDesktop {
+    display: none;
+  }
+
+  .separatorSmall {
+    display: inline;
+  }
+
+  .copyrightItem {
+    justify-content: center;
+    text-align: center;
+    font-size: var(--font-size-xs);
+    word-break: break-word;
+  }
+
+  .copyrightItem a {
+    word-break: break-word;
+  }
+
+  .socialLink {
+    font-size: var(--font-size-sm);
+  }
+
+  .bottomBar {
+    padding: var(--space-4) var(--space-6);
+  }
+
+  .socialIcons {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-4);
+  }
+
+  .newsletterForm {
+    margin-right: 0;
+    width: 100%;
+    margin: 0 auto;
+    max-width: 100%;
+  }
+
+  .newsletterInput {
+    margin-right: 0;
+    width: 100%;
   }
 }
 
 @media (max-width: 480px) {
-  .footer {
-    padding: 1.5rem 1rem 0.8rem;
-  }
-
   .footerSection h3 {
-    font-size: 1.3rem;
+    font-size: var(--font-size-xl);
   }
 
   .footerSection h4 {
-    font-size: 0.95rem;
+    font-size: var(--font-size-base);
   }
 
   .tagline {
-    font-size: 0.85rem;
+    font-size: var(--font-size-sm);
   }
 
   .socialLinks {
-    gap: 0.6rem;
+    gap: var(--space-2);
   }
 
   .socialLink {
-    padding: 6px;
+    padding: var(--space-2);
+    font-size: var(--font-size-sm);
+    gap: var(--space-2);
   }
 
   .links a {
-    font-size: 0.85rem;
+    font-size: var(--font-size-sm);
   }
 
   .contactItem {
-    font-size: 0.85rem;
-  }
-
-  .footerBottom {
-    font-size: 0.75rem;
+    font-size: var(--font-size-sm);
   }
 
   .middleGroup {
-    gap: 1rem;
+    gap: var(--space-4);
   }
 
   .middleGroup .footerSection {
     flex: 1 1 48%;
+  }
+
+  .bottomBar {
+    padding: var(--space-3) var(--space-4);
+  }
+
+  .newsletterForm {
+    max-width: 100%;
+  }
+
+  .newsletterInput {
+    width: 100%;
   }
 }

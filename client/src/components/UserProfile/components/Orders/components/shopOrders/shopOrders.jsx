@@ -1,59 +1,186 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import styles from "./shopOrders.module.css";
-import { Package, Truck, CheckCircle, XCircle, Eye } from "lucide-react";
+import {
+  Package,
+  Truck,
+  CheckCircle,
+  XCircle,
+  Filter,
+  Search,
+  User as UserIcon,
+  Calendar as CalendarIcon,
+  ArrowLeft,
+  ChevronRight,
+  RefreshCw,
+} from "lucide-react";
 import { API_BASE_URL, BASE_URL } from "../../../../../../utils/constants";
+import { PROFILE_SEARCH_EVENT } from "../../../../../../utils/profileSearch";
 import toast from "react-hot-toast";
-const ShopOrders = ({ user }) => {
+import { TableRowSkeleton } from "../../../../../Skeletons";
+import FilterSidebar from "../../../../../common/FilterSidebar/FilterSidebar";
+import OrderDetails from "../ShopOrderDetails/OrderDetails";
+import { Button, Pagination } from "../../../../../common";
+import ConfirmationModal from "../../../../../ConfirmationModal/ConfirmationModal";
+const ShopOrders = ({ user, setIsDetailsView }) => {
   const [orders, setOrders] = useState([]);
+  const [filteredOrders, setFilteredOrders] = useState([]);
+  const [filters, setFilters] = useState({
+    search: "",
+    status: "all",
+  });
+  const [showFilters, setShowFilters] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [showDetails, setShowDetails] = useState(false);
   const [loading, setLoading] = useState(true);
-
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [confirmConfig, setConfirmConfig] = useState(null);
+  const [isStatusUpdating, setIsStatusUpdating] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const lastListPageRef = useRef(1);
+  const ITEMS_PER_PAGE = 6;
   const token =
     localStorage.getItem("token") || sessionStorage.getItem("token");
   const shopId = user?._id;
+  const toIdString = (value) => {
+    if (!value) return "";
+    if (typeof value === "object" && value._id) return String(value._id);
+    return String(value);
+  };
+  useEffect(() => {
+    let result = orders;
+    if (filters.status !== "all") {
+      result = result.filter((order) => order.status === filters.status);
+    }
+    if (filters.search?.trim()) {
+      const query = filters.search.toLowerCase();
+      result = result.filter(
+        (order) =>
+          order._id.toLowerCase().includes(query) ||
+          order.customerName?.toLowerCase().includes(query),
+      );
+    }
+    setFilteredOrders(result);
+  }, [orders, filters]);
 
+  useEffect(() => {
+    if (setIsDetailsView) {
+      setIsDetailsView(showDetails);
+    }
+  }, [showDetails, setIsDetailsView]);
+
+  // Reset to first page when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [filters]);
+
+  useEffect(() => {
+    const handleProfileSearch = (event) => {
+      const { query = "", targetTab = "" } = event.detail || {};
+      if (targetTab && targetTab !== "orders" && targetTab !== "management")
+        return;
+      if (showDetails) return;
+
+      const normalizedQuery = String(query || "");
+
+      setFilters((previous) => {
+        if (previous.search === normalizedQuery) return previous;
+        return {
+          ...previous,
+          search: normalizedQuery,
+        };
+      });
+    };
+
+    window.addEventListener(PROFILE_SEARCH_EVENT, handleProfileSearch);
+    return () =>
+      window.removeEventListener(PROFILE_SEARCH_EVENT, handleProfileSearch);
+  }, [showDetails]);
   const fetchShopOrders = async () => {
     try {
+      if (!shopId) return;
       const res = await fetch(`${API_BASE_URL}/orders/shop/${shopId}`, {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
-
       if (!res.ok) throw new Error();
-
       const data = await res.json();
-      setOrders(data);
-    } catch (err) {
+      setOrders(Array.isArray(data) ? data : []);
+    } catch {
       toast.error("Failed to fetch orders");
     } finally {
       setLoading(false);
     }
   };
-
   useEffect(() => {
-    if (shopId) fetchShopOrders();
+    fetchShopOrders();
   }, [shopId]);
 
-  const updateOrderStatus = async (orderId, newStatus) => {
+  const handleRefresh = async () => {
+    setIsRefreshing(true);
+    await fetchShopOrders();
+    setTimeout(() => setIsRefreshing(false), 500);
+  };
+
+  const updateOrderStatus = async (orderId, newStatus, reason) => {
+    setIsStatusUpdating(true);
     try {
+      const payload = {
+        status: newStatus,
+      };
+      if (newStatus === "delivered") {
+        payload.paymentStatus = "paid";
+        payload.paidAt = new Date();
+      }
+      if (newStatus === "cancelled" && reason) {
+        payload.cancellationReason = reason;
+      }
       const res = await fetch(`${API_BASE_URL}/orders/${orderId}/status`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ status: newStatus }),
+        body: JSON.stringify(payload),
       });
-
       if (!res.ok) throw new Error();
-
-      toast.success("Order status updated");
+      toast.success(`Order ${newStatus} successfully`);
       fetchShopOrders();
-    } catch (err) {
+      if (selectedOrder && selectedOrder._id === orderId) {
+        setSelectedOrder((prev) => ({
+          ...prev,
+          status: newStatus,
+          cancellationReason: reason || prev.cancellationReason,
+        }));
+      }
+      setShowConfirmModal(false);
+    } catch {
       toast.error("Failed to update order");
+    } finally {
+      setIsStatusUpdating(false);
     }
   };
 
+  const handleStatusUpdateClick = (
+    orderId,
+    newStatus,
+    actionTitle,
+    actionMessage,
+  ) => {
+    const isCancellation = newStatus === "cancelled";
+    setConfirmConfig({
+      type: isCancellation ? "cancel" : "confirm",
+      title: actionTitle,
+      message: actionMessage,
+      confirmText: actionTitle.split(" ")[0],
+      showInput: isCancellation,
+      required: isCancellation,
+      inputPlaceholder: "Reason for cancellation...",
+      onConfirm: (reason) => updateOrderStatus(orderId, newStatus, reason),
+    });
+    setShowConfirmModal(true);
+  };
   const getStatusColor = (status) => {
     switch (status) {
       case "delivered":
@@ -64,328 +191,421 @@ const ShopOrders = ({ user }) => {
         return styles.statusShipped;
       case "cancelled":
         return styles.statusCancelled;
-      case "pending":
-        return styles.statusPending;
       default:
         return styles.statusPending;
     }
   };
-
   const getImageUrl = (img) => {
     if (!img) return `${BASE_URL}/uploads/products/default.png`;
-
-    if (img.startsWith("http://") || img.startsWith("https://")) {
-      return img;
-    }
-
+    if (img.startsWith("http")) return img;
     return `${BASE_URL}/uploads/products/${img}`;
   };
-
   const getStatusIcon = (status) => {
     switch (status) {
       case "delivered":
-        return <CheckCircle size={16} />;
       case "confirmed":
-        return <CheckCircle size={16} />;
+        return <CheckCircle size={14} />;
       case "shipped":
-        return <Truck size={16} />;
+        return <Truck size={14} />;
       case "cancelled":
-        return <XCircle size={16} />;
+        return <XCircle size={14} />;
       default:
-        return <Package size={16} />;
+        return <Package size={14} />;
     }
   };
-
-  const calculateTotalItems = (items) => {
-    return items?.reduce((total, item) => total + (item.quantity || 1), 0) || 0;
+  const calculateTotalItems = (items = []) =>
+    items.reduce((t, i) => t + (Number(i.quantity) || 1), 0);
+  const calculateItemsTotal = (items = []) =>
+    items.reduce(
+      (sum, item) => sum + Number(item.price || 0) * Number(item.quantity || 1),
+      0,
+    );
+  const getShopItems = (items = []) => {
+    const currentShopId = toIdString(shopId);
+    return items.filter((item) => toIdString(item.shopId) === currentShopId);
   };
-
-  const getShopItems = (items) => {
-    return items.filter((item) => item.shopId === shopId);
+  const filterOptions = [
+    {
+      id: "status",
+      label: "Order Status",
+      values: [
+        {
+          id: "all",
+          label: "All Status",
+        },
+        {
+          id: "pending",
+          label: "Pending",
+        },
+        {
+          id: "confirmed",
+          label: "Confirmed",
+        },
+        {
+          id: "shipped",
+          label: "Shipped",
+        },
+        {
+          id: "delivered",
+          label: "Delivered",
+        },
+        {
+          id: "cancelled",
+          label: "Cancelled",
+        },
+      ],
+    },
+  ];
+  const handleBackToList = () => {
+    setShowDetails(false);
+    setSelectedOrder(null);
+    setCurrentPage(lastListPageRef.current);
   };
-
-  if (loading) return <div className={styles.loading}>Loading orders...</div>;
-
+  const handleViewOrder = (order, shopItems) => {
+    lastListPageRef.current = currentPage;
+    setSelectedOrder({
+      ...order,
+      shopItems,
+    });
+    setShowDetails(true);
+  };
+  const hasActiveFilters = filters.search !== "" || filters.status !== "all";
+  if (loading)
+    return (
+      <div className={styles.container}>
+        <TableRowSkeleton columns={4} rows={5} />
+      </div>
+    );
   return (
     <div className={styles.container}>
-      <div className={styles.header}>
-        <h1 className={styles.title}>Shop Orders</h1>
-      </div>
+      <FilterSidebar
+        isOpen={showFilters}
+        onClose={() => setShowFilters(false)}
+        filters={filters}
+        setFilters={setFilters}
+        options={filterOptions}
+        showSearch={false}
+        onReset={() =>
+          setFilters({
+            search: "",
+            status: "all",
+          })
+        }
+      />
 
-      {orders.length === 0 ? (
-        <div className={styles.emptyState}>
-          <Package size={48} className={styles.emptyIcon} />
-          <p>No orders received yet</p>
-        </div>
-      ) : (
-        <div className={styles.ordersList}>
-          {orders.map((order) => {
-            const shopItems = getShopItems(order.items);
-            if (shopItems.length === 0) return null;
+      {showDetails && selectedOrder ? (
+        <div className={styles.detailsView}>
+          <div className={styles.detailsTopBar}>
+            <Button
+              className={styles.backBtn}
+              onClick={handleBackToList}
+              variant="ghost"
+              size="sm"
+            >
+              <ArrowLeft size={18} /> Back to Orders
+            </Button>
 
-            return (
-              <div key={order._id} className={styles.orderCard}>
-                <div className={styles.orderHeader}>
-                  <div className={styles.orderInfo}>
-                    <h4 className={styles.orderId}>
-                      Order #{order._id.slice(-8).toUpperCase()}
-                    </h4>
-                    <div className={styles.orderMeta}>
-                      <span className={styles.orderDate}>
-                        {new Date(order.createdAt).toLocaleDateString("en-IN")}
-                      </span>
-                      <span className={styles.itemCount}>
-                        {calculateTotalItems(shopItems)} items
-                      </span>
-                      <span className={styles.customerName}>
-                        Customer: {order.customerName}
-                      </span>
-                    </div>
-                  </div>
-                  <div className={styles.orderStatus}>
-                    <span
-                      className={`${styles.status} ${getStatusColor(
-                        order.status
-                      )}`}
-                    >
-                      {getStatusIcon(order.status)}
-                      {order.status}
-                    </span>
-                    <span className={styles.orderTotal}>
-                      ₹
-                      {shopItems.reduce(
-                        (sum, item) => sum + item.price * (item.quantity || 1),
-                        0
-                      )}
-                    </span>
-                  </div>
-                </div>
-
-                <div className={styles.orderItems}>
-                  {shopItems.slice(0, 3).map((item, index) => (
-                    <div key={index} className={styles.orderItem}>
-                      <img
-                        src={getImageUrl(item.image)}
-                        alt={item.name}
-                        className={styles.itemImage}
-                      />
-                      <div className={styles.itemDetails}>
-                        <span className={styles.itemName}>{item.name}</span>
-                        <span className={styles.itemPrice}>
-                          ₹{item.price} x {item.quantity || 1}
-                        </span>
-                      </div>
-                    </div>
-                  ))}
-                  {shopItems.length > 3 && (
-                    <div className={styles.moreItems}>
-                      +{shopItems.length - 3} more items
-                    </div>
-                  )}
-                </div>
-
-                <div className={styles.orderActions}>
-                  <button
-                    className={styles.secondaryButton}
-                    onClick={() => {
-                      setSelectedOrder({ ...order, shopItems });
-                      setShowDetails(true);
-                    }}
-                  >
-                    <Eye size={16} />
-                    View Details
-                  </button>
-
-                  {order.status === "pending" && (
-                    <>
-                      <button
-                        className={styles.successButton}
-                        onClick={() =>
-                          updateOrderStatus(order._id, "confirmed")
-                        }
-                      >
-                        <CheckCircle size={16} />
-                        Confirm
-                      </button>
-                      <button
-                        className={styles.dangerButton}
-                        onClick={() =>
-                          updateOrderStatus(order._id, "cancelled")
-                        }
-                      >
-                        <XCircle size={16} />
-                        Cancel
-                      </button>
-                    </>
-                  )}
-
-                  {order.status === "confirmed" && (
-                    <button
-                      className={styles.primaryButton}
-                      onClick={() => updateOrderStatus(order._id, "shipped")}
-                    >
-                      <Truck size={16} />
-                      Mark Shipped
-                    </button>
-                  )}
-
-                  {order.status === "shipped" && (
-                    <button
-                      className={styles.successButton}
-                      onClick={() => updateOrderStatus(order._id, "delivered")}
-                    >
-                      <CheckCircle size={16} />
-                      Mark Delivered
-                    </button>
-                  )}
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      )}
-
-      {showDetails && selectedOrder && (
-        <div className={styles.modalOverlay}>
-          <div className={styles.modal}>
-            <div className={styles.modalHeader}>
-              <h3>
-                Order Details #{selectedOrder._id.slice(-8).toUpperCase()}
-              </h3>
-              <button
-                className={styles.closeButton}
-                onClick={() => setShowDetails(false)}
-              >
-                <XCircle size={20} />
-              </button>
-            </div>
-
-            <div className={styles.modalContent}>
-              <div className={styles.detailSection}>
-                <h4>Customer Information</h4>
-                <div className={styles.orderSummary}>
-                  <p>
-                    <strong>Name:</strong> {selectedOrder.customerName}
-                  </p>
-                  <p>
-                    <strong>Phone:</strong> {selectedOrder.mobileNumber}
-                  </p>
-                  <p>
-                    <strong>Order Date:</strong>{" "}
-                    {new Date(selectedOrder.createdAt).toLocaleString("en-IN")}
-                  </p>
-                  <p>
-                    <strong>Status:</strong>
-                    <span
-                      className={`${styles.status} ${getStatusColor(
-                        selectedOrder.status
-                      )}`}
-                    >
-                      {getStatusIcon(selectedOrder.status)}
-                      {selectedOrder.status}
-                    </span>
-                  </p>
-                </div>
-              </div>
-
-              <div className={styles.detailSection}>
-                <h4>
-                  Order Items ({calculateTotalItems(selectedOrder.shopItems)})
-                </h4>
-                <div className={styles.itemsList}>
-                  {selectedOrder.shopItems?.map((item, index) => (
-                    <div key={index} className={styles.detailItem}>
-                      <img
-                        src={getImageUrl(item.image)}
-                        alt={item.name}
-                        className={styles.itemImage}
-                      />
-                      <div className={styles.itemInfo}>
-                        <span className={styles.itemName}>{item.name}</span>
-                        {item.brand && (
-                          <span className={styles.itemBrand}>{item.brand}</span>
-                        )}
-                        <span className={styles.itemQuantity}>
-                          Qty: {item.quantity || 1}
-                        </span>
-                      </div>
-                      <div className={styles.itemTotal}>
-                        ₹{(item.price * (item.quantity || 1)).toFixed(2)}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {selectedOrder.shippingAddress && (
-                <div className={styles.detailSection}>
-                  <h4>Shipping Address</h4>
-                  <div className={styles.address}>
-                    <p>{selectedOrder.shippingAddress.street}</p>
-                    <p>
-                      {selectedOrder.shippingAddress.city},{" "}
-                      {selectedOrder.shippingAddress.state} -{" "}
-                      {selectedOrder.shippingAddress.zipCode}
-                    </p>
-                  </div>
-                </div>
-              )}
-            </div>
-
-            <div className={styles.modalActions}>
-              <button
-                className={styles.secondaryButton}
-                onClick={() => setShowDetails(false)}
-              >
-                Close
-              </button>
+            <div className={styles.detailsActionGroup}>
               {selectedOrder.status === "pending" && (
                 <>
-                  <button
+                  <Button
                     className={styles.successButton}
-                    onClick={() => {
-                      updateOrderStatus(selectedOrder._id, "confirmed");
-                      setShowDetails(false);
-                    }}
+                    onClick={() =>
+                      handleStatusUpdateClick(
+                        selectedOrder._id,
+                        "confirmed",
+                        "Confirm Order",
+                        "Are you sure you want to confirm this order? This will notify the customer.",
+                      )
+                    }
+                    variant="success"
+                    size="md"
                   >
-                    Confirm Order
-                  </button>
-                  <button
+                    <CheckCircle size={14} /> Confirm
+                  </Button>
+                  <Button
                     className={styles.dangerButton}
-                    onClick={() => {
-                      updateOrderStatus(selectedOrder._id, "cancelled");
-                      setShowDetails(false);
-                    }}
+                    onClick={() =>
+                      handleStatusUpdateClick(
+                        selectedOrder._id,
+                        "cancelled",
+                        "Cancel Order",
+                        "Are you sure you want to cancel this order? This action cannot be undone.",
+                      )
+                    }
+                    variant="danger"
+                    size="md"
                   >
-                    Cancel Order
-                  </button>
+                    <XCircle size={14} /> Cancel
+                  </Button>
                 </>
               )}
+
               {selectedOrder.status === "confirmed" && (
-                <button
+                <Button
                   className={styles.primaryButton}
-                  onClick={() => {
-                    updateOrderStatus(selectedOrder._id, "shipped");
-                    setShowDetails(false);
-                  }}
+                  onClick={() =>
+                    handleStatusUpdateClick(
+                      selectedOrder._id,
+                      "shipped",
+                      "Ship Order",
+                      "Has this order been picked up by the courier?",
+                    )
+                  }
+                  variant="primary"
+                  size="md"
                 >
-                  Mark as Shipped
-                </button>
+                  <Truck size={14} /> Mark Shipped
+                </Button>
               )}
+
               {selectedOrder.status === "shipped" && (
-                <button
+                <Button
                   className={styles.successButton}
-                  onClick={() => {
-                    updateOrderStatus(selectedOrder._id, "delivered");
-                    setShowDetails(false);
-                  }}
+                  onClick={() =>
+                    handleStatusUpdateClick(
+                      selectedOrder._id,
+                      "delivered",
+                      "Deliver Order",
+                      "Confirm that this order has been successfully delivered to the customer.",
+                    )
+                  }
+                  variant="success"
+                  size="md"
                 >
-                  Mark as Delivered
-                </button>
+                  <CheckCircle size={14} /> Mark Delivered
+                </Button>
               )}
             </div>
           </div>
+
+          <OrderDetails
+            order={selectedOrder}
+            getStatusColor={getStatusColor}
+            getStatusIcon={getStatusIcon}
+            getImageUrl={getImageUrl}
+            calculateTotalItems={calculateTotalItems}
+          />
         </div>
+      ) : (
+        <>
+          <div className={styles.header}>
+            <div className={styles.titleBlock}>
+              <h2 className={styles.title}>Shop Orders</h2>
+              <p className={styles.subtitle}>
+                Track and manage incoming orders with status updates.
+              </p>
+            </div>
+            <div className={styles.headerActions}>
+              <Button
+                className={styles.filterBtn}
+                onClick={() => setShowFilters(true)}
+                variant="ghost"
+                size="sm"
+              >
+                <Filter size={16} />
+                Filters
+                {hasActiveFilters && <span className={styles.filterDot} />}
+              </Button>
+              {hasActiveFilters && (
+                <Button
+                  className={styles.clearBtnInline}
+                  onClick={() =>
+                    setFilters({
+                      search: "",
+                      status: "all",
+                    })
+                  }
+                  variant="ghost"
+                  size="sm"
+                >
+                  Clear
+                </Button>
+              )}
+              <Button
+                className={styles.refreshBtn}
+                onClick={handleRefresh}
+                title="Refresh Orders"
+                variant="ghost"
+                size="md"
+              >
+                <RefreshCw
+                  size={18}
+                  className={isRefreshing ? styles.spinning : ""}
+                />
+              </Button>
+            </div>
+          </div>
+
+          {orders.length === 0 ? (
+            <div className={styles.emptyState}>
+              <Package size={48} className={styles.emptyIcon} />
+              <p>No orders received yet</p>
+            </div>
+          ) : filteredOrders.length === 0 ? (
+            <div className={styles.emptyState}>
+              <Search size={48} className={styles.emptyIcon} />
+              <p>No orders match your filters</p>
+            </div>
+          ) : (
+            <>
+              <div className={styles.ordersList}>
+                {filteredOrders
+                  .slice(
+                    (currentPage - 1) * ITEMS_PER_PAGE,
+                    currentPage * ITEMS_PER_PAGE,
+                  )
+                  .map((order) => {
+                    const shopItems = getShopItems(order.items);
+                    if (shopItems.length === 0) return null;
+                    const shopTotal = calculateItemsTotal(shopItems);
+                    return (
+                      <div
+                        key={order._id}
+                        className={styles.orderCard}
+                        onClick={() => handleViewOrder(order, shopItems)}
+                      >
+                        <div className={styles.cardMain}>
+                          <div className={styles.orderIdentRow}>
+                            <div className={styles.orderIdentLeft}>
+                              <h4 className={styles.orderId}>
+                                Order #{order._id.slice(-8).toUpperCase()}
+                              </h4>
+                              <div className={styles.orderMeta}>
+                                <span className={styles.customerName}>
+                                  <UserIcon size={12} /> {order.customerName}
+                                </span>
+                                <span className={styles.orderDate}>
+                                  <CalendarIcon size={12} />
+                                  {new Date(order.createdAt).toLocaleDateString(
+                                    "en-IN",
+                                  )}
+                                </span>
+                              </div>
+                            </div>
+                            <div className={styles.orderIdentRight}>
+                              <div className={styles.orderPriceBlock}>
+                                <span className={styles.orderTotal}>
+                                  ₹{shopTotal.toFixed(2)}
+                                </span>
+                                <span
+                                  className={`${styles.status} ${getStatusColor(order.status)}`}
+                                >
+                                  {getStatusIcon(order.status)}
+                                  {order.status}
+                                </span>
+                              </div>
+                              <ChevronRight
+                                size={18}
+                                className={styles.cardArrow}
+                              />
+                            </div>
+                          </div>
+                        </div>
+
+                        {["pending", "confirmed", "shipped"].includes(
+                          order.status,
+                        ) && (
+                          <div className={styles.orderActions}>
+                            {order.status === "pending" && (
+                              <>
+                                <Button
+                                  className={styles.successButton}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleStatusUpdateClick(
+                                      order._id,
+                                      "confirmed",
+                                      "Confirm Order",
+                                      "Are you sure you want to confirm this order?",
+                                    );
+                                  }}
+                                  variant="success"
+                                  size="md"
+                                >
+                                  <CheckCircle size={14} /> Confirm
+                                </Button>
+                                <Button
+                                  className={styles.dangerButton}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleStatusUpdateClick(
+                                      order._id,
+                                      "cancelled",
+                                      "Cancel Order",
+                                      "Please provide a reason for cancelling this order.",
+                                    );
+                                  }}
+                                  variant="danger"
+                                  size="md"
+                                >
+                                  <XCircle size={14} /> Cancel
+                                </Button>
+                              </>
+                            )}
+
+                            {order.status === "confirmed" && (
+                              <Button
+                                className={styles.primaryButton}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleStatusUpdateClick(
+                                    order._id,
+                                    "shipped",
+                                    "Ship Order",
+                                    "Mark this order as shipped?",
+                                  );
+                                }}
+                                variant="primary"
+                                size="md"
+                              >
+                                <Truck size={14} /> Shipped
+                              </Button>
+                            )}
+
+                            {order.status === "shipped" && (
+                              <Button
+                                className={styles.successButton}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleStatusUpdateClick(
+                                    order._id,
+                                    "delivered",
+                                    "Deliver Order",
+                                    "Mark this order as delivered?",
+                                  );
+                                }}
+                                variant="success"
+                                size="md"
+                              >
+                                <CheckCircle size={14} /> Delivered
+                              </Button>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+              </div>
+              <div className={styles.paginationWrap}>
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={Math.ceil(filteredOrders.length / ITEMS_PER_PAGE)}
+                  onPageChange={setCurrentPage}
+                  showPageInfo
+                />
+              </div>
+            </>
+          )}
+        </>
+      )}
+      {showConfirmModal && confirmConfig && (
+        <ConfirmationModal
+          config={confirmConfig}
+          onConfirm={confirmConfig.onConfirm}
+          onCancel={() => setShowConfirmModal(false)}
+          isLoading={isStatusUpdating}
+        />
       )}
     </div>
   );

@@ -1,15 +1,27 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft, Star, MapPin, PawPrint } from "lucide-react";
-import { API_BASE_URL } from "../../utils/constants";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
+import {
+  ArrowLeft,
+  Star,
+  MapPin,
+  PawPrint,
+  Phone,
+  MessageCircle,
+  UserRoundCheck,
+} from "lucide-react";
+import { API_BASE_URL, BASE_URL } from "../../utils/constants";
 import ProductCard from "../PetProducts/ProductCard/productCard";
 import PetCard from "../PetShop/PetCard/petCard";
 import styles from "./shopDetails.module.css";
 import toast from "react-hot-toast";
+import { DetailsSkeleton } from "../Skeletons";
+import { openAuthModal } from "../../utils/authModalNavigation";
+import { Button, Pagination, ReviewSection, SectionHeader } from "../common";
+
 const ShopDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-
+  const location = useLocation();
   const [shop, setShop] = useState(null);
   const [products, setProducts] = useState([]);
   const [pets, setPets] = useState([]);
@@ -17,13 +29,13 @@ const ShopDetails = () => {
   const [formRating, setFormRating] = useState(0);
   const [formReview, setFormReview] = useState("");
   const [submitting, setSubmitting] = useState(false);
-  const [showLoginPopup, setShowLoginPopup] = useState(false);
   const [activeTab, setActiveTab] = useState("products");
-
+  const [itemsPerPage, setItemsPerPage] = useState(3);
+  const [productsPage, setProductsPage] = useState(1);
+  const [petsPage, setPetsPage] = useState(1);
   useEffect(() => {
     if (id) fetchShopDetails();
   }, [id]);
-
   const fetchShopDetails = async () => {
     try {
       const [shopRes, productsRes, petsRes] = await Promise.all([
@@ -31,13 +43,17 @@ const ShopDetails = () => {
         fetch(`${API_BASE_URL}/products/shop/${id}`),
         fetch(`${API_BASE_URL}/pets/shop/${id}`),
       ]);
-
       const shopData = await shopRes.json();
       const productsData = productsRes.ok
         ? await productsRes.json()
-        : { products: [] };
-      const petsData = petsRes.ok ? await petsRes.json() : { pets: [] };
-
+        : {
+            products: [],
+          };
+      const petsData = petsRes.ok
+        ? await petsRes.json()
+        : {
+            pets: [],
+          };
       setShop(shopData);
       setProducts(productsData.products || []);
       setPets(petsData.pets || []);
@@ -47,21 +63,65 @@ const ShopDetails = () => {
       setLoading(false);
     }
   };
-
   useEffect(() => {
     if (shop && shop.roleData?.shopType?.toLowerCase() === "petstore") {
       setActiveTab("pets");
     }
   }, [shop]);
 
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(max-width: 768px)");
+    const syncItemsPerPage = () => setItemsPerPage(mediaQuery.matches ? 1 : 3);
+    syncItemsPerPage();
+    if (typeof mediaQuery.addEventListener === "function") {
+      mediaQuery.addEventListener("change", syncItemsPerPage);
+      return () => mediaQuery.removeEventListener("change", syncItemsPerPage);
+    }
+    mediaQuery.addListener(syncItemsPerPage);
+    return () => mediaQuery.removeListener(syncItemsPerPage);
+  }, []);
+
+  const totalProductPages = Math.max(
+    1,
+    Math.ceil(products.length / itemsPerPage),
+  );
+  const totalPetPages = Math.max(1, Math.ceil(pets.length / itemsPerPage));
+  useEffect(() => {
+    setProductsPage((prev) => Math.min(prev, totalProductPages));
+  }, [totalProductPages]);
+  useEffect(() => {
+    setPetsPage((prev) => Math.min(prev, totalPetPages));
+  }, [totalPetPages]);
+  const visibleProducts = products.slice(
+    (productsPage - 1) * itemsPerPage,
+    productsPage * itemsPerPage,
+  );
+  const visiblePets = pets.slice(
+    (petsPage - 1) * itemsPerPage,
+    petsPage * itemsPerPage,
+  );
   const handleViewProduct = (productId) => navigate(`/products/${productId}`);
   const handleViewPet = (petId) => navigate(`/shop-pets/${petId}`);
-
-  const handleAddToCart = async (product) => {
+  const handleAddToCart = async (product, quantity = 1) => {
+    const stockCount = Number(product.stock) || 0;
+    if (stockCount === 0) {
+      toast.info("Out of stock");
+      return false;
+    }
+    const quantityToAdd = Math.min(
+      Math.max(Number(quantity) || 1, 1),
+      Math.max(1, stockCount),
+    );
     const token =
       localStorage.getItem("token") || sessionStorage.getItem("token");
-    if (!token) return toast.error("Please login to add items to cart");
-
+    if (!token) {
+      openAuthModal(navigate, {
+        location,
+        view: "login",
+        from: location.pathname,
+      });
+      return false;
+    }
     try {
       const res = await fetch(`${API_BASE_URL}/cart/add`, {
         method: "POST",
@@ -69,51 +129,73 @@ const ShopDetails = () => {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ productId: product._id, quantity: 1 }),
+        body: JSON.stringify({
+          productId: product._id,
+          quantity: quantityToAdd,
+        }),
       });
-
-      const data = await res.json();
-      res.ok ? toast.success("Added to cart!") : toast.error(data.message);
+      const data = await res.json().catch(() => ({}));
+      if (res.ok) {
+        window.dispatchEvent(new Event("cart-updated"));
+        toast.success(
+          `${quantityToAdd} item${quantityToAdd > 1 ? "s" : ""} added to cart`,
+        );
+        navigate("/cart");
+        return true;
+      }
+      toast.error(data.message || "Failed to add to cart");
+      return false;
     } catch {
       toast.error("Failed to add to cart");
+      return false;
     }
   };
-
   const handleEnquiry = (pet) => {
     const token =
       localStorage.getItem("token") || sessionStorage.getItem("token");
-    if (!token) return toast.error("Please login to send enquiry");
-
+    if (!token) {
+      openAuthModal(navigate, {
+        location,
+        view: "login",
+        from: location.pathname,
+      });
+      return;
+    }
     navigate(`/shop-pets/${pet._id}`);
   };
-
   const calculateAverageRating = (ratings) => {
     if (!ratings || ratings.length === 0) return 0;
     const total = ratings.reduce((s, r) => s + r.rating, 0);
     return (total / ratings.length).toFixed(1);
   };
-
   const checkAuth = () =>
     !!(localStorage.getItem("token") || sessionStorage.getItem("token"));
-
   const submitReview = async () => {
-    if (!checkAuth()) return setShowLoginPopup(true);
-    if (!formRating) return toast.warning("Select a rating");
+    if (!checkAuth()) {
+      openAuthModal(navigate, {
+        location,
+        view: "login",
+        from: location.pathname,
+      });
+      return;
+    }
 
+    if (!formRating) return toast.warning("Select a rating");
     try {
       setSubmitting(true);
       const token =
         localStorage.getItem("token") || sessionStorage.getItem("token");
-
       const res = await fetch(`${API_BASE_URL}/shop/${id}/rate`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ rating: formRating, review: formReview }),
+        body: JSON.stringify({
+          rating: formRating,
+          review: formReview,
+        }),
       });
-
       const data = await res.json();
       if (res.ok) {
         const refreshed = await fetch(`${API_BASE_URL}/shop/${id}`);
@@ -128,84 +210,153 @@ const ShopDetails = () => {
       setSubmitting(false);
     }
   };
-
-  const handleLogin = () => {
-    setShowLoginPopup(false);
-    navigate("/login", { state: { from: `/shop/${id}` } });
-  };
-
-  if (loading) return <div className={styles.loading}>Loading shop...</div>;
+  if (loading) return <DetailsSkeleton />;
   if (!shop) return <div className={styles.notFound}>Shop not found</div>;
-
   const type = shop?.roleData?.shopType?.toLowerCase();
   const isPetStore = type === "petstore";
   const isMixed = type === "mixed";
-
   const showProducts = type === "products" || isMixed;
   const showPets = isPetStore || isMixed;
-
   const averageRating = calculateAverageRating(shop.ratings);
   const totalReviews = shop.ratings?.length || 0;
-
   return (
     <div className={styles.shopDetails}>
-      <button className={styles.backBtn} onClick={() => navigate(-1)}>
+      <Button
+        className={styles.backBtn}
+        onClick={() => navigate(-1)}
+        variant="ghost"
+        size="sm"
+      >
         <ArrowLeft size={20} /> Back
-      </button>
+      </Button>
 
       {/* Header */}
       <div className={styles.shopHeader}>
+        <img
+          src={
+            shop.avatar
+              ? `${BASE_URL}/uploads/avatars/${shop.avatar}`
+              : "https://media.istockphoto.com/id/1155986877/vector/pets-shop-vector-logo.jpg?s=612x612&w=0&k=20&c=i3Q5ZELG3sY6Fj-5A7Q8k8S3g4M7yL3r7z4V6XU5vK0="
+          }
+          alt={shop.businessName}
+          className={styles.shopAvatar}
+        />
         <div className={styles.shopInfo}>
-          <h1 className={styles.shopName}>{shop.businessName || shop.name}</h1>
-          <p className={styles.shopType}>{shop.roleData?.shopType}</p>
-
-          <div className={styles.location}>
-            <MapPin size={16} />
-            <span>
-              {shop.address?.street} {shop.address?.city}
-            </span>
+          <div className={styles.headerTop}>
+            <h1 className={styles.shopName}>
+              {shop.roleData?.shopName || shop.businessName || shop.name}
+            </h1>
+            <div className={styles.ratingBadge}>
+              <Star
+                size={16}
+                fill="var(--color-warning)"
+                stroke="var(--color-warning)"
+              />
+              <span>{averageRating > 0 ? averageRating : "New"}</span>
+              <span className={styles.reviewCount}>
+                ({totalReviews} reviews)
+              </span>
+            </div>
           </div>
 
-          <div className={styles.ratingRow}>
-            <Star size={18} className={styles.starIcon} />
-            <span>{averageRating > 0 ? averageRating : "No ratings yet"}</span>
-            <span className={styles.reviewCount}>({totalReviews} reviews)</span>
+          <p className={styles.shopType}>{shop.roleData?.shopType || "Shop"}</p>
+
+          <div className={styles.detailsRow}>
+            <div className={styles.detailItem}>
+              <MapPin size={16} />
+              <span>
+                {shop.address?.street}, {shop.address?.city}
+              </span>
+            </div>
+
+            {shop.roleData?.ownerName && (
+              <div className={styles.detailItem}>
+                <UserRoundCheck size={16} />
+                <span>Owner: {shop.roleData.ownerName}</span>
+              </div>
+            )}
           </div>
+
+          {shop.phone && (
+            <div className={styles.actionButtons}>
+              <Button
+                as="a"
+                href={`tel:${shop.phone}`}
+                className={styles.callButton}
+                variant="outline"
+                size="md"
+              >
+                <Phone size={20} /> <span>Call</span>
+              </Button>
+              <Button
+                as="a"
+                href={`https://wa.me/${shop.phone}`}
+                target="_blank"
+                className={styles.whatsappButton}
+                variant="success"
+                size="md"
+              >
+                <MessageCircle size={20} /> <span>WhatsApp</span>
+              </Button>
+            </div>
+          )}
         </div>
       </div>
 
       {/* Tabs */}
-      {showProducts && showPets && (
+      {(showProducts || showPets) && (
         <div className={styles.tabNavigation}>
-          <button
-            className={`${styles.tab} ${
-              activeTab === "products" ? styles.activeTab : ""
-            }`}
-            onClick={() => setActiveTab("products")}
+          {showProducts && (
+            <Button
+              className={`${styles.tab} ${activeTab === "products" ? styles.activeTab : ""}`}
+              as="a"
+              href="#products-section"
+              onClick={() => setActiveTab("products")}
+              variant="ghost"
+              size="sm"
+            >
+              Products ({products.length})
+            </Button>
+          )}
+          {showPets && (
+            <Button
+              className={`${styles.tab} ${activeTab === "pets" ? styles.activeTab : ""}`}
+              as="a"
+              href="#pets-section"
+              onClick={() => setActiveTab("pets")}
+              variant="ghost"
+              size="sm"
+            >
+              <PawPrint size={16} /> Pets ({pets.length})
+            </Button>
+          )}
+          <Button
+            className={styles.tab}
+            as="a"
+            href="#reviews-section"
+            variant="ghost"
+            size="sm"
           >
-            Products ({products.length})
-          </button>
-          <button
-            className={`${styles.tab} ${
-              activeTab === "pets" ? styles.activeTab : ""
-            }`}
-            onClick={() => setActiveTab("pets")}
-          >
-            <PawPrint size={16} /> Pets ({pets.length})
-          </button>
+            Reviews
+          </Button>
         </div>
       )}
 
       {/* Products */}
       {showProducts && activeTab === "products" && (
-        <div className={styles.productsSection}>
-          <h2 className={styles.sectionTitle}>Products</h2>
+        <div id="products-section" className={styles.productsSection}>
+          <SectionHeader
+            className={styles.sectionHeader}
+            title="Products"
+            count={products.length}
+            level="section"
+          />
 
           {products.length === 0 ? (
             <div className={styles.noProducts}>No products available.</div>
           ) : (
             <div className={styles.productsGrid}>
-              {products.map((product) => (
+              {visibleProducts.map((product) => (
                 <ProductCard
                   key={product._id}
                   product={product}
@@ -215,21 +366,33 @@ const ShopDetails = () => {
               ))}
             </div>
           )}
+          {products.length > 0 && (
+            <Pagination
+              currentPage={productsPage}
+              totalPages={totalProductPages}
+              hideIfSinglePage={false}
+              onPageChange={setProductsPage}
+            />
+          )}
         </div>
       )}
 
       {/* Pets */}
       {showPets && activeTab === "pets" && (
-        <div className={styles.petsSection}>
-          <h2 className={styles.sectionTitle}>
-            <PawPrint size={20} /> Available Pets ({pets.length})
-          </h2>
+        <div id="pets-section" className={styles.petsSection}>
+          <SectionHeader
+            className={styles.sectionHeader}
+            icon={<PawPrint size={20} />}
+            title="Available Pets"
+            count={pets.length}
+            level="section"
+          />
 
           {pets.length === 0 ? (
             <div className={styles.noPets}>No pets available.</div>
           ) : (
             <div className={styles.petsGrid}>
-              {pets.map((pet) => (
+              {visiblePets.map((pet) => (
                 <PetCard
                   key={pet._id}
                   pet={pet}
@@ -239,95 +402,36 @@ const ShopDetails = () => {
               ))}
             </div>
           )}
-        </div>
-      )}
-
-      {/* Reviews */}
-      <div className={styles.reviewsSection}>
-        <h2 className={styles.sectionTitle}>Customer Reviews</h2>
-
-        {/* Submit review */}
-        <div className={styles.reviewFormBox}>
-          <h3>Write a Review</h3>
-
-          <div className={styles.starRow}>
-            {[1, 2, 3, 4, 5].map((s) => (
-              <Star
-                key={s}
-                size={28}
-                className={
-                  formRating >= s ? styles.starActive : styles.starInactive
-                }
-                onClick={() => setFormRating(s)}
-              />
-            ))}
-          </div>
-
-          <textarea
-            value={formReview}
-            onChange={(e) => setFormReview(e.target.value)}
-            className={styles.reviewTextarea}
-            placeholder="Share your experience..."
-          />
-
-          <button
-            className={styles.submitReviewButton}
-            onClick={submitReview}
-            disabled={submitting}
-          >
-            {submitting ? "Submitting..." : "Submit Review"}
-          </button>
-        </div>
-
-        {/* Review List */}
-        <div className={styles.reviewsGrid}>
-          {!shop.ratings?.length ? (
-            <div className={styles.noReviews}>No reviews yet.</div>
-          ) : (
-            shop.ratings.map((r) => (
-              <div key={r._id} className={styles.reviewCard}>
-                <div className={styles.reviewHeader}>
-                  <strong>{r.userId?.name || "Anonymous"}</strong>
-                  <span className={styles.reviewDate}>
-                    {new Date(r.createdAt).toLocaleDateString()}
-                  </span>
-                </div>
-
-                <div className={styles.ratingRow}>
-                  <Star size={16} className={styles.starIcon} />
-                  <span>{r.rating}</span>
-                </div>
-
-                <p className={styles.reviewText}>{r.review}</p>
-              </div>
-            ))
+          {pets.length > 0 && (
+            <Pagination
+              currentPage={petsPage}
+              totalPages={totalPetPages}
+              hideIfSinglePage={false}
+              onPageChange={setPetsPage}
+            />
           )}
         </div>
-      </div>
-
-      {/* LOGIN POPUP */}
-      {showLoginPopup && (
-        <div className={styles.loginPopupOverlay}>
-          <div className={styles.loginPopup}>
-            <h3>Login Required</h3>
-            <p>Please login to submit a review</p>
-
-            <div className={styles.popupActions}>
-              <button className={styles.loginButton} onClick={handleLogin}>
-                Login
-              </button>
-              <button
-                className={styles.cancelButton}
-                onClick={() => setShowLoginPopup(false)}
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-        </div>
       )}
+
+      <div id="reviews-section" className={styles.sectionAnchor}>
+        <ReviewSection
+          title="Customer Reviews"
+          count={totalReviews}
+          formTitle="Write a Review"
+          ratingValue={formRating}
+          onRatingChange={setFormRating}
+          reviewValue={formReview}
+          onReviewChange={setFormReview}
+          placeholder="Share your experience..."
+          onSubmit={submitReview}
+          submitting={submitting}
+          submitText="Submit Review"
+          submittingText="Submitting..."
+          reviews={shop.ratings || []}
+          emptyText="No reviews yet."
+        />
+      </div>
     </div>
   );
 };
-
 export default ShopDetails;

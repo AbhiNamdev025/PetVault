@@ -1,0 +1,237 @@
+/* ========================================
+   MANAGEMENT ANALYTICS DASHBOARD
+   ======================================== */
+
+.container {
+  padding: 0 0 var(--space-4);
+  background-color: var(--color-bg-secondary);
+  border-radius: var(--radius-xl);
+  min-height: 400px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.header {
+  margin-bottom: var(--space-8);
+}
+
+.title {
+  font-family: var(--font-family);
+  font-size: var(--ui-heading-section);
+  font-weight: var(--ui-heading-weight);
+  letter-spacing: var(--ui-heading-letter-spacing);
+  line-height: var(--ui-heading-line-height);
+  color: var(--color-text-primary);
+  margin-bottom: var(--space-2);
+}
+
+.subtitle {
+  font-family: var(--font-family);
+  font-size: var(--ui-subheading-section);
+  font-weight: var(--ui-subheading-weight);
+  line-height: var(--ui-subheading-line-height);
+  color: var(--color-text-tertiary);
+}
+
+.alertsSection {
+  margin-top: var(--space-6);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-2xl);
+  background: var(--color-bg-primary);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--space-5);
+  margin-bottom: var(--space-8);
+}
+
+.card {
+  background: var(--color-bg-primary);
+  padding: var(--space-5);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-base);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--space-4);
+  border: 1px solid var(--color-border-light);
+}
+
+.cardIcon {
+  width: var(--space-12);
+  height: var(--space-12);
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--color-text-inverse);
+}
+
+.cardContent {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.cardLabel {
+  font-family: var(--font-family);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  margin-bottom: 0;
+  line-height: 1.2;
+}
+
+.cardValue {
+  font-family: var(--font-family);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  line-height: 1.2;
+}
+
+.chartSection {
+  background: var(--color-bg-primary);
+  padding: var(--space-6);
+  border-radius: var(--radius-2xl);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--color-border-light);
+}
+
+.chartHeader {
+  margin-bottom: var(--space-6);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.chartTitle {
+  font-family: var(--font-family);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  color: var(--color-text-tertiary);
+  font-family: var(--font-family);
+}
+
+/* Colors for cards */
+.blueIcon {
+  background: linear-gradient(
+    135deg,
+    var(--color-info),
+    var(--color-primary-700)
+  );
+}
+.greenIcon {
+  background: linear-gradient(
+    135deg,
+    var(--color-success),
+    var(--color-success-dark, var(--color-success-dark))
+  );
+}
+.purpleIcon {
+  background: linear-gradient(
+    135deg,
+    var(--color-primary-400),
+    var(--color-primary-600)
+  );
+}
+.orangeIcon {
+  background: linear-gradient(
+    135deg,
+    var(--color-warning),
+    var(--color-warning-dark)
+  );
+}
+.redIcon {
+  background: linear-gradient(
+    135deg,
+    var(--color-error),
+    var(--color-error-dark)
+  );
+}
+
+/* Toggle Buttons for Chart */
+.toggleContainer {
+  display: flex;
+  gap: var(--space-2);
+  background: var(--color-neutral-100);
+  padding: var(--space-1);
+  border-radius: var(--radius-lg);
+}
+
+.toggleBtn {
+  padding: var(--space-2) var(--space-4);
+  border: none;
+  background: transparent;
+  color: var(--color-text-secondary);
+  font-family: var(--font-family);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.toggleBtn:hover {
+  background: color-mix(in srgb, var(--color-text-inverse) 50%, transparent);
+  color: var(--color-text-primary);
+}
+
+.activeToggle {
+  background: var(--color-bg-primary) !important;
+  color: var(--color-primary-600) !important;
+  box-shadow: var(--shadow-xs);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .container {
+    padding: 0;
+  }
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-2);
+  }
+  .card {
+    padding: var(--space-3);
+    gap: var(--space-3);
+  }
+
+  .cardIcon {
+    width: var(--space-9);
+    height: var(--space-9);
+    border-radius: var(--radius-md);
+  }
+  .cardLabel {
+    font-size: var(--font-size-xs);
+    margin-bottom: 0;
+  }
+  .cardValue {
+    font-size: var(--font-size-md);
+  }
+  .chartHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-4);
+  }
+
+  .toggleContainer {
+    width: 100%;
+  }
+
+  .toggleBtn {
+    flex: 1;
+    text-align: center;
+  }
+}

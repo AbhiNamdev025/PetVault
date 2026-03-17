@@ -1,0 +1,58 @@
+/* ========================================
+   SCROLL TO TOP COMPONENT STYLES
+   ======================================== */
+
+.scrollToTop {
+  position: fixed;
+  bottom: var(--space-8);
+  right: var(--space-8);
+  z-index: var(--z-tooltip);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(20px);
+  transition: all var(--transition-base);
+}
+
+.scrollToTop.visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.button {
+  color: var(--color-primary-600);
+  background: var(--color-text-inverse);
+  border: none;
+  border-radius: var(--radius-full);
+  width: 56px;
+  height: 56px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: var(--shadow-lg);
+  transition: all var(--transition-fast);
+}
+
+.button:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-xl);
+}
+
+@media (max-width: 768px) {
+  .scrollToTop {
+    bottom: var(--space-4);
+    right: var(--space-4);
+  }
+
+  .button {
+    width: var(--space-10);
+    height: var(--space-10);
+    min-height: var(--space-10) !important;
+    min-width: var(--space-10) !important;
+    border-radius: var(--radius-full);
+    font-size: var(--font-size-lg);
+    padding: 0 !important;
+  }
+}

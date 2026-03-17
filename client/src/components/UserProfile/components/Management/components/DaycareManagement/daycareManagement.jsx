@@ -1,37 +1,69 @@
 import React, { useEffect, useState } from "react";
 import styles from "./daycareManagement.module.css";
-import { API_BASE_URL, BASE_URL } from "../../../../../../utils/constants";
-import { Plus, Edit, Trash2 } from "lucide-react";
-import AddCaretakerModal from "./addCaretakerModal";
-import EditCaretakerModal from "./editCaretakerModal";
+import { API_BASE_URL } from "../../../../../../utils/constants";
+import { PROFILE_SEARCH_EVENT } from "../../../../../../utils/profileSearch";
+import CaretakerFormModal from "./CaretakerFormModal";
 import toast from "react-hot-toast";
-const DaycareManagement = () => {
+import ConfirmationModal from "../../../../../ConfirmationModal/ConfirmationModal";
+import DaycareHeader from "./components/DaycareHeader";
+import CaretakerGrid from "./components/CaretakerGrid";
+import ManagementEmptyState from "../common/ManagementEmptyState";
+import { Users as UsersIcon } from "lucide-react";
+import { Pagination } from "../../../../../common";
+
+const DaycareManagement = ({ user }) => {
   const token =
     localStorage.getItem("token") || sessionStorage.getItem("token");
-  const savedUser = JSON.parse(
-    localStorage.getItem("user") || sessionStorage.getItem("user")
-  );
-  const daycareId = savedUser?._id;
+  const daycareId = user?._id;
 
   const [caretakers, setCaretakers] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [showAdd, setShowAdd] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
   const [selectedCaretaker, setSelectedCaretaker] = useState(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [caretakerToDelete, setCaretakerToDelete] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 8;
 
   const loadCaretakers = async () => {
-    const res = await fetch(`${API_BASE_URL}/daycare/staff/${daycareId}`);
-    const data = await res.json();
-    setCaretakers(data.caretakers || []);
+    if (!daycareId) return;
+    try {
+      setLoading(true);
+      const res = await fetch(`${API_BASE_URL}/daycare/staff/${daycareId}`);
+      if (!res.ok) throw new Error("Failed to fetch");
+      const data = await res.json();
+      setCaretakers(data.caretakers || []);
+      setCurrentPage(1); // Reset to first page on new data load
+    } catch (error) {
+      console.error("Error loading caretakers:", error);
+      toast.error("Failed to load staff");
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
     loadCaretakers();
+  }, [daycareId]);
+
+  useEffect(() => {
+    const handleProfileSearch = (event) => {
+      const { query = "", targetTab = "" } = event.detail || {};
+      if (targetTab && targetTab !== "management") return;
+      setSearchQuery(String(query || ""));
+    };
+
+    window.addEventListener(PROFILE_SEARCH_EVENT, handleProfileSearch);
+    return () =>
+      window.removeEventListener(PROFILE_SEARCH_EVENT, handleProfileSearch);
   }, []);
 
-  const deleteCaretaker = async (id) => {
-    if (!window.confirm("Delete caretaker?")) return;
+  const confirmDelete = async () => {
+    if (!caretakerToDelete) return;
 
-    const res = await fetch(`${API_BASE_URL}/caretaker/${id}`, {
+    const res = await fetch(`${API_BASE_URL}/caretaker/${caretakerToDelete}`, {
       method: "DELETE",
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -40,73 +72,110 @@ const DaycareManagement = () => {
       toast.success("Caretaker removed");
       loadCaretakers();
     } else toast.error("Failed");
+
+    setShowDeleteModal(false);
+    setCaretakerToDelete(null);
   };
+
+  const normalizedSearch = String(searchQuery || "")
+    .trim()
+    .toLowerCase();
+  const filteredCaretakers = caretakers.filter((caretaker) => {
+    if (!normalizedSearch) return true;
+    const searchable = [
+      caretaker?.name,
+      caretaker?.email,
+      caretaker?.phone,
+      caretaker?.roleData?.staffSpecialization,
+      caretaker?._id,
+    ]
+      .filter(Boolean)
+      .map((value) => String(value).toLowerCase());
+    return searchable.some((value) => value.includes(normalizedSearch));
+  });
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [normalizedSearch, caretakers.length]);
+
+  const totalPages = Math.ceil(filteredCaretakers.length / ITEMS_PER_PAGE);
+  const paginatedCaretakers = filteredCaretakers.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE,
+  );
+
+  const deleteCaretaker = (id) => {
+    setCaretakerToDelete(id);
+    setShowDeleteModal(true);
+  };
+
+  if (loading) return <div className={styles.loading}>Loading staff...</div>;
 
   return (
     <div className={styles.container}>
-      <div className={styles.topRow}>
-        <h2 className={styles.title}>Manage Caretakers</h2>
+      <DaycareHeader onAdd={() => setShowAdd(true)} />
 
-        <button className={styles.addBtn} onClick={() => setShowAdd(true)}>
-          <Plus size={16} /> Add Caretaker
-        </button>
-      </div>
-
-      <div className={styles.grid}>
-        {caretakers.map((c) => (
-          <div className={styles.card} key={c._id}>
-            <img
-              src={
-                c.avatar
-                  ? `${BASE_URL}/uploads/avatars/${c.avatar}`
-                  : "https://cdn-icons-png.flaticon.com/512/1946/1946429.png"
-              }
-              className={styles.avatar}
-            />
-
-            <h3 className={styles.name}>{c.name}</h3>
-            <p className={styles.specialization}>
-              {c.roleData?.staffSpecialization}
-            </p>
-            <p className={styles.experience}>
-              {c.roleData?.staffExperience} yrs
-            </p>
-
-            <div className={styles.actions}>
-              <button
-                className={styles.editBtn}
-                onClick={() => {
-                  setSelectedCaretaker(c);
-                  setShowEdit(true);
-                }}
-              >
-                <Edit size={16} />
-              </button>
-
-              <button
-                className={styles.delBtn}
-                onClick={() => deleteCaretaker(c._id)}
-              >
-                <Trash2 size={16} />
-              </button>
-            </div>
-          </div>
-        ))}
-      </div>
+      {filteredCaretakers.length === 0 ? (
+        <ManagementEmptyState
+          title={normalizedSearch ? "No matching caretakers found" : "No Staff Members"}
+          description={
+            normalizedSearch
+              ? "Try a different search term."
+              : "Manage your daycare staff here. Start by adding your first caretaker to help handle pet bookings."
+          }
+          onAdd={() => setShowAdd(true)}
+          icon={UsersIcon}
+          buttonText="Add Caretaker"
+        />
+      ) : (
+        <>
+          <CaretakerGrid
+            caretakers={paginatedCaretakers}
+            onEdit={(caretaker) => {
+              setSelectedCaretaker(caretaker);
+              setShowEdit(true);
+            }}
+            onDelete={deleteCaretaker}
+          />
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+            showPageInfo
+          />
+        </>
+      )}
 
       {showAdd && (
-        <AddCaretakerModal
+        <CaretakerFormModal
           daycareId={daycareId}
           onClose={() => setShowAdd(false)}
-          onAdded={loadCaretakers}
+          onSaved={loadCaretakers}
         />
       )}
 
       {showEdit && selectedCaretaker && (
-        <EditCaretakerModal
+        <CaretakerFormModal
           caretaker={selectedCaretaker}
           onClose={() => setShowEdit(false)}
-          onUpdated={loadCaretakers}
+          onSaved={loadCaretakers}
+        />
+      )}
+
+      {showDeleteModal && (
+        <ConfirmationModal
+          config={{
+            title: "Remove Caretaker",
+            message:
+              "Are you sure you want to remove this caretaker? This action cannot be undone.",
+            confirmText: "Yes, Remove",
+            type: "cancel",
+          }}
+          onConfirm={confirmDelete}
+          onCancel={() => {
+            setShowDeleteModal(false);
+            setCaretakerToDelete(null);
+          }}
         />
       )}
     </div>

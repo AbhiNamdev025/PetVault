@@ -1,36 +1,66 @@
-import React, { useState, useEffect } from "react";
-import {
-  Users,
-  PawPrint,
-  ShoppingBag,
-  Calendar,
-  Plus,
-  ClipboardList,
-} from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import { API_BASE_URL } from "../../../utils/constants";
 import styles from "./adminDashboard.module.css";
+import { DashboardSkeleton } from "../../Skeletons";
+import { toast } from "react-hot-toast";
+import ApprovalModal from "../UserManagement/components/ApproveModal/ApprovalModal";
+import RejectionModal from "../UserManagement/components/RejectionModal/RejectionModal";
+import { ExternalLink, Filter } from "lucide-react";
+import AdminHeader from "../common/AdminHeader/AdminHeader";
+import MetricsGrid from "./components/MetricsGrid";
+import RevenueTrends from "./components/RevenueTrends";
+import KycQueue from "./components/KycQueue";
+import DashboardSidebar from "./components/DashboardSidebar";
+import PlatformFeeManager from "./components/PlatformFeeManager";
+import Button from "../../common/Button/Button";
 
 const AdminDashboard = () => {
   const [stats, setStats] = useState(null);
+  const [activities, setActivities] = useState([]);
+  const [pendingApps, setPendingApps] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [showApproveModal, setShowApproveModal] = useState(false);
+  const [userToApprove, setUserToApprove] = useState(null);
+  const [showRejectModal, setShowRejectModal] = useState(false);
+  const [userToReject, setUserToReject] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { dashboardFilters, onOpenFilters } = useOutletContext();
   const navigate = useNavigate();
 
   useEffect(() => {
     fetchDashboardStats();
-  }, []);
+  }, [dashboardFilters]);
 
   const fetchDashboardStats = async () => {
     try {
       const token =
         localStorage.getItem("token") || sessionStorage.getItem("token");
-      const response = await fetch(`${API_BASE_URL}/admin/dashboard`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const range = dashboardFilters?.range || "lifetime";
+      const response = await fetch(
+        `${API_BASE_URL}/admin/dashboard?range=${range}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        },
+      );
 
       if (response.ok) {
         const data = await response.json();
         setStats(data.stats);
+        setPendingApps(data.pendingApplications || []);
+
+        const combined = [
+          ...(data.recentAppointments || []).map((a) => ({
+            ...a,
+            activityType: "appointment",
+          })),
+          ...(data.recentOrders || []).map((o) => ({
+            ...o,
+            activityType: "order",
+          })),
+        ].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+        setActivities(combined.slice(0, 5));
       }
     } catch (error) {
       console.error("Error fetching dashboard stats:", error);
@@ -39,124 +69,152 @@ const AdminDashboard = () => {
     }
   };
 
-  if (loading) {
-    return (
-      <div className={styles.dashboard}>
-        <div className={styles.loading}>Loading dashboard...</div>
-      </div>
-    );
-  }
+  const handleStatusUpdate = (app, status) => {
+    if (status === "approve") {
+      setUserToApprove(app);
+      setShowApproveModal(true);
+    } else {
+      setUserToReject(app);
+      setShowRejectModal(true);
+    }
+  };
+
+  const handleConfirmApprove = async () => {
+    if (!userToApprove) return;
+    setIsSubmitting(true);
+    const loadingToast = toast.loading(`Approving ${userToApprove.name}...`);
+
+    try {
+      const token =
+        localStorage.getItem("token") || sessionStorage.getItem("token");
+      const response = await fetch(
+        `${API_BASE_URL}/admin/users/${userToApprove._id}/approve`,
+        {
+          method: "PUT",
+          headers: { Authorization: `Bearer ${token}` },
+        },
+      );
+
+      if (response.ok) {
+        toast.success(`${userToApprove.name}'s application approved.`, {
+          id: loadingToast,
+        });
+        fetchDashboardStats();
+      } else {
+        const error = await response.json();
+        toast.error(error.message || "Failed to approve.", {
+          id: loadingToast,
+        });
+      }
+    } catch (error) {
+      toast.error(`Error: ${error.message}`, { id: loadingToast });
+    } finally {
+      setIsSubmitting(false);
+      setShowApproveModal(false);
+      setUserToApprove(null);
+    }
+  };
+
+  const handleConfirmReject = async (remark) => {
+    if (!userToReject) return;
+    setIsSubmitting(true);
+    const loadingToast = toast.loading(`Rejecting ${userToReject.name}...`);
+
+    try {
+      const token =
+        localStorage.getItem("token") || sessionStorage.getItem("token");
+      const response = await fetch(
+        `${API_BASE_URL}/admin/users/${userToReject._id}/reject`,
+        {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ remark }),
+        },
+      );
+
+      if (response.ok) {
+        toast.success(`${userToReject.name}'s application rejected.`, {
+          id: loadingToast,
+        });
+        fetchDashboardStats();
+      } else {
+        const error = await response.json();
+        toast.error(error.message || "Failed to reject.", { id: loadingToast });
+      }
+    } catch (error) {
+      toast.error(`Error: ${error.message}`, { id: loadingToast });
+    } finally {
+      setIsSubmitting(false);
+      setShowRejectModal(false);
+      setUserToReject(null);
+    }
+  };
+
+  if (loading) return <DashboardSkeleton statsCount={5} />;
 
   return (
-    <div className={styles.dashboard}>
-      <div className={styles.header}>
-        <h1>Dashboard Overview</h1>
-        <p>Welcome back, Admin! Manage your pet care platform.</p>
+    <div className={styles.dashboardContainer}>
+      <AdminHeader
+        title="Admin Command Center"
+        subtitle="Real-time platform insights and system management."
+        actions={
+          <Button
+            variant="ghost"
+            onClick={onOpenFilters}
+            size="sm"
+            leftIcon={<Filter size={14} />}
+          >
+            Filters
+          </Button>
+        }
+      />
+
+      <MetricsGrid stats={stats} onNavigate={navigate} />
+
+      <div className={styles.mainLayout}>
+        <div className={styles.leftCol}>
+          <RevenueTrends
+            dailyRevenue={stats?.dailyRevenue}
+            range={dashboardFilters?.range || "lifetime"}
+          />
+          <KycQueue
+            filteredApps={pendingApps}
+            onViewAll={() => navigate("/admin/tenants")}
+            onStatusUpdate={handleStatusUpdate}
+            onRowClick={(app) => navigate(`/admin/tenants/${app._id}`)}
+          />
+          <PlatformFeeManager />
+        </div>
+
+        <DashboardSidebar
+          pendingApps={pendingApps}
+          activities={activities}
+          onNavigate={navigate}
+        />
       </div>
 
-      <div className={styles.statsGrid}>
-        <div className={styles.statCard}>
-          <div className={styles.statIcon}>
-            <Users size={24} />
-          </div>
-          <div className={styles.statContent}>
-            <h3>{stats?.totalUsers || 0}</h3>
-            <p>Total Users</p>
-          </div>
-        </div>
+      {showApproveModal && (
+        <ApprovalModal
+          isOpen={showApproveModal}
+          onClose={() => setShowApproveModal(false)}
+          onConfirm={handleConfirmApprove}
+          userName={userToApprove?.name}
+          isLoading={isSubmitting}
+        />
+      )}
 
-        <div className={styles.statCard}>
-          <div className={styles.statIcon}>
-            <PawPrint size={24} />
-          </div>
-          <div className={styles.statContent}>
-            <h3>{stats?.totalPets || 0}</h3>
-            <p>Total Pets</p>
-          </div>
-        </div>
-
-        <div className={styles.statCard}>
-          <div className={styles.statIcon}>
-            <ShoppingBag size={24} />
-          </div>
-          <div className={styles.statContent}>
-            <h3>{stats?.totalProducts || 0}</h3>
-            <p>Products</p>
-          </div>
-        </div>
-
-        <div className={styles.statCard}>
-          <div className={styles.statIcon}>
-            <Calendar size={24} />
-          </div>
-          <div className={styles.statContent}>
-            <h3>{stats?.totalAppointments || 0}</h3>
-            <p>Appointments</p>
-          </div>
-        </div>
-        <div className={styles.statCard}>
-          <div className={styles.statIcon}>
-            <ClipboardList size={24} />
-          </div>
-          <div className={styles.statContent}>
-            <h3>{stats?.totalOrders || 0}</h3>
-            <p>Orders</p>
-          </div>
-        </div>
-      </div>
-
-      <div className={styles.contentGrid}>
-        <div className={styles.card}>
-          <div className={styles.cardHeader}>
-            <h3>Quick Actions</h3>
-          </div>
-          <div className={styles.actions}>
-            <button
-              className={styles.actionBtn}
-              onClick={() => navigate("/admin/pets")}
-            >
-              <PawPrint size={18} />
-              <span>Manage Pets</span>
-              <Plus size={16} />
-            </button>
-            <button
-              className={styles.actionBtn}
-              onClick={() => navigate("/admin/products")}
-            >
-              <ShoppingBag size={18} />
-              <span>Manage Products</span>
-              <Plus size={16} />
-            </button>
-            <button
-              className={styles.actionBtn}
-              onClick={() => navigate("/admin/services")}
-            >
-              <Calendar size={18} />
-              <span>Manage Services</span>
-              <Plus size={16} />
-            </button>
-            <button
-              className={styles.actionBtn}
-              onClick={() => navigate("/admin/users")}
-            >
-              <Users size={18} />
-              <span>View Users</span>
-            </button>
-          </div>
-        </div>
-
-        <div className={styles.card}>
-          <div className={styles.cardHeader}>
-            <h3>Recent Activity</h3>
-          </div>
-          <div className={styles.activities}>
-            <div className={styles.activityPlaceholder}>
-              <p>Recent activities will appear here</p>
-              <span>Appointments, new users, and updates</span>
-            </div>
-          </div>
-        </div>
-      </div>
+      {showRejectModal && (
+        <RejectionModal
+          isOpen={showRejectModal}
+          onClose={() => setShowRejectModal(false)}
+          onConfirm={handleConfirmReject}
+          userName={userToReject?.name}
+          isLoading={isSubmitting}
+        />
+      )}
     </div>
   );
 };

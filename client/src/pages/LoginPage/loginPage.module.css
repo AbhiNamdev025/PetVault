@@ -1,0 +1,22 @@
+.loginPage {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--color-bg-secondary) 0%, var(--color-border-medium) 100%);
+  padding: var(--ui-section-padding-y) var(--ui-section-padding-x);
+}
+
+.container {
+  max-width: var(--ui-page-max-width);
+  margin: 0 auto;
+  padding: 0 var(--ui-page-padding-x);
+  width: 100%;
+}
+
+.loginWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}

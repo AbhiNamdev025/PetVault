@@ -4,10 +4,9 @@ import styles from "./management.module.css";
 import DashboardTabs from "./dashboardTabs";
 
 import HospitalManagement from "./components/HospitalManagement/hospitalManagement";
-import DoctorManagement from "./components/DoctorManagement/doctorManagement";
 import DaycareManagement from "./components/DaycareManagement/daycareManagement";
-import CaretakerManagement from "./components/CaretakerManagement/caretakerManagement";
-import ShopManagement from "./components/ShopManagement/shopManagement";
+import SharedProviderManagement from "./components/sharedProviderManagement";
+import ShopManagement from "./components/ShopManagement/components/ShopProducts/ShopProducts";
 import NgoManagement from "./components/NgoManagement/ngoManagement";
 import UserManagement from "./components/UsersManagement/userManagement";
 import PetManagement from "./components/PetManagement/petManagement";
@@ -30,19 +29,21 @@ const Management = ({ user, userRole }) => {
         user: [],
       };
 
-    if (userRole === "shop") {
-  const shopType = user.roleData?.shopType;
+      if (userRole === "shop") {
+        const shopType = user.roleData?.shopType;
 
-  if (shopType === "petStore") {
-    return ["pets", "orders"];
-  } else if (shopType === "productStore") {
-    return ["shop", "orders"];
-  } else if (shopType === "mixed") {
-    return ["shop", "pets", "orders"];
-  }
-  return ["shop", "orders"];
-}
-
+        if (shopType === "mixed") {
+          return ["shop", "pets", "orders"];
+        } else if (shopType === "petStore") {
+          return ["pets"];
+        } else if (
+          shopType === "medicalStore" ||
+          shopType === "groomingCenter"
+        ) {
+          return ["shop", "orders"];
+        }
+        return ["shop", "orders"];
+      }
 
       return roleTabs[userRole] || [];
     };
@@ -60,11 +61,11 @@ const Management = ({ user, userRole }) => {
       case "hospital":
         return <HospitalManagement user={user} userRole={userRole} />;
       case "doctor":
-        return <DoctorManagement user={user} userRole={userRole} />;
+        return <SharedProviderManagement user={user} title="Doctor" />;
       case "daycare":
         return <DaycareManagement user={user} userRole={userRole} />;
       case "caretaker":
-        return <CaretakerManagement user={user} userRole={userRole} />;
+        return <SharedProviderManagement user={user} title="Caretaker" />;
       case "shop":
         return <ShopManagement user={user} userRole={userRole} />;
       case "pets":

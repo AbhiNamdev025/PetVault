@@ -1,0 +1,50 @@
+.specializedNav {
+  --admin-typo-md: var(--font-size-md);
+  --admin-typo-sm: var(--font-size-sm);
+  --admin-typo-xs: var(--font-size-xs);
+  background: var(--color-text-primary);
+  padding: var(--space-5) var(--space-8);
+  border-radius: var(--radius-lg);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--color-text-inverse);
+  margin-top: auto;
+}
+
+.specializedNav p {
+  margin: 0;
+  font-size: var(--admin-typo-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-border-dark);
+}
+
+.specializedNav button {
+  background: var(--color-primary-500);
+  color: var(--color-text-inverse);
+  border: none;
+  padding: var(--space-2) var(--space-5);
+  border-radius: var(--radius-md);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--admin-typo-xs);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.specializedNav button:hover {
+  background: var(--color-primary-600);
+  transform: translateY(-1px);
+}
+
+@media (max-width: 768px) {
+  .specializedNav {
+    flex-direction: column;
+    text-align: center;
+    gap: var(--space-4);
+    border-radius: 0;
+    padding: var(--space-6) var(--space-4);
+  }
+  .specializedNav button {
+    width: 100%;
+  }
+}

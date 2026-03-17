@@ -1,0 +1,308 @@
+.card {
+  background: var(--color-bg-primary);
+  border-radius: var(--radius-xl);
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--color-border-medium);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.card:hover {
+  border-color: var(--color-primary-500);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.cardActive {
+  z-index: 50; /* Ensure active card is on top of sibling cards */
+  border-color: var(--color-primary-500);
+  box-shadow: var(--shadow-lg);
+}
+
+.content {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  position: relative;
+}
+
+.avatarWrapper {
+  flex-shrink: 0;
+}
+
+.avatar,
+.avatarPlaceholder {
+  width: var(--space-11);
+  height: var(--space-11);
+  border-radius: var(--radius-lg);
+  object-fit: cover;
+}
+
+.avatarPlaceholder {
+  background: var(--color-bg-secondary);
+  color: var(--color-text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-sm);
+  border: 1px solid var(--color-border-light);
+}
+
+.details {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.userName {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 150px;
+}
+
+.roleBadge {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-extrabold);
+  padding: 1px 6px;
+  border-radius: var(--radius-full);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.roleBadge.admin {
+  background: var(--color-error-light);
+  color: var(--color-error-dark);
+}
+.roleBadge.doctor {
+  background: var(--color-info-light);
+  color: var(--color-info-dark);
+}
+.roleBadge.hospital {
+  background: var(--color-success-light);
+  color: var(--color-success-dark);
+}
+.roleBadge.shop {
+  background: var(--color-warning-light);
+  color: var(--color-warning-dark);
+}
+.roleBadge.daycare {
+  background: var(--color-primary-50);
+  color: var(--color-secondary-700);
+}
+.roleBadge.user {
+  background: var(--color-bg-tertiary);
+  color: var(--color-text-secondary);
+}
+
+.emailRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  color: var(--color-text-tertiary);
+  font-size: var(--font-size-xs);
+}
+
+.emailRow span {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.deleteBtn {
+  opacity: 0;
+  width: var(--space-7);
+  height: var(--space-7);
+  border-radius: var(--radius-md);
+  border: none;
+  background: var(--color-error-light);
+  color: var(--color-error-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-base);
+}
+
+.card:hover .deleteBtn {
+  opacity: 1;
+}
+
+.deleteBtn:hover {
+  background: var(--color-error-dark);
+  color: var(--color-text-inverse);
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--color-border-light);
+}
+
+.uid {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-tertiary);
+  font-family: monospace;
+}
+
+.arrow {
+  color: var(--color-primary-500);
+  opacity: 1;
+  transition: transform 0.2s;
+}
+
+.card:hover .arrow {
+  transform: translateX(3px);
+  opacity: 1;
+}
+
+/* Update badges row */
+.badgesRow {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+}
+
+.statusBadge {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-extrabold);
+  padding: 1px 6px;
+  border-radius: var(--radius-full);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.statusBadge.pending {
+  background: var(--color-warning-light);
+  color: var(--color-warning-dark);
+  border: 1px solid var(--color-warning-light);
+}
+
+.statusBadge.approved {
+  background: var(--color-success-light);
+  color: var(--color-success-dark);
+  border: 1px solid var(--color-success-light);
+}
+
+.statusBadge.rejected {
+  background: var(--color-error-light);
+  color: var(--color-error-dark);
+  border: 1px solid var(--color-error-light);
+}
+.statusBadge.archived {
+  background: var(--color-text-primary);
+  color: var(--color-bg-primary);
+  border: 1px solid var(--color-text-primary);
+}
+
+/* Menu Styles */
+.menuWrapper {
+  position: relative;
+  /* margin-left: auto; Already in flex row */
+}
+
+.menuBtn {
+  width: var(--space-8);
+  height: var(--space-8);
+  border-radius: var(--radius-full);
+  background: transparent;
+  border: none;
+  color: var(--color-text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-base);
+  cursor: pointer;
+}
+
+/* .card:hover .menuBtn {
+  opacity: 1;
+} */
+
+.menuBtn:hover,
+.menuBtn:active {
+  background: var(--color-bg-secondary);
+  color: var(--color-text-primary);
+}
+
+.menuDropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  background: var(--color-bg-primary);
+  border-radius: var(--radius-lg);
+  padding: var(--space-1);
+  min-width: 170px;
+  z-index: 100;
+  border: 1px solid var(--color-border-medium);
+  box-shadow:
+    0 10px 25px -5px color-mix(in srgb, var(--color-neutral-900) 10%, transparent),
+    0 var(--space-2) 10px -6px color-mix(in srgb, var(--color-neutral-900) 10%, transparent);
+  animation: fadeIn 0.15s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.menuItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  border-radius: var(--radius-md);
+  transition: all var(--transition-fast);
+}
+
+.menuItem:hover {
+  background: var(--color-bg-secondary);
+  color: var(--color-text-primary);
+}
+
+.menuItem.approve:hover {
+  background: var(--color-success-light);
+  color: var(--color-success-dark);
+}
+
+.menuItem.reject:hover {
+  background: var(--color-error-light);
+  color: var(--color-error-dark);
+}
+
+.menuItem.delete:hover {
+  background: var(--color-error-light);
+  color: var(--color-error-dark);
+}
+
+.menuItem.archive:hover {
+  background: var(--color-warning-light);
+  color: var(--color-warning-dark);
+}

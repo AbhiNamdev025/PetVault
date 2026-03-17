@@ -1,0 +1,282 @@
+.modalContent {
+  padding: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  background: var(--color-bg-primary);
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-4);
+  align-items: start;
+  min-width: 0;
+}
+
+.uploadArea {
+  position: relative;
+  border: 1px dashed var(--color-border-dark);
+  border-radius: var(--radius-lg);
+  background: var(--color-bg-secondary);
+  min-height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  width: 100%;
+}
+
+.fileInput {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+  z-index: 3;
+}
+
+.previewImage {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: var(--color-bg-secondary);
+}
+
+.uploadContent {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  color: var(--color-text-secondary);
+  text-align: center;
+  padding: var(--space-3);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.uploadIcon {
+  color: var(--color-primary-600);
+  opacity: 0.85;
+}
+
+.uploadContent p {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+}
+
+.uploadAreaHasImage .uploadContent {
+  display: none;
+}
+
+.imageSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  width: 100%;
+}
+
+.imagePreviewWrap {
+  width: 100%;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  gap: var(--space-2);
+}
+
+.fullWidth {
+  grid-column: 1 / -1;
+}
+
+.modalContent :global(label),
+.fieldLabel {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+  margin-bottom: var(--space-2);
+  line-height: 1.4;
+  display: block;
+}
+
+.formControl :global(input),
+.formControl :global([class*="selectTrigger"]) {
+  width: 100%;
+  min-height: 42px;
+  border: 1px solid var(--color-border-medium);
+  border-radius: var(--radius-lg);
+  background: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  padding: 0.7rem 0.8rem;
+  font-size: var(--font-size-sm);
+  outline: none;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.formControl :global(input:focus),
+.formControl :global([class*="selectTrigger"].isOpen) {
+  border-color: color-mix(in srgb, var(--color-primary-600) 55%, transparent);
+  box-shadow: 0 0 0 3px
+    color-mix(in srgb, var(--color-primary-600) 12%, transparent);
+}
+
+.ageToggle {
+  display: inline-flex;
+  background: var(--color-bg-secondary);
+  padding: 3px;
+  border-radius: var(--radius-md);
+  gap: 2px;
+  margin-bottom: var(--space-1);
+  width: fit-content;
+  align-self: flex-start;
+}
+
+.toggleBtn {
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  border: none;
+  cursor: pointer;
+  background: transparent;
+  color: var(--color-text-secondary);
+  transition: all var(--transition-base);
+}
+
+.activeToggle {
+  background: var(--color-bg-primary);
+  color: var(--color-primary-600);
+  box-shadow: var(--shadow-sm);
+}
+
+.tagInputWrapper {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+  min-width: 0;
+}
+
+.tagAddBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  min-width: 42px;
+  height: 42px;
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-border-medium);
+  background: var(--color-text-inverse);
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.tagAddBtn:hover {
+  border: 1px solid var(--color-primary-600);
+  color: var(--color-primary-600);
+}
+
+.tagList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-1);
+  width: 100%;
+  min-width: 0;
+}
+
+.tagBadge {
+  background: var(--color-primary-50);
+  color: var(--color-primary-700);
+  padding: var(--space-1) 10px;
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid var(--color-primary-100);
+  max-width: 100%;
+  min-width: 0;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  line-height: 1.35;
+}
+
+.tagText {
+  min-width: 0;
+}
+
+.tagRemoveBtn {
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--color-primary-400);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  align-self: flex-start;
+}
+
+.tagRemoveBtn:hover {
+  color: var(--color-error);
+}
+
+.modalFooter {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-3);
+}
+
+.cancelBtn,
+.submitBtn {
+  margin: 0;
+  min-width: 120px;
+}
+
+@media (max-width: 640px) {
+  .modalContent {
+    padding: var(--space-4);
+    gap: var(--space-4);
+  }
+
+  .formGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .imagePreviewWrap {
+    width: 100%;
+  }
+
+  .uploadArea {
+    min-height: 120px;
+  }
+
+  .modalFooter {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+  }
+
+  .cancelBtn,
+  .submitBtn {
+    width: auto;
+    flex: 1;
+    min-width: 0;
+  }
+}

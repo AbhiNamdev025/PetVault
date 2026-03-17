@@ -1,0 +1,164 @@
+.reviewsSection {
+  background: var(--color-bg-secondary);
+  padding: var(--ui-section-padding-y) var(--ui-page-padding-x);
+}
+
+.sectionHeader {
+  margin-bottom: var(--ui-section-gap);
+}
+
+.helperText {
+  text-align: center;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+}
+
+.sliderViewport {
+  position: relative;
+  overflow: hidden;
+}
+
+.sliderViewport::before,
+.sliderViewport::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 56px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.sliderViewport::before {
+  left: 0;
+  background: linear-gradient(
+    to right,
+    var(--color-bg-secondary),
+    color-mix(in srgb, var(--color-text-inverse) 0%, transparent)
+  );
+}
+
+.sliderViewport::after {
+  right: 0;
+  background: linear-gradient(
+    to left,
+    var(--color-bg-secondary),
+    color-mix(in srgb, var(--color-text-inverse) 0%, transparent)
+  );
+}
+
+.sliderTrack {
+  display: flex;
+  gap: var(--space-4);
+  width: max-content;
+  will-change: transform;
+}
+
+.animate {
+  animation: slide var(--scroll-duration, 30s) linear infinite;
+}
+
+.sliderViewport:hover .animate {
+  animation-play-state: paused;
+}
+
+.card {
+  width: min(360px, calc(100vw - 5rem));
+  min-height: 150px;
+  border: 1px solid var(--color-border-medium);
+  border-radius: var(--radius-xl);
+  background: var(--color-bg-primary);
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.card:hover {
+  border-color: var(--color-primary-500);
+}
+
+.cardHeader {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: var(--space-3);
+  align-items: center;
+}
+
+.avatar {
+  width: var(--space-11);
+  height: var(--space-11);
+  border-radius: var(--radius-full);
+  background: var(--color-primary-600);
+  color: var(--color-text-inverse);
+  display: grid;
+  place-items: center;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+}
+
+.headerContent {
+  min-width: 0;
+}
+
+.reviewer {
+  margin: 0;
+  color: var(--color-text-primary);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.provider {
+  margin: 2px 0 0 0;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-xs);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.date {
+  color: var(--color-text-tertiary);
+  font-size: var(--font-size-xs);
+  white-space: nowrap;
+}
+
+.feedback {
+  margin: var(--space-4) 0;
+  color: var(--color-text-primary);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-relaxed);
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  line-clamp: 4;
+  overflow: hidden;
+}
+
+.ratingRow {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+@keyframes slide {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (max-width: 640px) {
+  .sliderViewport::before,
+  .sliderViewport::after {
+    width: var(--space-7);
+  }
+
+  .card {
+    width: min(320px, calc(100vw - 3.5rem));
+  }
+}

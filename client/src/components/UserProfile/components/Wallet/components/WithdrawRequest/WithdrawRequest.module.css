@@ -1,0 +1,64 @@
+.payoutCard {
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border-medium);
+  border-radius: var(--radius-xl);
+  padding: var(--space-5);
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.cardHeader:hover {
+  opacity: 0.8;
+}
+
+.cardHeader h3 {
+  margin: 0;
+  font-size: var(--font-size-lg);
+  color: var(--color-text-primary);
+  font-weight: var(--font-weight-semibold);
+}
+
+.cardContent {
+  margin-top: var(--space-4);
+}
+
+.payoutHint {
+  margin: 0 0 var(--space-3);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+}
+
+.warningText {
+  margin: 0 0 var(--space-3);
+  color: var(--color-error-dark);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-4);
+}
+
+.formGroup {
+  width: 100%;
+}
+
+.formActions {
+  margin-top: var(--space-4);
+  display: flex;
+  justify-content: flex-end;
+}
+
+@media (max-width: 768px) {
+  .formGrid {
+    grid-template-columns: 1fr;
+  }
+}

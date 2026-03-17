@@ -1,0 +1,74 @@
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+  margin-top: var(--space-8);
+  flex-wrap: nowrap; /* Keep items on one line, scrolling handled by .pageNumbers */
+  width: 100%;
+}
+
+.pagination > * {
+  flex: 0 0 auto;
+}
+
+.pageInfo {
+  text-align: center;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-secondary);
+  padding: 0 var(--space-2);
+}
+
+@media (max-width: 600px) {
+  .pagination {
+    gap: var(--space-3);
+    margin-top: var(--space-6);
+    justify-content: space-between;
+  }
+
+  .pageInfo {
+    order: 1; /* Move to bottom or center */
+    width: 100%;
+    margin-top: var(--space-2);
+    font-size: var(--font-size-xs);
+  }
+
+  .pagination button {
+    flex: 1;
+    min-width: var(--size-avatar-md);
+  }
+
+  .pageNumbers {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    gap: var(--space-2);
+    max-width: 140px;
+    scrollbar-width: none;
+    order: 2;
+  }
+  .pageNumbers::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.pageNumbers {
+  display: flex;
+  gap: var(--space-2);
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scrollbar-width: none !important; /* Firefox */
+  -ms-overflow-style: none !important; /* IE/Edge */
+  max-width: 140px; /* Approximately 3 buttons (40px + 8px gap) */
+  padding: 0 var(--space-1);
+}
+
+.pageNumbers::-webkit-scrollbar {
+  display: none !important; /* Chrome/Safari */
+}
+
+.pageButton {
+  min-width: 40px;
+  flex-shrink: 0;
+}

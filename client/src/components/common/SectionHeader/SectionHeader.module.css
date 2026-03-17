@@ -1,0 +1,136 @@
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin-bottom: var(--ui-section-gap-sm);
+}
+
+.inverse .icon {
+  color: var(--color-text-inverse);
+}
+
+.inverse .title {
+  color: var(--color-text-inverse);
+}
+
+.inverse .subtitle {
+  color: color-mix(in srgb, var(--color-text-inverse) 88%, transparent);
+}
+
+.inverse .count {
+  color: color-mix(in srgb, var(--color-text-inverse) 85%, transparent);
+}
+
+.left {
+  text-align: left;
+}
+
+.center {
+  text-align: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.center .titleRow {
+  justify-content: center;
+}
+
+.center .subtitle {
+  margin-inline: auto;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-section-gap-xs);
+  min-width: 0;
+}
+
+.titleRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.icon {
+  display: inline-flex;
+  color: var(--color-primary-600);
+  flex-shrink: 0;
+}
+
+.title {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--ui-heading-weight);
+  line-height: var(--ui-heading-line-height);
+  letter-spacing: var(--ui-heading-letter-spacing);
+  color: var(--color-text-primary);
+  margin: 0;
+  min-width: 0;
+}
+
+.subtitle {
+  color: var(--color-text-secondary);
+  font-size: var(--ui-subheading-section);
+  font-weight: var(--ui-subheading-weight);
+  line-height: var(--ui-subheading-line-height);
+  margin: 0;
+  max-width: 70ch;
+}
+
+.count {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  white-space: nowrap;
+}
+
+.actions {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.page .title {
+  font-size: var(--ui-heading-page);
+}
+
+.section .title {
+  font-size: var(--font-size-2xl);
+}
+
+.subsection .title {
+  font-size: var(--ui-heading-subsection);
+}
+
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-3);
+  }
+
+  .center {
+    align-items: center;
+  }
+
+  .titleRow {
+    gap: var(--space-2);
+  }
+
+  .subtitle {
+    max-width: none;
+  }
+
+  .actions {
+    justify-content: flex-start;
+    width: 100%;
+  }
+
+  .center .actions {
+    justify-content: center;
+  }
+}

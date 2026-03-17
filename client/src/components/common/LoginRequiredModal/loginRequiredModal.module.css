@@ -1,0 +1,21 @@
+/* ========================================
+   COMMON - LOGIN REQUIRED MODAL STYLES
+   ======================================== */
+
+.modalContent {
+  text-align: center;
+  padding: var(--space-6) var(--space-4) var(--space-4);
+}
+
+.modalContent p {
+  font-size: var(--font-size-base);
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-6);
+}
+
+.actions {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+}

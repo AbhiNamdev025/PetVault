@@ -17,7 +17,7 @@
 
 //   const fetchFeaturedPets = async () => {
 //     try {
-//       const token = localStorage.getItem("token");
+//       const token = localStorage.getItem("token") || sessionStorage.getItem("token");
 //       const response = await fetch(`${API_BASE_URL}/pets`, {
 //         headers: {
 //           Authorization: `Bearer ${token}`,
@@ -153,8 +153,9 @@
 import React, { useEffect, useState } from "react";
 import { Star, Home, User, PawPrint } from "lucide-react";
 import toast from "react-hot-toast";
-import { API_BASE_URL } from "../../../utils/constants";
+import { API_BASE_URL, BASE_URL } from "../../../utils/constants";
 import styles from "./petsShowcase.module.css";
+import { SectionHeader } from "../../common";
 
 const PetsShowcase = () => {
   const [soldPets, setSoldPets] = useState([]);
@@ -164,9 +165,58 @@ const PetsShowcase = () => {
     fetchPets();
   }, []);
 
+  const fallbackPets = [
+    {
+      _id: "fallback-1",
+      name: "Bella",
+      breed: "Golden Retriever",
+      images: [
+        "https://images.unsplash.com/photo-1552053831-71594a27632d?w=500&q=80",
+      ],
+      ownerName: "Sarah Miller",
+      review:
+        "Bella has been such a blessing to our family. She's so gentle and loving!",
+      rating: 5,
+      ownerImage:
+        "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face",
+      isFallback: true,
+    },
+    {
+      _id: "fallback-2",
+      name: "Max",
+      breed: "German Shepherd",
+      images: [
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDcwxuYIHbkarvPep6lKrBZB3jgbzrh4OO0g&s",
+      ],
+      ownerName: "David Chen",
+      review:
+        "Max is the perfect companion for my morning runs. So energetic and loyal!",
+      rating: 5,
+      ownerImage:
+        "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&crop=face",
+      isFallback: true,
+    },
+    {
+      _id: "fallback-3",
+      name: "Luna",
+      breed: "Siamese Cat",
+      images: [
+        "https://cdn.shopify.com/s/files/1/1199/8502/files/Siamese-Cat-in.jpg?v=1669310440",
+      ],
+      ownerName: "Emily Wilson",
+      review:
+        "Luna is so graceful and affectionate. My home feels complete with her.",
+      rating: 5,
+      ownerImage:
+        "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=150&fit=crop&crop=face",
+      isFallback: true,
+    },
+  ];
+
   const fetchPets = async () => {
     try {
-      const token = localStorage.getItem("token");
+      const token =
+        localStorage.getItem("token") || sessionStorage.getItem("token");
       const response = await fetch(`${API_BASE_URL}/pets`, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -178,12 +228,17 @@ const PetsShowcase = () => {
         const allPets = data.pets || [];
 
         const unavailablePets = allPets.filter(
-          (pet) => pet.available === false
+          (pet) => pet.available === false,
         );
 
         let displayPets = unavailablePets;
         if (displayPets.length === 0) {
           displayPets = allPets.filter((pet) => pet.featured === true);
+        }
+
+        if (displayPets.length === 0) {
+          setSoldPets(fallbackPets);
+          return;
         }
 
         const mockData = [
@@ -215,19 +270,19 @@ const PetsShowcase = () => {
 
         const petsWithReviews = displayPets.slice(0, 3).map((pet, index) => ({
           ...pet,
-          ownerName: mockData[index].ownerName,
-          review: mockData[index].review(pet.name),
-          rating: mockData[index].rating,
-          ownerImage: mockData[index].ownerImage,
+          ownerName: mockData[index % mockData.length].ownerName,
+          review: mockData[index % mockData.length].review(pet.name),
+          rating: mockData[index % mockData.length].rating,
+          ownerImage: mockData[index % mockData.length].ownerImage,
         }));
 
         setSoldPets(petsWithReviews);
       } else {
-        toast.error("Failed to load pets");
+        setSoldPets(fallbackPets);
       }
     } catch (error) {
       console.error("Error fetching pets:", error);
-      toast.error("Error fetching pets");
+      setSoldPets(fallbackPets);
     } finally {
       setLoading(false);
     }
@@ -238,8 +293,12 @@ const PetsShowcase = () => {
       <Star
         key={index}
         size={16}
-        fill={index < rating ? "#facc15" : "#e5e7eb"}
-        color={index < rating ? "#facc15" : "#e5e7eb"}
+        fill={
+          index < rating ? "var(--color-warning)" : "var(--color-border-medium)"
+        }
+        color={
+          index < rating ? "var(--color-warning)" : "var(--color-border-medium)"
+        }
       />
     ));
   };
@@ -260,16 +319,14 @@ const PetsShowcase = () => {
   return (
     <section className={styles.showcase}>
       <div className={styles.container}>
-        <div className={styles.header}>
-          <div className={styles.titleWrapper}>
-            <PawPrint size={32} className={styles.titleIcon} />
-            <h2 className={styles.title}>Happy Tails</h2>
-          </div>
-          <p className={styles.subtitle}>
-            Meet our beloved pets who found their forever homes and the families
-            who adore them
-          </p>
-        </div>
+        <SectionHeader
+          className={styles.header}
+          align="center"
+          level="section"
+          icon={<PawPrint size={32} className={styles.titleIcon} />}
+          title="Happy Tails"
+          subtitle="Meet our beloved pets who found their forever homes and the families who adore them."
+        />
 
         {soldPets.length === 0 ? (
           <div className={styles.emptyState}>
@@ -283,7 +340,11 @@ const PetsShowcase = () => {
                   <div className={styles.petImages}>
                     {pet.images && pet.images.length > 0 ? (
                       <img
-                        src={`http://localhost:5000/uploads/pets/${pet.images[0]}`}
+                        src={
+                          pet.isFallback
+                            ? pet.images[0]
+                            : `${BASE_URL}/uploads/pets/${pet.images[0]}`
+                        }
                         alt={pet.name}
                         className={styles.petImage}
                       />
@@ -314,7 +375,7 @@ const PetsShowcase = () => {
                 <p className={styles.reviewText}>"{pet.review}"</p>
 
                 <div className={styles.adoptedBadge}>
-                  <Home size={16} className={styles.homeIcon} />
+                  <Home size={18} className={styles.homeIcon} />
                   Forever Home Found
                 </div>
               </div>

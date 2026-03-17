@@ -1,20 +1,34 @@
 import React, { useEffect, useState } from "react";
 import styles from "./vetCards.module.css";
 import {
-  Stethoscope,
   GraduationCap,
-  MapPin,
   Star,
   Shield,
   XCircle,
+  Stethoscope,
   Hospital as HospitalIcon,
+  BadgeIndianRupee,
 } from "lucide-react";
 import { API_BASE_URL, BASE_URL } from "../../../../utils/constants";
 import { useNavigate } from "react-router-dom";
+import { VetCardSkeleton } from "../../../Skeletons";
+import {
+  Badge,
+  Button,
+  EmptyState,
+  ListingCard,
+  Pagination,
+  SearchFilterBar,
+  SectionHeader,
+} from "../../../common";
 
-const VetCards = () => {
+const ITEMS_PER_PAGE = 8;
+
+const VetCards = ({ onBookNow }) => {
   const [vets, setVets] = useState([]);
-  const [showAll, setShowAll] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -35,13 +49,19 @@ const VetCards = () => {
         setVets(sorted);
       } catch (error) {
         console.error(error);
+      } finally {
+        setLoading(false);
       }
     };
     fetchVets();
   }, []);
 
   const goToDoctor = (doctor) => {
-    navigate(`/doctor/${doctor._id}`, { state: { doctor } });
+    navigate(`/doctor/${doctor._id}`, {
+      state: {
+        doctor,
+      },
+    });
   };
 
   const goToHospital = (hospitalId) => {
@@ -53,128 +73,228 @@ const VetCards = () => {
     if (vet.availability?.available === false) {
       return {
         status: "unavailable",
-        text: "Currently Unavailable",
-        color: "#ef4444",
+        text: "Unavailable",
+        color: "var(--color-error)",
       };
     }
-    return { status: "available", text: "Available Now", color: "#10b981" };
+    return {
+      status: "available",
+      text: "Available Now",
+      color: "var(--color-success)",
+    };
   };
 
-  const visibleVets = showAll ? vets : vets.slice(0, 3);
+  const filteredVets = vets.filter((v) => {
+    const query = searchTerm.trim().toLowerCase();
+    if (!query) return true;
+
+    const searchPool = [
+      v.roleData?.doctorName || v.name,
+      v.roleData?.hospitalName,
+      v.roleData?.doctorSpecialization,
+      v.roleData?.serviceDescription,
+      Array.isArray(v.roleData?.servicesOffered)
+        ? v.roleData.servicesOffered.join(" ")
+        : v.roleData?.servicesOffered,
+    ];
+
+    return searchPool.some((value) =>
+      String(value || "")
+        .toLowerCase()
+        .includes(query),
+    );
+  });
+  const totalPages = Math.max(
+    1,
+    Math.ceil(filteredVets.length / ITEMS_PER_PAGE),
+  );
+
+  useEffect(() => {
+    setCurrentPage((prev) => Math.min(prev, totalPages));
+  }, [totalPages]);
+
+  const visibleVets = filteredVets.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE,
+  );
+  const hasActiveSearch = searchTerm.trim().length > 0;
 
   return (
     <section className={styles.vetCardsSection}>
-      <div className={styles.header}>
-        <h2 className={styles.heading}>Meet Our Trusted Veterinarians</h2>
-        <p className={styles.subheading}>
-          Experienced professionals dedicated to your pet's health and wellbeing
-        </p>
-      </div>
+      <SectionHeader
+        className={styles.header}
+        level="section"
+        align="center"
+        icon={<Stethoscope />}
+        title="Meet Our Trusted Veterinarians"
+        subtitle="Experienced professionals dedicated to your pet's health and wellbeing."
+        actions={
+          <SearchFilterBar
+            searchPlaceholder="Search by doctor, hospital, or specialization..."
+            searchValue={searchTerm}
+            onSearchChange={(value) => {
+              setSearchTerm(value);
+              setCurrentPage(1);
+            }}
+            resultText={`${filteredVets.length} vets found`}
+          />
+        }
+      />
 
       <div className={styles.cardsContainer}>
-        {visibleVets.map((vet) => {
-          const avgRating = vet.ratings?.length
-            ? (
-                vet.ratings.reduce((t, r) => t + r.rating, 0) /
-                vet.ratings.length
-              ).toFixed(1)
-            : "No Ratings";
-          const availability = getAvailabilityStatus(vet);
-          const hospitalId =
-            vet.roleData?.hospitalId || vet.roleData?.hospitalId;
-          return (
-            <div key={vet._id} className={styles.card}>
-              <div className={styles.imageWrapper}>
-                <img
-                  src={
-                    vet.avatar
-                      ? `${BASE_URL}/uploads/avatars/${vet.avatar}`
-                      : vet.roleData?.doctorImages?.[0]?.startsWith("http")
+        {loading ? (
+          Array.from({ length: 8 }).map((_, i) => <VetCardSkeleton key={i} />)
+        ) : filteredVets.length === 0 ? (
+          <div className={styles.emptyStateWrap}>
+            <EmptyState
+              icon={<Stethoscope size={34} />}
+              title={hasActiveSearch ? "No Vets Found" : "No Vets Available"}
+              description={
+                hasActiveSearch
+                  ? "No veterinarians match your search. Try another doctor, hospital, or specialization."
+                  : "Veterinarian listings are currently unavailable. Please check back soon."
+              }
+              action={
+                hasActiveSearch ? (
+                  <Button
+                    variant="ghost"
+                    size="md"
+                    onClick={() => setSearchTerm("")}
+                  >
+                    Clear Search
+                  </Button>
+                ) : null
+              }
+            />
+          </div>
+        ) : (
+          visibleVets.map((vet) => {
+            const avgRating = vet.ratings?.length
+              ? (
+                  vet.ratings.reduce((t, r) => t + r.rating, 0) /
+                  vet.ratings.length
+                ).toFixed(1)
+              : "No Ratings";
+            const consultationFee = Number(
+              vet.roleData?.consultationFee ?? vet.roleData?.charges ?? 0,
+            );
+            const availability = getAvailabilityStatus(vet);
+            const hospitalId = vet.roleData?.hospitalId;
+
+            return (
+              <ListingCard
+                key={vet._id}
+                onClick={() => goToDoctor(vet)}
+                imageSrc={
+                  vet.avatar
+                    ? `${BASE_URL}/uploads/avatars/${vet.avatar}`
+                    : vet.roleData?.doctorImages?.[0]?.startsWith("http")
                       ? vet.roleData.doctorImages[0]
-                      : "https://static.vecteezy.com/system/resources/thumbnails/005/387/889/small/veterinary-doctor-doing-vaccination-for-dog-free-vector.jpg"
-                  }
-                  onError={(e) => {
-                    e.target.src =
-                      "https://static.vecteezy.com/system/resources/thumbnails/005/387/889/small/veterinary-doctor-doing-vaccination-for-dog-free-vector.jpg";
-                  }}
-                  alt={vet.roleData?.doctorName}
-                  className={styles.image}
-                />
-
-                <div
-                  className={styles.availabilityBadge}
-                  style={{ backgroundColor: availability.color }}
-                >
-                  {availability.status === "available" ? (
-                    <Shield size={14} />
-                  ) : (
-                    <XCircle size={14} />
-                  )}
-                  <span>{availability.text}</span>
-                </div>
-
-                <div className={styles.ratingOverlay}>
-                  <Star size={16} className={styles.ratingIcon} />
-                  <span>{avgRating}</span>
-                </div>
-              </div>
-
-              <div className={styles.info}>
-                <div className={styles.doctorHeader}>
-                  <h3 className={styles.name}>
-                    <Stethoscope size={18} />{" "}
-                    {vet.roleData?.doctorName || vet.name}
-                  </h3>
-                  <p className={styles.specialization}>
-                    {vet.roleData?.doctorSpecialization}
-                  </p>
-                </div>
-
-                <div className={styles.metaGrid}>
-                  <div className={styles.metaItem}>
-                    <GraduationCap size={16} />
-                    <span>{vet.roleData?.doctorExperience || "-"} yrs</span>
-                  </div>
-                  <div className={styles.metaItem}>
-                    <MapPin size={16} />
-                    <button
-                      className={styles.hospitalBtn}
-                      onClick={() => goToHospital(hospitalId)}
-                    >
-                      <HospitalIcon size={14} />{" "}
-                      {vet.roleData?.hospitalName || "Hospital"}
-                    </button>
-                  </div>
-                </div>
-
-                <p className={styles.about}>
-                  {vet.roleData?.serviceDescription}
-                </p>
-
-                <button
-                  className={styles.bookButton}
-                  onClick={() => goToDoctor(vet)}
-                  disabled={vet.availability?.available === false}
-                >
-                  {vet.availability?.available === false
-                    ? "Currently Unavailable"
-                    : "View Details & Book"}
-                </button>
-              </div>
-            </div>
-          );
-        })}
+                      : ""
+                }
+                fallbackImageSrc="https://static.vecteezy.com/system/resources/thumbnails/005/387/889/small/veterinary-doctor-doing-vaccination-for-dog-free-vector.jpg"
+                imageAlt={vet.roleData?.doctorName || vet.name}
+                badges={[
+                  {
+                    position: "top-right",
+                    content: (
+                      <Badge
+                        variant={
+                          availability.status === "available"
+                            ? "success"
+                            : "error"
+                        }
+                        size="sm"
+                        icon={
+                          availability.status === "available" ? (
+                            <Shield size={12} />
+                          ) : (
+                            <XCircle size={12} />
+                          )
+                        }
+                      >
+                        {availability.text}
+                      </Badge>
+                    ),
+                  },
+                ]}
+                title={vet.roleData?.doctorName || vet.name}
+                titleIcon={<Stethoscope size={18} />}
+                headerRight={
+                  <Button
+                    type="button"
+                    className={styles.entityContextButton}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      goToHospital(hospitalId);
+                    }}
+                    disabled={!hospitalId}
+                    variant="primary"
+                    size="md"
+                  >
+                    <HospitalIcon size={14} />
+                    <span>{vet.roleData?.hospitalName || "Hospital"}</span>
+                  </Button>
+                }
+                subtitle={vet.roleData?.doctorSpecialization}
+                context={
+                  <Badge
+                    variant="warning-soft"
+                    size="sm"
+                    icon={<Star size={12} />}
+                  >
+                    {avgRating}
+                  </Badge>
+                }
+                description={vet.roleData?.serviceDescription}
+                metaItems={[
+                  {
+                    icon: <GraduationCap size={14} />,
+                    label: `${vet.roleData?.doctorExperience || "-"} yrs`,
+                  },
+                  {
+                    icon: <BadgeIndianRupee size={14} />,
+                    label:
+                      consultationFee > 0
+                        ? `₹${consultationFee}/visit`
+                        : "Price on request",
+                  },
+                ]}
+                as="div"
+                footer={
+                  <Button
+                    fullWidth
+                    size="sm"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (onBookNow) {
+                        onBookNow(vet);
+                        return;
+                      }
+                      goToDoctor(vet);
+                    }}
+                    disabled={vet.availability?.available === false}
+                    variant="primary"
+                  >
+                    {vet.availability?.available === false
+                      ? "Unavailable"
+                      : onBookNow
+                        ? "Book"
+                        : "View Details & Book"}
+                  </Button>
+                }
+              />
+            );
+          })
+        )}
       </div>
 
-      {vets.length > 3 && !showAll && (
-        <div className={styles.centerBtn}>
-          <button
-            className={styles.viewAllBtn}
-            onClick={() => setShowAll(true)}
-          >
-            View All Veterinarians
-          </button>
-        </div>
+      {!loading && filteredVets.length > 0 && (
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+        />
       )}
     </section>
   );

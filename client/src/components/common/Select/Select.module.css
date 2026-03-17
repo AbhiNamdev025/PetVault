@@ -1,0 +1,201 @@
+/* ========================================
+   SELECT COMPONENT STYLES
+   ======================================== */
+
+.selectWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  width: 100%;
+  position: relative;
+}
+
+.selectWrapper.fullWidth {
+  width: 100%;
+}
+
+.selectControl {
+  position: relative;
+  width: 100%;
+}
+
+/* ===== LABEL ===== */
+.label {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+  line-height: 1.4;
+  display: block;
+}
+
+.required {
+  color: var(--color-error);
+  margin-left: var(--space-1);
+}
+
+/* ===== TRIGGER (The "Input" Box) ===== */
+.selectTrigger {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-normal);
+  color: var(--color-text-primary);
+  background-color: var(--color-bg-primary);
+  border: 1px solid var(--color-border-medium);
+  border-radius: var(--radius-lg);
+  padding: var(--space-3) var(--space-4);
+  padding-right: calc(var(--space-4) * 2.5);
+  min-height: var(--space-11);
+  transition: all var(--transition-base);
+  cursor: pointer;
+  user-select: none;
+}
+
+.selectTrigger.withIcon {
+  padding-left: var(--space-12);
+}
+
+.selectTrigger:hover:not(.disabled) {
+  border-color: var(--color-border-dark);
+}
+
+.selectTrigger.isOpen {
+  border-color: var(--color-primary-500);
+  box-shadow: 0 0 0 3px var(--color-primary-100);
+}
+
+.selectTrigger.error {
+  border-color: var(--color-error);
+}
+
+.selectTrigger.disabled {
+  background-color: var(--color-neutral-100);
+  color: var(--color-text-disabled);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.triggerContent {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.triggerContent.placeholder {
+  color: var(--color-text-tertiary); /* Lighter placeholder color */
+}
+
+/* ===== ICONS ===== */
+.icon {
+  position: absolute;
+  left: var(--space-4);
+  color: var(--color-text-tertiary);
+  display: flex;
+  align-items: center;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.arrow {
+  position: absolute;
+  right: var(--space-4);
+  color: var(--color-text-tertiary);
+  font-size: var(--font-size-xs);
+  pointer-events: none;
+  transition: transform 0.2s ease;
+}
+
+.isOpen .arrow {
+  transform: rotate(180deg);
+}
+
+/* ===== CUSTOM DROPDOWN MENU ===== */
+.dropdownMenu {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  width: 100%;
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border-medium);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 var(--space-1) var(--space-5) color-mix(in srgb, var(--color-neutral-900) 10%, transparent);
+  z-index: 1400;
+  max-height: 250px;
+  overflow-y: auto;
+  animation: slideDown 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  padding: var(--space-1);
+}
+
+.optionItem {
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--font-size-base);
+  color: var(--color-text-primary);
+  cursor: pointer;
+  border-radius: var(--radius-md);
+  transition: background var(--transition-fast);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.optionItem:hover {
+  background-color: var(--color-neutral-100);
+  color: var(--color-primary-700);
+}
+
+.optionItem.selected {
+  background-color: var(--color-primary-50);
+  color: var(--color-primary-700);
+  font-weight: var(--font-weight-medium);
+}
+
+/* Scrollbar for dropdown */
+.dropdownMenu::-webkit-scrollbar {
+  width: 6px;
+}
+
+.dropdownMenu::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.dropdownMenu::-webkit-scrollbar-thumb {
+  background-color: var(--color-neutral-200);
+  border-radius: var(--radius-2xl);
+}
+
+/* ===== FULL WIDTH ===== */
+.fullWidth {
+  width: 100%;
+}
+
+/* ===== HELPER TEXT ===== */
+.helperText,
+.errorText {
+  font-size: var(--font-size-xs);
+  margin-top: var(--space-1);
+  display: block;
+}
+
+.helperText {
+  color: var(--color-text-tertiary);
+}
+
+.errorText {
+  color: var(--color-error);
+  font-weight: var(--font-weight-medium);
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

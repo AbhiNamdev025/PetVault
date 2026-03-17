@@ -1,191 +1,55 @@
+/* ========================================
+   NAVBAR COMPONENT STYLES
+   ======================================== */
+
 .navbar {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  padding: 1rem 0;
-  position: sticky;
+  background: linear-gradient(
+    135deg,
+    var(--color-primary-600),
+    var(--color-primary-700)
+  );
+  position: fixed;
   top: 0;
-  z-index: 1000;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  left: 0;
+  right: 0;
+  min-height: var(--app-navbar-height);
+  z-index: var(--z-sticky);
+  box-shadow: var(--shadow-lg);
 }
 
 .navContainer {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 var(--space-6);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  flex-wrap: wrap;
-  gap: 1rem;
-}
-
-.logo {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  text-decoration: none;
-  color: white;
-  font-size: 1.7rem;
-  font-weight: 700;
-}
-
-.logoIcon {
-  color: #ffd700;
-  transition: 0.3s ease;
-}
-
-.navMenu {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.navLink {
-  color: white;
-  text-decoration: none;
-  font-weight: 500;
-  padding: 8px 16px;
-  border-radius: 8px;
-}
-
-.navLink:hover {
-  background: rgba(255, 255, 255, 0.15);
-}
-
-.activeLink {
-  background: rgba(255, 255, 255, 0.25);
+  min-height: var(--app-navbar-height);
+  flex-wrap: nowrap;
+  gap: var(--space-4);
 }
 
 .navActions {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: var(--space-4);
 }
 
-.authLink {
-  color: white;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 12px;
-  border-radius: 8px;
-  text-decoration: none;
+/* ===== TABLET/LAPTOP OPTIMIZATION ===== */
+@media (min-width: 769px) and (max-width: 1150px) {
+  .navContainer {
+    gap: var(--space-1);
+    padding: 0 var(--space-4);
+  }
 }
 
-.cartBtn {
-  background: rgba(255, 255, 255, 0.15);
-  border: none;
-  padding: 8px;
-  border-radius: 8px;
-  color: white;
-  position: relative;
-}
-
-.cartCount {
-  position: absolute;
-  top: -5px;
-  right: -5px;
-  background: #ff6b6b;
-  color: white;
-  font-size: 10px;
-  width: 17px;
-  height: 17px;
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.userMenu {
-  position: relative;
-}
-
-.userButton {
-  background: rgba(255, 255, 255, 0.15);
-  border: none;
-  color: white;
-  padding: 6px 12px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.dropdownMenu {
-  position: absolute;
-  top: 110%;
-  right: 0;
-  background: white;
-  width: 180px;
-  border-radius: 10px;
-  padding: 8px 0;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-}
-
-.dropdownItem {
-  padding: 10px 16px;
-  color: #333;
-  text-decoration: none;
-  display: flex;
-  align-items: center;
-  background: none;
-  border: none;
-}
-
-/* MOBILE */
-
-.mobileToggle {
-  display: none;
-}
-
+/* ===== MOBILE ===== */
 @media (max-width: 768px) {
-  .navMenu,
+  .navContainer {
+    padding: 0 var(--space-4);
+  }
+
   .navActions {
     display: none;
   }
-
-  .mobileToggle {
-    display: block;
-    background: none;
-    border: none;
-    color: white;
-  }
-
-  .mobileDropdown {
-    position: fixed;
-    top: 85px;
-    left: 75%;
-    transform: translateX(-50%);
-    width: 85%;
-    max-width: 200px;
-    background: #ffffffdb;
-    border-radius: 16px;
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
-    padding: 1rem 0;
-    display: flex;
-    flex-direction: column;
-    z-index: 2000;
-  }
-  .mobileItem {
-    padding: 12px 16px;
-    text-align: center;
-    font-weight: 500;
-    color: #333;
-    text-decoration: none;
-    background: none;
-    border: none;
-    width: 100%;
-    cursor: pointer;
-  }
-
-  .divider {
-    width: 85%;
-    height: 1px;
-    background: #ddd;
-    margin: 8px auto;
-  }
-}
-.avatar {
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid #fff;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.15);
 }

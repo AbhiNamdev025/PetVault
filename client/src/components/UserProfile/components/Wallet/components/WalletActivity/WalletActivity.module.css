@@ -1,0 +1,99 @@
+.ledgerCard {
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border-medium);
+  border-radius: var(--radius-xl);
+  padding: var(--space-5);
+}
+
+.ledgerCard h3 {
+  margin: 0;
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+}
+
+.loading {
+  margin-top: var(--space-3);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+}
+
+.ledgerList {
+  margin-top: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.ledgerRow {
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-lg);
+  background: var(--color-bg-secondary);
+  padding: var(--space-3);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+
+.left {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.left p {
+  margin: 0;
+  color: var(--color-text-primary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+}
+
+.left span {
+  color: var(--color-text-tertiary);
+  font-size: var(--font-size-sm);
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 10px;
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+}
+
+.creditTag {
+  background: var(--color-success-light);
+  color: var(--color-success);
+}
+
+.debitTag {
+  background: var(--color-error-light);
+  color: var(--color-error-dark);
+}
+
+.amount {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+}
+
+.credit {
+  color: var(--color-success);
+}
+
+.debit {
+  color: var(--color-error-dark);
+}
+
+@media (max-width: 768px) {
+  .ledgerRow {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .amount {
+    align-self: flex-end;
+  }
+}

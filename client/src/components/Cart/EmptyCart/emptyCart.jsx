@@ -1,25 +1,32 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { ShoppingBag } from "lucide-react";
-import styles from "./EmptyCart.module.css";
+import styles from "./emptyCart.module.css";
+import { Button, EmptyState } from "../../common";
 
 const EmptyCart = () => {
   const navigate = useNavigate();
 
   return (
-    <div className={styles.emptyCart}>
-      <div className={styles.iconWrapper}>
-        <ShoppingBag className={styles.icon} size={80} />
-      </div>
-      <h2 className={styles.title}>Your cart is empty!</h2>
-      <p className={styles.text}>Looks like you haven’t added anything yet.</p>
-      <button
-        className={styles.shopBtn}
-        onClick={() => navigate("/pet-products")}
-      >
-        Continue Shopping
-      </button>
-    </div>
+    <EmptyState
+      className={styles.emptyCart}
+      icon={
+        <div className={styles.iconWrapper}>
+          <ShoppingBag className={styles.icon} size={80} />
+        </div>
+      }
+      title="Your cart is empty!"
+      description="Looks like you haven’t added anything yet."
+      action={
+        <Button
+          variant="primary"
+          size="lg"
+          onClick={() => navigate("/pet-products")}
+        >
+          Continue Shopping
+        </Button>
+      }
+    />
   );
 };
 

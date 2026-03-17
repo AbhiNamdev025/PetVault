@@ -1,0 +1,166 @@
+.modalContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  padding: var(--space-6);
+  align-items: center;
+  text-align: center;
+  animation: modalFadeIn 0.6s ease-out;
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.iconWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100px;
+  height: 100px;
+  background: linear-gradient(135deg, var(--color-primary-600) 0%, var(--color-primary-600) 100%);
+  border-radius: var(--radius-full);
+  box-shadow: 0 10px 25px -5px color-mix(in srgb, var(--color-primary-600) 40%, transparent);
+  margin-bottom: var(--space-2);
+}
+
+.iconWrapper::after {
+  content: "";
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  right: -10px;
+  bottom: -10px;
+  border-radius: var(--radius-full);
+  border: 2px dashed color-mix(in srgb, var(--color-primary-600) 30%, transparent);
+  animation: rotate 10s linear infinite;
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.successIcon {
+  color: var(--color-text-inverse);
+  width: var(--space-12);
+  height: var(--space-12);
+  animation: checkPop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.2s both;
+}
+
+@keyframes checkPop {
+  0% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.title {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-extrabold);
+  background: linear-gradient(135deg, var(--color-text-primary) 0%, var(--color-text-secondary) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin: 0;
+}
+
+.message {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-md);
+  margin: 0;
+  line-height: 1.6;
+}
+
+.emailHighlight {
+  display: inline-block;
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-primary-600);
+  background: color-mix(in srgb, var(--color-primary-600) 8%, transparent);
+  padding: 6px var(--space-4);
+  border-radius: var(--radius-full);
+  border: 1px solid color-mix(in srgb, var(--color-primary-600) 20%, transparent);
+  margin-top: var(--space-2);
+}
+
+.infoBox {
+  background: color-mix(in srgb, var(--color-text-inverse) 60%, transparent);
+  backdrop-filter: blur(10px);
+  border: 1px solid color-mix(in srgb, var(--color-primary-600) 10%, transparent);
+  padding: var(--space-4);
+  border-radius: var(--radius-xl);
+  text-align: left;
+  position: relative;
+  overflow: hidden;
+}
+
+.infoBox::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: var(--space-1);
+  background: var(--color-primary-600);
+  border-radius: var(--radius-full);
+}
+
+.infoBox p {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+}
+
+.infoBox strong {
+  color: var(--color-primary-600);
+  font-weight: var(--font-weight-bold);
+}
+
+.supportText {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-tertiary);
+  margin-top: var(--space-2);
+}
+
+.supportLink {
+  color: var(--color-primary-600);
+  font-weight: var(--font-weight-semibold);
+  text-decoration: none;
+  transition: all var(--transition-base);
+}
+
+.supportLink:hover {
+  color: var(--color-primary-600);
+  text-decoration: underline;
+}
+
+.actions {
+  display: flex;
+  width: 100%;
+  margin-top: var(--space-4);
+}
+
+.btnGradient {
+  background: linear-gradient(135deg, var(--color-primary-600) 0%, var(--color-primary-600) 100%) !important;
+  box-shadow: 0 var(--space-1) 15px -3px color-mix(in srgb, var(--color-primary-600) 40%, transparent) !important;
+  border: none !important;
+  height: 50px !important;
+  font-weight: var(--font-weight-bold) !important;
+  letter-spacing: 0.5px !important;
+  transition: all var(--transition-slow);
+}

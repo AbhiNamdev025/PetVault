@@ -1,0 +1,74 @@
+/* Base Skeleton Styles */
+.skeleton {
+  background: linear-gradient(90deg, var(--color-bg-tertiary) 25%, var(--color-border-medium) 37%, var(--color-bg-tertiary) 63%);
+  background-size: 400% 100%;
+  display: block;
+}
+
+/* Variants */
+.text {
+  border-radius: var(--radius-sm);
+  transform: scale(1, 0.6);
+  transform-origin: 0 60%;
+  min-height: 1em;
+}
+
+.circular {
+  border-radius: var(--radius-full);
+}
+
+.rectangular {
+  border-radius: 0;
+}
+
+.rounded {
+  border-radius: var(--radius-lg);
+}
+
+/* Animations */
+.shimmer {
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+.pulse {
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.wave {
+  animation: wave 1.6s linear infinite;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    color-mix(in srgb, var(--color-text-inverse) 40%, transparent) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 100% 0;
+  }
+  100% {
+    background-position: -100% 0;
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}
+
+@keyframes wave {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}

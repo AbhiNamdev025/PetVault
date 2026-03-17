@@ -1,25 +1,42 @@
 import React, { useState, useEffect } from "react";
-import { X, Upload } from "lucide-react";
+import { X, Upload, Plus } from "lucide-react";
 import styles from "./editPetModal.module.css";
 import { API_BASE_URL } from "../../../../utils/constants";
 import toast from "react-hot-toast";
-const EditPetModal = ({ pet, onClose }) => {
-  if (!pet) return null;
+import {
+  Modal,
+  Button,
+  Checkbox,
+  Select,
+  Input,
+  Textarea,
+} from "../../../common";
 
+const EditPetModal = ({ pet, onClose }) => {
   const [formData, setFormData] = useState({
     name: "",
     breed: "",
     type: "dog",
     gender: "male",
     age: "",
-    ageUnit: "months",
+    ageUnit: "years",
     price: "",
     color: "",
     description: "",
+    weight: "",
+    identifiableMarks: "",
+    dob: "",
+    medicalConditions: [],
+    allergies: [],
     available: true,
     category: "shop",
+    dewormed: true,
     vaccinated: false,
   });
+
+  const [ageMode, setAgeMode] = useState("Years");
+  const [newCondition, setNewCondition] = useState("");
+  const [newAllergy, setNewAllergy] = useState("");
   const [images, setImages] = useState([]);
   const [existingImages, setExistingImages] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -32,14 +49,21 @@ const EditPetModal = ({ pet, onClose }) => {
         type: pet.type || "dog",
         gender: pet.gender || "male",
         age: pet.age ? pet.age.toString() : "",
-        ageUnit: pet.ageUnit || "months",
+        ageUnit: pet.ageUnit || "years",
         price: pet.price ? pet.price.toString() : "",
         color: pet.color || "",
         description: pet.description || "",
+        weight: pet.weight ? pet.weight.toString() : "",
+        identifiableMarks: pet.identifiableMarks || "",
+        dob: pet.dob ? new Date(pet.dob).toISOString().split("T")[0] : "",
+        medicalConditions: pet.medicalConditions || [],
+        allergies: pet.allergies || [],
         available: Boolean(pet.available),
         category: pet.category || "shop",
         vaccinated: Boolean(pet.vaccinated),
+        dewormed: Boolean(pet.dewormed),
       });
+      setAgeMode(pet.dob ? "DOB" : "Years");
       setExistingImages(pet.images || []);
     }
   }, [pet]);
@@ -49,6 +73,40 @@ const EditPetModal = ({ pet, onClose }) => {
     setFormData((prev) => ({
       ...prev,
       [name]: type === "checkbox" ? checked : value,
+    }));
+  };
+
+  const addMedicalCondition = () => {
+    if (newCondition.trim()) {
+      setFormData((prev) => ({
+        ...prev,
+        medicalConditions: [...prev.medicalConditions, newCondition.trim()],
+      }));
+      setNewCondition("");
+    }
+  };
+
+  const removeMedicalCondition = (index) => {
+    setFormData((prev) => ({
+      ...prev,
+      medicalConditions: prev.medicalConditions.filter((_, i) => i !== index),
+    }));
+  };
+
+  const addAllergy = () => {
+    if (newAllergy.trim()) {
+      setFormData((prev) => ({
+        ...prev,
+        allergies: [...prev.allergies, newAllergy.trim()],
+      }));
+      setNewAllergy("");
+    }
+  };
+
+  const removeAllergy = (index) => {
+    setFormData((prev) => ({
+      ...prev,
+      allergies: prev.allergies.filter((_, i) => i !== index),
     }));
   };
 
@@ -63,10 +121,13 @@ const EditPetModal = ({ pet, onClose }) => {
 
   const handleDeleteExistingImage = async (img) => {
     try {
-      const token = localStorage.getItem("token");
+      const token =
+        localStorage.getItem("token") || sessionStorage.getItem("token");
       const res = await fetch(`${API_BASE_URL}/pets/${pet._id}/image/${img}`, {
         method: "DELETE",
-        headers: { Authorization: `Bearer ${token}` },
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
       if (res.ok) {
         setExistingImages((prev) => prev.filter((i) => i !== img));
@@ -83,21 +144,28 @@ const EditPetModal = ({ pet, onClose }) => {
     e.preventDefault();
     setLoading(true);
     try {
-      const token = localStorage.getItem("token");
+      const token =
+        localStorage.getItem("token") || sessionStorage.getItem("token");
       const form = new FormData();
-      Object.keys(formData).forEach((key) => form.append(key, formData[key]));
+      Object.keys(formData).forEach((key) => {
+        if (Array.isArray(formData[key])) {
+          formData[key].forEach((val) => form.append(key, val));
+        } else {
+          form.append(key, formData[key]);
+        }
+      });
       if (images.length > 0) {
         form.append("replaceImages", "false");
         images.forEach((img) => form.append("petImages", img));
       }
       const response = await fetch(`${API_BASE_URL}/pets/${pet._id}`, {
         method: "PUT",
-        headers: { Authorization: `Bearer ${token}` },
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
         body: form,
       });
       if (response.ok) {
-        const updated = await response.json();
-        setExistingImages(updated.images || []);
         toast.success("Pet updated successfully");
         onClose();
       } else {
@@ -113,230 +181,431 @@ const EditPetModal = ({ pet, onClose }) => {
   if (!pet || !pet._id) return null;
 
   return (
-    <div className={styles.modalOverlay}>
-      <div className={styles.modal}>
-        <div className={styles.modalHeader}>
-          <h2>Edit Pet</h2>
-          <button className={styles.closeButton} onClick={onClose}>
-            <X size={24} />
-          </button>
-        </div>
-        <form onSubmit={handleSubmit} className={styles.form}>
-          <div className={styles.formGrid}>
-            <div className={styles.formGroup}>
-              <label>Pet Name *</label>
-              <input
-                type="text"
-                name="name"
-                value={formData.name}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-            <div className={styles.formGroup}>
-              <label>Breed *</label>
-              <input
-                type="text"
-                name="breed"
-                value={formData.breed}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-            <div className={styles.formGroup}>
-              <label>Type *</label>
-              <select
-                name="type"
-                value={formData.type}
-                onChange={handleInputChange}
-                required
-              >
-                <option value="dog">Dog</option>
-                <option value="cat">Cat</option>
-                <option value="bird">Bird</option>
-                <option value="rabbit">Rabbit</option>
-                <option value="fish">Fish</option>
-                <option value="other">Other</option>
-              </select>
-            </div>
-            <div className={styles.formGroup}>
-              <label>Gender *</label>
-              <select
-                name="gender"
-                value={formData.gender}
-                onChange={handleInputChange}
-                required
-              >
-                <option value="male">Male</option>
-                <option value="female">Female</option>
-              </select>
-            </div>
-            <div className={styles.formGroup}>
-              <label>Category *</label>
-              <select
-                name="category"
-                value={formData.category}
-                onChange={handleInputChange}
-                required
-              >
-                <option value="shop">For Sale</option>
-                <option value="adoption">For Adoption</option>
-              </select>
-            </div>
-            <div className={styles.formGroup}>
-              <label>Age *</label>
-              <div className={styles.ageInput}>
-                <input
-                  type="number"
-                  name="age"
-                  value={formData.age || ""}
-                  onChange={handleInputChange}
-                  min="0"
-                  required
-                />
-                <select
-                  name="ageUnit"
-                  value={formData.ageUnit}
-                  onChange={handleInputChange}
-                >
-                  <option value="months">Months</option>
-                  <option value="years">Years</option>
-                </select>
-              </div>
-            </div>
-            <div className={styles.formGroup}>
-              <label>Price (Rs) *</label>
-              <input
-                type="number"
-                name="price"
-                value={formData.price || ""}
-                onChange={handleInputChange}
-                min="0"
-                step="0.01"
-                required
-              />
-            </div>
-            <div className={styles.formGroup}>
-              <label>Color</label>
-              <input
-                type="text"
-                name="color"
-                value={formData.color}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-          </div>
-
+    <Modal
+      isOpen
+      onClose={onClose}
+      showCloseButton={false}
+      hideContentPadding
+      size="lg"
+      backdropClassName={styles.modalOverlay}
+      className={styles.modal}
+    >
+      <div className={styles.modalHeader}>
+        <h2>Edit Pet</h2>
+        <Button
+          className={styles.closeButton}
+          onClick={onClose}
+          usePresetStyle={false}
+        >
+          <X size={24} />
+        </Button>
+      </div>
+      <form onSubmit={handleSubmit} className={styles.form}>
+        <div className={styles.formGrid}>
           <div className={styles.formGroup}>
-            <label>Description *</label>
-            <textarea
-              name="description"
-              value={formData.description}
+            <Input
+              type="text"
+              label="Pet Name"
+              name="name"
+              value={formData.name}
               onChange={handleInputChange}
-              rows="4"
               required
+              fullWidth
+              className={styles.inputField}
             />
           </div>
-
-          {existingImages && existingImages.length > 0 && (
-            <div className={styles.formGroup}>
-              <label>Existing Images</label>
-              <div className={styles.imagePreview}>
-                {existingImages.map((img, index) => {
-                  const imageUrl = img.startsWith("http")
-                    ? img
-                    : `${API_BASE_URL.replace("/api", "")}/uploads/pets/${img}`;
-                  return (
-                    <div key={index} className={styles.previewItem}>
-                      <img src={imageUrl} alt="Pet" />
-                      <button
-                        type="button"
-                        onClick={() => handleDeleteExistingImage(img)}
-                        className={styles.removeImage}
-                      >
-                        <X size={16} />
-                      </button>
-                    </div>
-                  );
-                })}
+          <div className={styles.formGroup}>
+            <Select
+              label="Species"
+              name="type"
+              value={formData.type}
+              onChange={handleInputChange}
+              required
+              fullWidth
+              className={styles.selectField}
+              options={[
+                {
+                  label: "Dog",
+                  value: "dog",
+                },
+                {
+                  label: "Cat",
+                  value: "cat",
+                },
+                {
+                  label: "Bird",
+                  value: "bird",
+                },
+                {
+                  label: "Rabbit",
+                  value: "rabbit",
+                },
+                {
+                  label: "Fish",
+                  value: "fish",
+                },
+                {
+                  label: "Other",
+                  value: "other",
+                },
+              ]}
+            />
+          </div>
+          <div className={styles.formGroup}>
+            <Input
+              type="text"
+              label="Breed"
+              name="breed"
+              value={formData.breed}
+              onChange={handleInputChange}
+              required
+              fullWidth
+              className={styles.inputField}
+            />
+          </div>
+          <div className={styles.formGroup}>
+            <Select
+              label="Gender"
+              name="gender"
+              value={formData.gender}
+              onChange={handleInputChange}
+              required
+              fullWidth
+              className={styles.selectField}
+              options={[
+                {
+                  label: "Male",
+                  value: "male",
+                },
+                {
+                  label: "Female",
+                  value: "female",
+                },
+              ]}
+            />
+          </div>
+          <div className={styles.formGroup}>
+            <Input
+              type="number"
+              label="Weight (kg)"
+              step="0.1"
+              name="weight"
+              value={formData.weight}
+              onChange={handleInputChange}
+              required
+              fullWidth
+              className={styles.inputField}
+            />
+          </div>
+          <div className={styles.formGroup}>
+            <Input
+              type="text"
+              label="Identifiable Marks"
+              name="identifiableMarks"
+              value={formData.identifiableMarks}
+              onChange={handleInputChange}
+              required
+              fullWidth
+              className={styles.inputField}
+            />
+          </div>
+          <div className={styles.formGroup}>
+            <div className={styles.ageHeader}>
+              <label>Age *</label>
+              <div className={styles.tabContainer}>
+                <Button
+                  type="button"
+                  className={`${styles.tab} ${ageMode === "DOB" ? styles.activeTab : ""}`}
+                  onClick={() => setAgeMode("DOB")}
+                  variant="ghost"
+                  size="sm"
+                >
+                  DOB
+                </Button>
+                <Button
+                  type="button"
+                  className={`${styles.tab} ${ageMode === "Years" ? styles.activeTab : ""}`}
+                  onClick={() => setAgeMode("Years")}
+                  variant="ghost"
+                  size="sm"
+                >
+                  Years
+                </Button>
               </div>
             </div>
-          )}
-
+            {ageMode === "DOB" ? (
+              <Input
+                type="date"
+                label="Date of Birth"
+                name="dob"
+                value={formData.dob}
+                onChange={handleInputChange}
+                required={ageMode === "DOB"}
+                fullWidth
+                className={styles.inputField}
+              />
+            ) : (
+              <Input
+                type="number"
+                label="Age"
+                step="0.1"
+                name="age"
+                value={formData.age}
+                onChange={handleInputChange}
+                required={ageMode === "Years"}
+                fullWidth
+                className={styles.inputField}
+              />
+            )}
+          </div>
           <div className={styles.formGroup}>
-            <label>Upload New Images</label>
-            <div className={styles.imageUpload}>
-              <label className={styles.uploadArea}>
-                <Upload size={24} />
-                <span>Click to upload new images</span>
-                <input
-                  type="file"
-                  multiple
-                  accept="image/*"
-                  onChange={handleImageUpload}
-                  className={styles.fileInput}
-                />
-              </label>
-              {images.length > 0 && (
-                <div className={styles.imagePreview}>
-                  {images.map((img, i) => (
-                    <div key={i} className={styles.previewItem}>
-                      <img src={URL.createObjectURL(img)} alt="Preview" />
-                      <button
-                        type="button"
-                        onClick={() => removeNewImage(i)}
-                        className={styles.removeImage}
-                      >
-                        <X size={16} />
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              )}
+            <Select
+              label="Category"
+              name="category"
+              value={formData.category}
+              onChange={handleInputChange}
+              required
+              fullWidth
+              className={styles.selectField}
+              options={[
+                {
+                  label: "For Sale",
+                  value: "shop",
+                },
+                {
+                  label: "For Adoption",
+                  value: "adoption",
+                },
+              ]}
+            />
+          </div>
+          <div className={styles.formGroup}>
+            <Input
+              type="number"
+              label="Price (Rs)"
+              name="price"
+              value={formData.price}
+              onChange={handleInputChange}
+              min="0"
+              step="0.01"
+              required
+              fullWidth
+              className={styles.inputField}
+            />
+          </div>
+          <div className={styles.formGroup}>
+            <Input
+              type="text"
+              label="Color"
+              name="color"
+              value={formData.color}
+              onChange={handleInputChange}
+              fullWidth
+              className={styles.inputField}
+            />
+          </div>
+        </div>
+
+        <div className={styles.twoColumn}>
+          <div className={styles.formGroup}>
+            <label>Medical Conditions</label>
+            <div className={styles.inputWithButton}>
+              <Input
+                placeholder="Add..."
+                value={newCondition}
+                onChange={(e) => setNewCondition(e.target.value)}
+                fullWidth
+                className={styles.inputField}
+              />
+              <Button
+                type="button"
+                onClick={addMedicalCondition}
+                className={styles.plusBtn}
+                usePresetStyle={false}
+                aria-label="Add medical condition"
+              >
+                <Plus size={16} />
+              </Button>
+            </div>
+            <div className={styles.tagGrid}>
+              {formData.medicalConditions.map((cond, i) => (
+                <span key={i} className={styles.tag}>
+                  {cond}
+                  <Button
+                    type="button"
+                    onClick={() => removeMedicalCondition(i)}
+                    className={styles.tagRemove}
+                    usePresetStyle={false}
+                    aria-label={`Remove ${cond}`}
+                  >
+                    <X size={10} />
+                  </Button>
+                </span>
+              ))}
             </div>
           </div>
-
-          <div className={styles.checkboxGroup}>
-            <label className={styles.checkboxLabel}>
-              <input
-                type="checkbox"
-                name="available"
-                checked={formData.available}
-                onChange={handleInputChange}
+          <div className={styles.formGroup}>
+            <label>Allergies</label>
+            <div className={styles.inputWithButton}>
+              <Input
+                placeholder="Add..."
+                value={newAllergy}
+                onChange={(e) => setNewAllergy(e.target.value)}
+                fullWidth
+                className={styles.inputField}
               />
-              Available for {formData.category === "shop" ? "sale" : "adoption"}
-            </label>
-            <label className={styles.checkboxLabel}>
-              <input
-                type="checkbox"
-                name="vaccinated"
-                checked={formData.vaccinated}
-                onChange={handleInputChange}
-              />
-              Vaccinated
-            </label>
+              <Button
+                type="button"
+                onClick={addAllergy}
+                className={styles.plusBtn}
+                usePresetStyle={false}
+                aria-label="Add allergy"
+              >
+                <Plus size={16} />
+              </Button>
+            </div>
+            <div className={styles.tagGrid}>
+              {formData.allergies.map((all, i) => (
+                <span key={i} className={styles.tag}>
+                  {all}
+                  <Button
+                    type="button"
+                    onClick={() => removeAllergy(i)}
+                    className={styles.tagRemove}
+                    usePresetStyle={false}
+                    aria-label={`Remove ${all}`}
+                  >
+                    <X size={10} />
+                  </Button>
+                </span>
+              ))}
+            </div>
           </div>
+        </div>
 
-          <div className={styles.modalActions}>
-            <button
-              type="button"
-              onClick={onClose}
-              className={styles.cancelButton}
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              disabled={loading}
-              className={styles.saveButton}
-            >
-              {loading ? "Updating..." : "Update Pet"}
-            </button>
+        <div className={styles.formGroup}>
+          <Textarea
+            label="Description"
+            name="description"
+            value={formData.description}
+            onChange={handleInputChange}
+            rows="4"
+            required
+            fullWidth
+            className={styles.textareaField}
+          />
+        </div>
+
+        {existingImages && existingImages.length > 0 && (
+          <div className={styles.formGroup}>
+            <label>Existing Images</label>
+            <div className={styles.imagePreview}>
+              {existingImages.map((img, index) => {
+                const imageUrl = img.startsWith("http")
+                  ? img
+                  : `${API_BASE_URL.replace("/api", "")}/uploads/pets/${img}`;
+                return (
+                  <div key={index} className={styles.previewItem}>
+                    <img src={imageUrl} alt="Pet" />
+                    <Button
+                      type="button"
+                      onClick={() => handleDeleteExistingImage(img)}
+                      className={styles.removeImage}
+                      variant="ghost"
+                      size="xs"
+                      aria-label="Remove image"
+                    >
+                      <X size={12} />
+                    </Button>
+                  </div>
+                );
+              })}
+            </div>
           </div>
-        </form>
-      </div>
-    </div>
+        )}
+
+        <div className={styles.formGroup}>
+          <label>Upload New Images</label>
+          <div className={styles.imageUpload}>
+            <label className={styles.uploadArea}>
+              <Upload size={24} />
+              <span>Click to upload new images</span>
+              <input
+                type="file"
+                multiple
+                accept="image/*"
+                onChange={handleImageUpload}
+                className={styles.fileInput}
+              />
+            </label>
+            {images.length > 0 && (
+              <div className={styles.imagePreview}>
+                {images.map((img, i) => (
+                  <div key={i} className={styles.previewItem}>
+                    <img src={URL.createObjectURL(img)} alt="Preview" />
+                    <Button
+                      type="button"
+                      onClick={() => removeNewImage(i)}
+                      className={styles.removeImage}
+                      variant="ghost"
+                      size="xs"
+                      aria-label="Remove image"
+                    >
+                      <X size={12} />
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div className={styles.checkboxGroup}>
+          <Checkbox
+            label={`Available for ${formData.category === "shop" ? "sale" : "adoption"}`}
+            name="available"
+            checked={formData.available}
+            onChange={handleInputChange}
+            className={styles.checkboxLabel}
+          />
+          <Checkbox
+            label="Vaccinated"
+            name="vaccinated"
+            checked={formData.vaccinated}
+            onChange={handleInputChange}
+            className={styles.checkboxLabel}
+          />
+          <Checkbox
+            label="Dewormed"
+            name="dewormed"
+            checked={formData.dewormed}
+            onChange={handleInputChange}
+            className={styles.checkboxLabel}
+          />
+        </div>
+
+        <div className={styles.modalActions}>
+          <Button
+            type="button"
+            onClick={onClose}
+            className={styles.cancelButton}
+            variant="ghost"
+            size="md"
+          >
+            Cancel
+          </Button>
+          <Button
+            type="submit"
+            disabled={loading}
+            className={styles.saveButton}
+            variant="primary"
+            size="md"
+          >
+            {loading ? "Updating..." : "Update Pet"}
+          </Button>
+        </div>
+      </form>
+    </Modal>
   );
 };
 

@@ -1,25 +1,33 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Star, Heart } from "lucide-react";
 import styles from "./heroSection.module.css";
+import Button from "../../common/Button/Button";
 
 const HeroSection = () => {
+  const navigate = useNavigate();
+
   return (
     <section className={styles.hero}>
       <div className={styles.container}>
         <div className={styles.dogImageOverlay}>
           <img
-            src="https://png.pngtree.com/png-vector/20250111/ourmid/pngtree-golden-retriever-dog-pictures-png-image_15147078.png"
+            // src="https://png.pngtree.com/png-vector/20250111/ourmid/pngtree-golden-retriever-dog-pictures-png-image_15147078.png"
+            src="/public/images/Home/Hero.png"
             alt="Happy dog"
           />
         </div>
 
         <h1 className={styles.heroTitle}>
           <span className={styles.titleLine}>
-            Adopt l
+            Adopt L
             <span className={`${styles.badge} ${styles.petsBadge}`}>
               <div className={styles.heartContainer}>
-                <Heart size={130} fill="#a78bfa" color="#a78bfa" />
+                <Heart
+                  size={130}
+                  fill="var(--color-primary-400)"
+                  color="var(--color-primary-400)"
+                />
                 <div className={styles.heartContent}>
                   <span className={styles.heartText}>Pets</span>
                   <span className={styles.heartNumber}>5k+</span>
@@ -45,7 +53,7 @@ const HeroSection = () => {
           <div className={styles.reviewsSection}>
             <div className={styles.reviewLabel}>Our happy pet owners</div>
             <div className={styles.rating}>
-              <Star size={20} fill="#facc15" color="#facc15" />
+              <Star size={20} fill="#af8bfa" color="#af8bfa" />
               <span className={styles.ratingText}>4.8</span>
               <span className={styles.reviewCount}>(1.5k Reviews)</span>
             </div>
@@ -74,14 +82,19 @@ const HeroSection = () => {
           <div className={styles.heroImage}></div>
 
           <div className={styles.description}>
-            <h3 className={styles.descriptionTitle}>WHAT WE DO?</h3>
+            <h3 className={styles.descriptionTitle}>What do we do?</h3>
             <p className={styles.descriptionText}>
               With a focus on matching the right pet with the right family,
               PetVault makes it easy to adopt love and foster happiness.
             </p>
-            <Link to="/pet-adoption" className={styles.ctaButton}>
+            <Button
+              variant="primary"
+              size="lg"
+              onClick={() => navigate("/pet-adoption")}
+              className={styles.ctaButton}
+            >
               View pets
-            </Link>
+            </Button>
           </div>
         </div>
       </div>

@@ -1,46 +1,40 @@
 import React, { useEffect, useState } from "react";
-import {
-  getCart,
-  removeCartItem,
-  updateCartItem,
-  clearCart,
-} from "./cartServices";
+import { useCart } from "../../Context/CartContext";
+import { removeCartItem, updateCartItem, clearCart } from "./cartServices";
 import CartItem from "./CartItems/cartItem";
 import EmptyCart from "./EmptyCart/emptyCart";
 import styles from "./cart.module.css";
 import { useNavigate } from "react-router-dom";
+import { CartSkeleton } from "../Skeletons";
+import { Button, SectionHeader } from "../common";
+import {
+  calculateTotalsForItems,
+  fetchPlatformFeeConfig,
+} from "../../utils/platformFee";
 
 const Cart = () => {
-  const [cartItems, setCartItems] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const token = localStorage.getItem("token");
+  const { cartItems, loading, refreshCart } = useCart();
+  const [platformConfig, setPlatformConfig] = useState(null);
+  const token =
+    localStorage.getItem("token") || sessionStorage.getItem("token");
   const navigate = useNavigate();
 
-  const fetchCart = async () => {
-    try {
-      const data = await getCart(token);
-      setCartItems(data);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  // fetchCart is handled by context now, removing local implementation
 
   const handleRemove = async (id) => {
     await removeCartItem(id, token);
-    fetchCart();
+    refreshCart();
   };
 
   const handleUpdate = async (id, quantity) => {
     if (quantity < 1) return;
     await updateCartItem(id, quantity, token);
-    fetchCart();
+    refreshCart();
   };
 
   const handleClear = async () => {
     await clearCart(token);
-    fetchCart();
+    refreshCart();
   };
 
   const handleProceed = () => {
@@ -48,21 +42,30 @@ const Cart = () => {
   };
 
   useEffect(() => {
-    fetchCart();
+    refreshCart();
+    fetchPlatformFeeConfig()
+      .then((config) => setPlatformConfig(config))
+      .catch(() => null);
   }, []);
 
-  if (loading) return <div className={styles.loading}>Loading your cart...</div>;
+  if (loading) return <CartSkeleton />;
 
   if (cartItems.length === 0) return <EmptyCart />;
 
-  const totalPrice = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
-  const gstRate = 0.10;
-  const gstAmount = totalPrice * gstRate;
-  const finalAmount = totalPrice + gstAmount;
+  const { subtotal, platformFee, total } = calculateTotalsForItems(
+    cartItems,
+    platformConfig,
+  );
 
   return (
     <section className={styles.cartSection}>
-      <h1 className={styles.title}>Your Shopping Cart</h1>
+      <SectionHeader
+        className={styles.header}
+        align="center"
+        level="page"
+        title="Your Shopping Cart"
+        subtitle={`${cartItems.length} item${cartItems.length > 1 ? "s" : ""} ready for checkout`}
+      />
 
       <div className={styles.cartContainer}>
         <div className={styles.itemsContainer}>
@@ -82,7 +85,7 @@ const Cart = () => {
 
             <div className={styles.summaryRow}>
               <span>Subtotal</span>
-              <span>₹{totalPrice.toFixed(2)}</span>
+              <span>₹{subtotal.toFixed(2)}</span>
             </div>
 
             <div className={styles.summaryRow}>
@@ -90,25 +93,36 @@ const Cart = () => {
               <span className={styles.free}>Free</span>
             </div>
             <div className={styles.summaryRow}>
-              <span>GST (10%)</span>
-              <span>₹{gstAmount.toFixed(2)}</span>
+              <span>Platform Fee</span>
+              <span>₹{platformFee.toFixed(2)}</span>
             </div>
             <div className={styles.summaryTotal}>
-              <span>Total (Incl. GST)</span>
-              <span>₹{finalAmount.toFixed(2)}</span>
+              <span>Total (Incl. Fee)</span>
+              <span>₹{total.toFixed(2)}</span>
             </div>
 
             <div className={styles.summaryActions}>
-              <button className={styles.checkoutBtn} onClick={handleProceed}>
+              <Button
+                variant="primary"
+                size="lg"
+                onClick={handleProceed}
+                fullWidth
+              >
                 Proceed to Checkout
-              </button>
-              <button onClick={handleClear} className={styles.clearBtn}>
-                Clear Cart
-              </button>
+              </Button>
 
-              <button onClick={() => navigate("/pet-products")} className={styles.continueBtn}>
+              <Button
+                variant="outline"
+                size="lg"
+                onClick={() => navigate("/pet-products")}
+                fullWidth
+              >
                 Continue Shopping
-              </button>
+              </Button>
+
+              <Button variant="ghost" size="lg" onClick={handleClear} fullWidth>
+                Clear Cart
+              </Button>
             </div>
           </div>
         </div>

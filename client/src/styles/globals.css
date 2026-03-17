@@ -1,26 +1,11 @@
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap");
+/* Keep this file for app-level opt-in overrides only.
+   Core design tokens, resets, and typography live in `index.css`. */
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap");
 
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: "Poppins", sans-serif;
+  font-family: var(--font-family) !important;
 }
 
-body {
-  font-family: "Poppins", sans-serif;
-  line-height: 1.6;
-  color: #2d3748;
-  background-color: #f8f9fa;
-  scrollbar-width: none;
-}
-
-.container {
-  max-width: 1440px;
-  margin: 0 auto;
-  padding: 0 20px;
-}
-/* Mobile toast optimization */
 @media (max-width: 768px) {
   [data-react-hot-toast] {
     width: 90% !important;

@@ -1,17 +1,24 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
-import { API_BASE_URL } from "../../../../utils/constants";
+import { API_BASE_URL, BASE_URL } from "../../../../utils/constants";
 
-import VetAppointmentForm from "../VetAppointment/vetAppointmentForm";
-import LoginPopup from "../../../LoginPopup/loginPopup";
 import toast from "react-hot-toast";
 import DoctorImageSection from "./components/DoctorImageSection/doctorImageSection";
 import DoctorInfoSection from "./components/DoctorInfoSection/doctorInfoSection";
 import DoctorTabs from "./components/DoctorTabs/doctorTabs";
-import DoctorReviews from "./components/DoctorReviews/doctorReviews";
-import DoctorReviewForm from "./components/DoctorReviewForm/doctorReviewForm";
-
-import HospitalInfoSection from "./components/HospitalInfoSection/hospitalInfoSection";
+import { DetailsSkeleton } from "../../../Skeletons";
+import { openAuthModal } from "../../../../utils/authModalNavigation";
+import {
+  DetailEntityCard,
+  ReviewSection,
+  DetailPage,
+  DetailBackButton,
+} from "../../../common";
+import {
+  buildAllowedWeekdaySet,
+  formatAvailabilityDays,
+  getWeekdayTokenFromDate,
+} from "../../../../utils/weekday";
 
 import styles from "./doctorDetail.module.css";
 
@@ -24,8 +31,6 @@ const DoctorDetails = () => {
   const [doctor, setDoctor] = useState(cachedDoctor || null);
   const [hospital, setHospital] = useState(null);
 
-  const [showForm, setShowForm] = useState(false);
-  const [showLoginPopup, setShowLoginPopup] = useState(false);
   const [tab, setTab] = useState("about");
   const [formRating, setFormRating] = useState(0);
   const [formReview, setFormReview] = useState("");
@@ -68,18 +73,22 @@ const DoctorDetails = () => {
 
   const handleBookAppointment = () => {
     if (!checkAuth()) {
-      setShowLoginPopup(true);
+      openAuthModal(navigate, {
+        location,
+        view: "login",
+        from: location.pathname,
+      });
       return;
     }
-    setShowForm(true);
+    navigate(`/book/vet?doctorId=${doctor._id}`, {
+      state: {
+        from: location.pathname,
+        doctor,
+      },
+    });
   };
 
-  const handleLogin = () => {
-    setShowLoginPopup(false);
-    navigate("/login", { state: { from: location.pathname } });
-  };
-
-  if (!doctor) return <p className={styles.loading}>Loading...</p>;
+  if (!doctor) return <DetailsSkeleton />;
 
   const avgRating =
     doctor.ratings?.length > 0
@@ -90,16 +99,20 @@ const DoctorDetails = () => {
       : "No Ratings";
 
   const getAvailabilityStatus = () => {
-    if (!doctor.availability) return { text: "Available", color: "#10b981" };
+    if (!doctor.availability)
+      return { text: "Available", color: "var(--color-success)" };
 
     if (doctor.availability.available === false)
-      return { text: "Currently Unavailable", color: "#ef4444" };
+      return { text: "Currently Unavailable", color: "var(--color-error)" };
 
-    const today = new Date().toLocaleString("en-us", { weekday: "long" });
-    const days = doctor.availability.days || [];
+    const days = Array.isArray(doctor.availability.days)
+      ? doctor.availability.days
+      : [];
+    const todayToken = getWeekdayTokenFromDate(new Date());
+    const allowedDaySet = buildAllowedWeekdaySet(days);
 
-    if (days.length > 0 && !days.includes(today))
-      return { text: "Not Working Today", color: "#f59e0b" };
+    if (allowedDaySet.size > 0 && todayToken && !allowedDaySet.has(todayToken))
+      return { text: "Not Working Today", color: "var(--color-warning)" };
 
     if (doctor.availability.startTime && doctor.availability.endTime) {
       const now = new Date();
@@ -114,18 +127,36 @@ const DoctorDetails = () => {
       const end = parse(doctor.availability.endTime);
 
       if (current >= start && current <= end)
-        return { text: "Available Now", color: "#10b981" };
+        return { text: "Available Now", color: "var(--color-success)" };
 
-      return { text: "Outside Working Hours", color: "#f59e0b" };
+      return { text: "Outside Working Hours", color: "var(--color-warning)" };
     }
 
-    return { text: "Available", color: "#10b981" };
+    return { text: "Available", color: "var(--color-success)" };
   };
 
   const availabilityInfo = getAvailabilityStatus();
+  const availabilityDayLabels = formatAvailabilityDays(
+    doctor.availability?.days || [],
+  );
+
+  const formatTime = (time) => {
+    if (!time) return "";
+    const [h, m] = time.split(":").map(Number);
+    const ampm = h >= 12 ? "PM" : "AM";
+    const hours = h % 12 || 12;
+    return `${hours}:${(m || 0).toString().padStart(2, "0")} ${ampm}`;
+  };
 
   const submitReview = async () => {
-    if (!checkAuth()) return toast.error("Please login");
+    if (!checkAuth()) {
+      openAuthModal(navigate, {
+        location,
+        view: "login",
+        from: location.pathname,
+      });
+      return;
+    }
 
     if (!formRating) return toast.error("Select a rating");
 
@@ -136,7 +167,7 @@ const DoctorDetails = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          Authorization: `Bearer ${localStorage.getItem("token") || sessionStorage.getItem("token")}`,
         },
         body: JSON.stringify({
           rating: formRating,
@@ -163,7 +194,9 @@ const DoctorDetails = () => {
   };
 
   return (
-    <div className={styles.page}>
+    <DetailPage className={styles.page}>
+      <DetailBackButton onClick={() => navigate(-1)} />
+
       <div className={styles.topSection}>
         <DoctorImageSection
           doctor={doctor}
@@ -173,14 +206,47 @@ const DoctorDetails = () => {
         <DoctorInfoSection
           doctor={doctor}
           avgRating={avgRating}
-          setShowForm={handleBookAppointment}
+          onBookClick={handleBookAppointment}
           availabilityInfo={availabilityInfo}
         />
       </div>
 
       {hospital && (
         <div className={styles.hospitalBox}>
-          <HospitalInfoSection hospital={hospital} />
+          <DetailEntityCard
+            avatarSrc={
+              hospital.avatar
+                ? `${BASE_URL}/uploads/avatars/${hospital.avatar}`
+                : hospital.roleData?.hospitalImages?.[0]
+                  ? `${BASE_URL}/uploads/roles/${hospital.roleData.hospitalImages[0]}`
+                  : "https://img.icons8.com/?size=512&id=99289&format=png"
+            }
+            avatarAlt={
+              hospital.roleData?.hospitalName ||
+              hospital.businessName ||
+              hospital.name
+            }
+            title={
+              hospital.roleData?.hospitalName ||
+              hospital.businessName ||
+              hospital.name
+            }
+            subtitle={
+              hospital.address
+                ? [
+                    hospital.address.street,
+                    hospital.address.city,
+                    hospital.address.state,
+                  ]
+                    .filter(Boolean)
+                    .join(", ")
+                : "Trusted veterinary hospital"
+            }
+            badges={[doctor.roleData?.hospitalName || "Hospital"]}
+            ctaText="View Hospital →"
+            onClick={() => navigate(`/hospital/${hospital._id}`)}
+            avatarFit="contain"
+          />
         </div>
       )}
 
@@ -191,8 +257,8 @@ const DoctorDetails = () => {
           <div className={styles.aboutBox}>
             <h3>About Doctor</h3>
             <p>
-              {doctor.roleData.serviceDescription ??
-                doctor.roleData.doctorSpecialization}
+              {doctor.availability?.statusNote ||
+                "No information provided about the doctor."}
             </p>
           </div>
         )}
@@ -227,8 +293,8 @@ const DoctorDetails = () => {
               <div className={styles.availabilityItem}>
                 <strong>Working Days:</strong>
                 <span>
-                  {doctor.availability?.days?.length > 0
-                    ? doctor.availability.days.join(", ")
+                  {availabilityDayLabels.length > 0
+                    ? availabilityDayLabels.join(", ")
                     : "Not specified"}
                 </span>
               </div>
@@ -237,24 +303,12 @@ const DoctorDetails = () => {
                 <strong>Working Hours:</strong>
                 <span>
                   {doctor.availability?.startTime
-                    ? `${doctor.availability.startTime} - ${doctor.availability.endTime}`
+                    ? `${formatTime(
+                        doctor.availability.startTime,
+                      )} - ${formatTime(doctor.availability.endTime)}`
                     : "Not specified"}
                 </span>
               </div>
-
-              <div className={styles.availabilityItem}>
-                <strong>Service Radius:</strong>
-                <span>
-                  {doctor.availability?.serviceRadius || "Not specified"}
-                </span>
-              </div>
-
-              {doctor.availability?.statusNote && (
-                <div className={styles.availabilityItem}>
-                  <strong>Note:</strong>
-                  <span>{doctor.availability.statusNote}</span>
-                </div>
-              )}
             </div>
 
             {/* Current Time Status */}
@@ -289,36 +343,24 @@ const DoctorDetails = () => {
         )}
 
         {tab === "reviews" && (
-          <div className={styles.reviewBox}>
-            <h3>Ratings & Reviews</h3>
-            <DoctorReviews doctor={doctor} />
-          </div>
+          <ReviewSection
+            title="Ratings & Reviews"
+            count={doctor.ratings?.length || 0}
+            formTitle="Write a Review"
+            ratingValue={formRating}
+            onRatingChange={setFormRating}
+            reviewValue={formReview}
+            onReviewChange={setFormReview}
+            onSubmit={submitReview}
+            submitting={submitting}
+            submitText="Submit Review"
+            submittingText="Submitting..."
+            reviews={doctor.ratings || []}
+            emptyText="No reviews yet."
+          />
         )}
       </div>
-
-      <DoctorReviewForm
-        formRating={formRating}
-        setFormRating={setFormRating}
-        formReview={formReview}
-        setFormReview={setFormReview}
-        submitReview={submitReview}
-        submitting={submitting}
-      />
-
-      {showForm && (
-        <VetAppointmentForm
-          doctorId={doctor._id}
-          onClose={() => setShowForm(false)}
-        />
-      )}
-
-      {showLoginPopup && (
-        <LoginPopup
-          onClose={() => setShowLoginPopup(false)}
-          onLogin={handleLogin}
-        />
-      )}
-    </div>
+    </DetailPage>
   );
 };
 

@@ -1,85 +1,170 @@
 .page {
-  min-height: 100vh;
-  padding: 2rem 0;
-  background: #f8f4ff;
+  width: min(100%, 1320px);
+  margin: 0 auto;
+  padding: var(--ui-section-padding-y) var(--ui-section-padding-x);
   display: flex;
   flex-direction: column;
-  gap: 2rem;
-}
-
-.loading {
-  text-align: center;
-  padding: 4rem 0;
-  font-size: 1.2rem;
+  gap: var(--space-6);
 }
 
 .topSection {
-  width: 90%;
-  margin: 0 auto;
-  padding: 2rem;
-  background: white;
-  border-radius: 22px;
-  box-shadow: 0 8px 30px rgba(139, 92, 246, 0.15);
+  border: 1px solid var(--color-border-medium);
+  border-radius: var(--radius-2xl);
+  background: var(--color-bg-primary);
+  padding: var(--space-6);
   display: flex;
-  gap: 2rem;
-  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--space-5);
 }
 
-.hospitalBox{
- width: 90%;
-  margin: 0 auto;
-}
-
+.hospitalBox,
 .tabContent {
-  width: 90%;
-  margin: 0 auto;
+  width: 100%;
 }
 
 .aboutBox,
 .servicesBox,
-.availabilityBox,
-.reviewBox {
-  background: white;
-  padding: 2rem;
-  border-radius: 18px;
-  box-shadow: 0 6px 25px rgba(139, 92, 246, 0.12);
+.availabilityBox {
+  border: 1px solid var(--color-border-medium);
+  border-radius: var(--radius-2xl);
+  background: var(--color-bg-primary);
+  padding: var(--space-6);
+}
+
+.aboutBox h3,
+.servicesBox h3,
+.availabilityBox h3 {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  margin-bottom: var(--space-3);
+}
+
+.aboutBox p {
+  color: var(--color-text-secondary);
+  line-height: var(--line-height-relaxed);
 }
 
 .servicesBox ul {
-  margin-top: 1rem;
-  line-height: 1.8rem;
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.servicesBox li {
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-lg);
+  background: var(--color-bg-secondary);
+  padding: var(--space-4) var(--space-5);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  line-height: 1.2;
 }
 
 .availabilityGrid {
   display: grid;
-  gap: 1rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-3);
 }
 
 .availabilityItem {
-  background: #f8f5ff;
-  padding: 1rem;
-  border-radius: 12px;
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-lg);
+  background: var(--color-bg-secondary);
+  padding: var(--space-3);
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.availabilityItem strong {
+  color: var(--color-text-primary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+}
+
+.availabilityItem span {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  text-align: right;
 }
 
 .statusBadge {
-  padding: 0.5rem 1rem;
-  border-radius: 20px;
-  color: white;
-  font-weight: 600;
+  color: var(--color-text-inverse) !important;
+  border-radius: var(--radius-full);
+  padding: 2px var(--space-3);
+  font-size: var(--font-size-xs) !important;
+  font-weight: var(--font-weight-semibold);
 }
 
-@media (max-width: 900px) {
+.currentStatus {
+  margin-top: var(--space-4);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-lg);
+  background: var(--color-bg-secondary);
+  padding: var(--space-4);
+}
+
+.currentStatus h4 {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  margin-bottom: var(--space-2);
+}
+
+.statusIndicator {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--color-text-primary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+}
+
+.statusDot {
+  width: 10px;
+  height: 10px;
+  border-radius: var(--radius-full);
+}
+
+.statusNote {
+  margin-top: var(--space-2);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-relaxed);
+}
+
+@media (max-width: 960px) {
   .topSection {
     flex-direction: column;
-    text-align: center;
+  }
+
+  .availabilityGrid {
+    grid-template-columns: 1fr;
   }
 }
 
-@media (max-width: 480px) {
-  .topSection {
-    width: 95%;
-    padding: 1.2rem;
+@media (max-width: 640px) {
+  .page {
+    gap: var(--space-5);
+  }
+
+  .topSection,
+  .aboutBox,
+  .servicesBox,
+  .availabilityBox {
+    padding: var(--space-4);
+  }
+
+  .availabilityItem {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .availabilityItem span {
+    text-align: left;
   }
 }

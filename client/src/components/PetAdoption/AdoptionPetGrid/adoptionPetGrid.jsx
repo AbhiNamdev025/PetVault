@@ -1,16 +1,21 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import PetCard from "../AdoptionPetCard/adoptionPetCard";
 import styles from "./adoptionPetGrid.module.css";
 import { PawPrint } from "lucide-react";
+import { GridSkeleton } from "../../Skeletons";
+import { Pagination } from "../../common";
+
+const ITEMS_PER_PAGE = 8;
 
 const AdoptionPetGrid = ({ pets, onViewPet, onEnquiry, loading }) => {
+  const [currentPage, setCurrentPage] = useState(1);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [pets]);
+
   if (loading) {
-    return (
-      <div className={styles.loadingContainer}>
-        <div className={styles.loadingSpinner}></div>
-        <p>Loading adorable pets...</p>
-      </div>
-    );
+    return <GridSkeleton count={8} />;
   }
 
   if (!pets || pets.length === 0) {
@@ -26,17 +31,30 @@ const AdoptionPetGrid = ({ pets, onViewPet, onEnquiry, loading }) => {
     );
   }
 
+  const totalPages = Math.max(1, Math.ceil(pets.length / ITEMS_PER_PAGE));
+  const visiblePets = pets.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE,
+  );
+
   return (
-    <div className={styles.petGrid}>
-      {pets.map((pet) => (
-        <PetCard
-          key={pet._id}
-          pet={pet}
-          onView={onViewPet}
-          onEnquiry={onEnquiry}
-        />
-      ))}
-    </div>
+    <>
+      <div className={styles.petGrid}>
+        {visiblePets.map((pet) => (
+          <PetCard
+            key={pet._id}
+            pet={pet}
+            onView={onViewPet}
+            onEnquiry={onEnquiry}
+          />
+        ))}
+      </div>
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={setCurrentPage}
+      />
+    </>
   );
 };
 

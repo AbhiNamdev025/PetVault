@@ -1,23 +1,32 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import toast from "react-hot-toast";
-import ProductFilters from "./ProductFilters/productFilter";
 import ProductGrid from "./ProductGrid/productGrid";
 import { API_BASE_URL } from "../../utils/constants";
 import styles from "./products.module.css";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/autoplay";
-import { Autoplay } from "swiper/modules";
+import { Autoplay, Pagination, EffectFade } from "swiper/modules";
+import "swiper/css/pagination";
+import "swiper/css/effect-fade";
+import { Store } from "lucide-react";
+import { SearchFilterBar, SectionHeader } from "../common";
+import FilterSidebar from "../common/FilterSidebar/FilterSidebar";
+import { openAuthModal } from "../../utils/authModalNavigation";
 
 const Products = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [category, setCategory] = useState("all");
-  const [sortOrder, setSortOrder] = useState("newest");
+  const [filters, setFilters] = useState({
+    search: "",
+    category: "all",
+    sort: "newest",
+  });
+  const [showFilters, setShowFilters] = useState(false);
 
   const carouselImages = [
     "https://supertails.com/cdn/shop/files/joint_care_b32a151f-e2dd-487c-8429-abf99b04a677_1200x.webp?v=1762764821",
@@ -35,7 +44,7 @@ const Products = () => {
 
   useEffect(() => {
     filterProducts();
-  }, [products, searchTerm, category, sortOrder]);
+  }, [products, filters]);
 
   const fetchProducts = async () => {
     try {
@@ -51,15 +60,35 @@ const Products = () => {
 
   const filterProducts = () => {
     let filtered = products.filter((product) => {
-      const matchesSearch = product.name
-        .toLowerCase()
-        .includes(searchTerm.toLowerCase());
+      const q = filters.search.trim().toLowerCase();
+      const shopName =
+        product.shopId?.businessName || product.shopId?.name || "";
+      const matchesSearch =
+        !q ||
+        [
+          product.name,
+          product.brand,
+          product.category,
+          product.description,
+          Array.isArray(product.features)
+            ? product.features.join(" ")
+            : product.features,
+          product.type,
+          product.petType,
+          product.forPetType,
+          shopName,
+          product.shopId ? "shop" : "",
+        ].some((value) =>
+          String(value || "")
+            .toLowerCase()
+            .includes(q),
+        );
       const matchesCategory =
-        category === "all" || product.category === category;
+        filters.category === "all" || product.category === filters.category;
       return matchesSearch && matchesCategory;
     });
 
-    switch (sortOrder) {
+    switch (filters.sort) {
       case "price_low_high":
         filtered.sort((a, b) => a.price - b.price);
         break;
@@ -79,15 +108,27 @@ const Products = () => {
     navigate(`/products/${id}`);
   };
 
-  const handleAddToCart = async (product) => {
+  const handleAddToCart = async (product, quantity = 1) => {
+    const stockCount = Number(product.stock) || 0;
+    if (stockCount === 0) {
+      toast.info("Out of stock");
+      return false;
+    }
+
+    const quantityToAdd = Math.min(
+      Math.max(Number(quantity) || 1, 1),
+      Math.max(1, stockCount),
+    );
     const token =
       localStorage.getItem("token") || sessionStorage.getItem("token");
-    const userData =
-      localStorage.getItem("user") || sessionStorage.getItem("user");
 
-    if (!token || !userData) {
-      toast.info("Please login to add items to cart");
-      return;
+    if (!token) {
+      openAuthModal(navigate, {
+        location,
+        view: "login",
+        from: location.pathname,
+      });
+      return false;
     }
 
     try {
@@ -99,86 +140,124 @@ const Products = () => {
         },
         body: JSON.stringify({
           productId: product._id,
-          quantity: 1,
+          quantity: quantityToAdd,
         }),
       });
 
       if (res.ok) {
-        toast.success("Added to cart!");
+        window.dispatchEvent(new Event("cart-updated"));
+        toast.success(
+          `${quantityToAdd} item${quantityToAdd > 1 ? "s" : ""} added to cart`,
+        );
+        return true;
       } else {
         const errData = await res.json();
         toast.error(errData.message || "Failed to add to cart");
+        return false;
       }
     } catch {
       toast.error("Something went wrong");
+      return false;
     }
   };
 
-  const categories = [
-    { value: "all", label: "All Products" },
-    { value: "food", label: "Food" },
-    { value: "toy", label: "Toys" },
-    { value: "accessory", label: "Accessories" },
-    { value: "grooming", label: "Grooming" },
-    { value: "health", label: "Health" },
+  const filterOptions = [
+    {
+      id: "category",
+      label: "Category",
+      values: [
+        { id: "all", label: "All Products" },
+        { id: "food", label: "Food" },
+        { id: "toy", label: "Toys" },
+        { id: "accessory", label: "Accessories" },
+        { id: "grooming", label: "Grooming" },
+        { id: "health", label: "Health" },
+        { id: "bedding", label: "Bedding" },
+      ],
+    },
+    {
+      id: "sort",
+      label: "Sort By",
+      clearValue: "newest",
+      values: [
+        { id: "newest", label: "Newest" },
+        { id: "price_low_high", label: "Price: Low → High" },
+        { id: "price_high_low", label: "Price: High → Low" },
+        { id: "rating_high", label: "Top Rated" },
+      ],
+    },
   ];
+
+  const hasActiveFilters =
+    filters.search.trim() !== "" ||
+    filters.category !== "all" ||
+    filters.sort !== "newest";
 
   return (
     <div className={styles.productsPage}>
-      <div className={styles.carouselSection}>
-        <Swiper
-          modules={[Autoplay]}
-          autoplay={{ delay: 1500, disableOnInteraction: false }}
-          loop={true}
-          speed={1000}
-          slidesPerView={1}
-          spaceBetween={0}
-        >
-          {carouselImages.map((img, i) => (
-            <SwiperSlide key={i}>
-              <img
-                src={img}
-                alt={`banner-${i}`}
-                className={styles.carouselImage}
-              />
-            </SwiperSlide>
-          ))}
-        </Swiper>
+      <FilterSidebar
+        isOpen={showFilters}
+        onClose={() => setShowFilters(false)}
+        filters={filters}
+        setFilters={setFilters}
+        options={filterOptions}
+        showSearch={false}
+        onReset={() =>
+          setFilters({ search: "", category: "all", sort: "newest" })
+        }
+      />
+      <div className={styles.hero}>
+        <div className={styles.carouselSection}>
+          <Swiper
+            modules={[Autoplay]}
+            autoplay={{ delay: 1500, disableOnInteraction: false }}
+            loop={true}
+            speed={1000}
+            slidesPerView={1}
+            spaceBetween={0}
+          >
+            {carouselImages.map((img, i) => (
+              <SwiperSlide key={i}>
+                <img
+                  src={img}
+                  alt={`banner-${i}`}
+                  className={styles.carouselImage}
+                />
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </div>
       </div>
 
       <div className={styles.container}>
-        <ProductFilters
-          searchTerm={searchTerm}
-          onSearchChange={setSearchTerm}
-          category={category}
-          onCategoryChange={setCategory}
-          sortOrder={sortOrder}
-          onSortChange={setSortOrder}
+        <SectionHeader
+          className={styles.resultsInfo}
+          title="All Products"
+          subtitle="Find products quickly with search, category, and sort."
+          level="section"
+          align="center"
+          icon={<Store />}
+          actions={
+            <SearchFilterBar
+              searchPlaceholder="Search by name, brand, type, or shop..."
+              searchValue={filters.search}
+              onSearchChange={(value) =>
+                setFilters((prev) => ({ ...prev, search: value }))
+              }
+              resultText={`${filteredProducts.length} items found`}
+              showFilterButton
+              onFilterClick={() => setShowFilters(true)}
+              hasActiveFilters={hasActiveFilters}
+              onClear={() =>
+                setFilters({
+                  search: "",
+                  category: "all",
+                  sort: "newest",
+                })
+              }
+            />
+          }
         />
-
-        <div className={styles.categorySection}>
-          <h2 className={styles.categoryTitle}>Browse by Category</h2>
-          <div className={styles.categoryGrid}>
-            {categories.map((c) => (
-              <button
-                key={c.value}
-                className={`${styles.categoryButton} ${
-                  category === c.value ? styles.active : ""
-                }`}
-                onClick={() => setCategory(c.value)}
-              >
-                {c.label}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <div className={styles.resultsInfo}>
-          <h2>All Products</h2>
-          <span className={styles.resultsCount}>
-            {filteredProducts.length} items found
-          </span>
-        </div>
 
         <ProductGrid
           products={filteredProducts}

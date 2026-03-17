@@ -1,26 +1,50 @@
+/* ========================================
+   MANAGEMENT DASHBOARD TABS
+   ======================================== */
+
 .tabRow {
   display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
+  gap: var(--space-3);
+  overflow-x: auto;
+  padding-bottom: var(--space-2);
+  flex-wrap: nowrap; /* Keep horizontal scroll on all devices or wrap? User said "keep those same", usually implies horizontal scroll like mobile apps */
+  margin-bottom: var(--space-4);
+  border-bottom: 1px solid var(--color-border-light);
+  padding: var(--space-4) 0;
+  -webkit-overflow-scrolling: touch;
 }
 
 .tab {
-  padding: 10px 16px;
-  background: #f3e8ff;
-  border-radius: 10px;
-  border: none;
-  font-weight: 600;
-  color: #6b21a8;
+  width: auto;
+  min-width: max-content;
+  padding: var(--space-2) var(--space-4);
+  white-space: nowrap;
+  border-radius: var(--radius-full);
+  flex-shrink: 0;
+  font-family: var(--font-family);
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
   cursor: pointer;
-  transition: all 0.3s;
+  transition: all var(--transition-base) ease-in-out;
+  border: 1px solid transparent;
+  background: transparent;
+  box-shadow: none;
 }
 
 .tab:hover {
-  background: #ede9fe;
+  background-color: var(--color-neutral-50);
+  color: var(--color-primary-600);
+  transform: translateY(-1px);
 }
 
 .activeTab {
-  background: linear-gradient(135deg, #6d28d9, #8b5cf6);
-  color: white;
-  box-shadow: 0 4px 15px rgba(124, 58, 237, 0.25);
+  background-color: var(--color-primary-50) !important;
+  color: var(--color-primary-600) !important;
+  font-weight: var(--font-weight-semibold);
+  background: var(--color-primary-50);
+  border: 1px solid var(--color-primary-100);
+  box-shadow: none;
 }
+
+/* Remove media query as styles are now global */

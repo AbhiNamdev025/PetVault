@@ -1,314 +1,299 @@
 .petManagement {
-  padding: 0px;
+  padding: 0;
+  max-width: var(--ui-page-max-width);
+  margin: 0 auto;
+  animation: fadeIn var(--transition-base) ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(var(--space-2));
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .header {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 2rem;
-  padding: 1rem 0;
+  align-items: flex-end;
+  margin-bottom: var(--space-10);
+  padding: var(--space-6) 0;
+  border-bottom: 1px solid var(--color-bg-tertiary);
 }
 
 .header h1 {
-  font-size: 2rem;
-  font-weight: 700;
-  color: #1a202c;
-  margin-bottom: 0.5rem;
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-extrabold);
+  color: var(--color-text-primary);
+  margin: 0 0 var(--space-2) 0;
+  letter-spacing: var(--ui-heading-letter-spacing);
 }
 
 .header p {
-  color: #64748b;
-  font-size: 1.1rem;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  margin: 0;
 }
 
-.addButton {
+.viewToggle {
+  display: flex;
+  background: var(--color-bg-primary);
+  padding: var(--space-1);
+  border-radius: var(--radius-lg);
+  gap: var(--space-1);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--color-border-medium);
+}
+
+.headerActions {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  background: #667eea;
-  color: white;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.headerSelect {
+  width: var(--size-pet-card-width) !important;
+}
+
+.toggleBtn {
+  padding: var(--space-2) var(--space-6);
   border: none;
-  padding: 0.75rem 1.5rem;
-  border-radius: 8px;
-  font-weight: 600;
+  background: transparent;
+  color: var(--color-text-secondary);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-sm);
+  border-radius: var(--radius-md);
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all var(--transition-base) cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.addButton:hover {
-  background: #5a67d8;
-  transform: translateY(-1px);
-}
-
-.controls {
-  display: flex;
-  gap: 1rem;
-  margin-bottom: 2rem;
-  background: white;
-  padding: 1.5rem;
-  border-radius: 12px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
-
-.searchBox {
-  flex: 1;
-  position: relative;
-  display: flex;
-  align-items: center;
-}
-
-.searchBox input {
-  width: 100%;
-  padding: 0.75rem 1rem 0.75rem 2.5rem;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  font-size: 1rem;
-}
-
-.searchBox svg {
-  position: absolute;
-  left: 0.75rem;
-  color: #64748b;
-}
-
-.filterBox {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.filterBox select {
-  padding: 0.75rem;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  background: white;
-  font-size: 1rem;
+.toggleBtn.active {
+  background: var(--color-primary-500);
+  color: var(--color-text-inverse);
+  box-shadow: var(--shadow-md);
 }
 
 .petsGrid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 1.5rem;
+  gap: var(--space-8);
+  padding-bottom: var(--space-12);
 }
 
 .petCard {
-  background: white;
-  border-radius: 12px;
+  background: var(--color-bg-primary);
+  border-radius: var(--radius-3xl);
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  border: 1px solid #e2e8f0;
-  transition: all 0.3s ease;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--color-border-medium);
+  transition: all var(--transition-base) cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
 }
 
 .petCard:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--color-primary-200);
 }
 
 .petImage {
   position: relative;
-  height: 200px;
-  height: 250px;
-  padding: 10px;
+  height: 220px;
+  background: var(--color-bg-secondary);
 }
 
 .petImage img {
   width: 100%;
   height: 100%;
-  object-fit: contain;
-  border-radius: 10px;
-}
-
-.noImage {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  color: #64748b;
-  font-weight: 500;
+  object-fit: cover;
 }
 
 .petStatus {
   position: absolute;
-  top: 0.75rem;
-  right: 0.75rem;
+  top: var(--space-4);
+  right: var(--space-4);
 }
 
 .status {
-  padding: 0.25rem 0.75rem;
-  border-radius: 20px;
-  font-size: 0.75rem;
-  font-weight: 600;
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-black);
   text-transform: uppercase;
+  letter-spacing: 0.05em;
+  backdrop-filter: blur(8px);
+  box-shadow: var(--shadow-sm);
 }
 
 .status.available {
-  background: #d1fae5;
-  color: #065f46;
+  background: color-mix(in srgb, var(--color-success) 20%, transparent);
+  color: var(--color-success-dark);
+  border: 1px solid color-mix(in srgb, var(--color-success) 30%, transparent);
 }
 
 .status.sold {
-  background: #fef3c7;
-  color: #92400e;
+  background: color-mix(in srgb, var(--color-warning) 20%, transparent);
+  color: var(--color-warning-dark);
+  border: 1px solid color-mix(in srgb, var(--color-warning) 30%, transparent);
 }
 
 .petInfo {
-  padding: 1.5rem;
+  padding: var(--space-6);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
-.petInfo h3 {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: #1a202c;
-  margin-bottom: 0.25rem;
+.itemName {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-extrabold);
+  color: var(--color-text-primary);
+  margin: 0 0 var(--space-1) 0;
 }
 
 .breed {
-  color: #64748b;
-  margin-bottom: 1rem;
-  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  margin-bottom: var(--space-4);
 }
 
 .details {
   display: flex;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
+  gap: var(--space-2);
+  margin-bottom: var(--space-6);
   flex-wrap: wrap;
 }
 
 .details span {
-  padding: 0.25rem 0.5rem;
-  background: #f1f5f9;
-  border-radius: 6px;
-  font-size: 0.8rem;
-  font-weight: 500;
-  color: #475569;
+  padding: var(--space-1) var(--space-2);
+  background: var(--color-bg-tertiary);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-secondary);
   text-transform: capitalize;
 }
 
-.price {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #059669;
-  margin-bottom: 1rem;
+.infoRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--color-border-medium);
+}
+
+.shopInfo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  background: var(--color-bg-tertiary);
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-md);
+}
+
+.shopName {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-primary-500);
+}
+
+.price,
+.adoptionText {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-black);
+  color: var(--color-text-primary);
 }
 
 .actions {
   display: flex;
-  gap: 0.5rem;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
 }
 
 .actions button {
+  flex: 1;
+  padding: var(--space-2);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
   display: flex;
   align-items: center;
-  gap: 0.25rem;
-  padding: 0.5rem 0.75rem;
-  border: none;
-  border-radius: 6px;
-  font-size: 0.8rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  flex: 1;
   justify-content: center;
+  gap: var(--space-1);
+  cursor: pointer;
+  transition: all var(--transition-base);
 }
 
 .viewBtn {
-  background: #f0f4ff;
-  color: #667eea;
+  background: var(--color-bg-secondary);
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-border-medium);
 }
 
 .viewBtn:hover {
-  background: #667eea;
-  color: white;
-}
-
-.editBtn {
-  background: #f0f9ff;
-  color: #0369a1;
-}
-
-.editBtn:hover {
-  background: #0369a1;
-  color: white;
+  background: var(--color-bg-primary);
+  border-color: var(--color-primary-500);
+  color: var(--color-primary-500);
 }
 
 .deleteBtn {
-  background: #fef2f2;
-  color: #dc2626;
+  background: var(--color-error-light);
+  color: var(--color-error-dark);
+  border: 1px solid transparent;
 }
 
 .deleteBtn:hover {
-  background: #dc2626;
-  color: white;
+  background: var(--color-error-dark);
+  color: var(--color-text-inverse);
+}
+
+.restoreBtn {
+  background: var(--color-success-light);
+  color: var(--color-success-dark);
+}
+
+.restoreBtn:hover {
+  background: var(--color-success-dark);
+  color: var(--color-text-inverse);
 }
 
 .emptyState {
   grid-column: 1 / -1;
   text-align: center;
-  padding: 4rem 2rem;
-  background: white;
-  border-radius: 12px;
-  border: 2px dashed #e2e8f0;
-}
-
-.emptyState p {
-  font-size: 1.1rem;
-  color: #64748b;
-  margin-bottom: 1.5rem;
-}
-
-.loading {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 200px;
-  font-size: 1.1rem;
-  color: #64748b;
-}
-.categoryBadge {
-  padding: 0.25rem 0.75rem;
-  border-radius: 20px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  margin-top: 0.5rem;
-  display: block;
-}
-
-.categoryBadge.shop {
-  background: #dbeafe;
-  color: #1e40af;
-}
-
-.categoryBadge.adoption {
-  background: #dcfce7;
-  color: #166534;
-}
-
-.adoptionText {
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: #059669;
-  margin-bottom: 1rem;
+  padding: var(--space-20);
+  background: var(--color-bg-primary);
+  border-radius: var(--radius-3xl);
+  border: 2px dashed var(--color-border-medium);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semibold);
 }
 
 @media (max-width: 768px) {
   .header {
     flex-direction: column;
-    gap: 1rem;
+    align-items: center;
+    text-align: center;
+    gap: var(--space-6);
   }
 
-  .controls {
-    flex-direction: column;
+  .headerActions {
+    width: 100%;
+    justify-content: stretch;
   }
 
-  .petsGrid {
-    grid-template-columns: 1fr;
-  }
-
-  .actions {
-    flex-direction: column;
+  .headerSelect {
+    width: 100% !important;
   }
 }

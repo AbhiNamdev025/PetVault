@@ -1,0 +1,141 @@
+.detailCard {
+  --admin-typo-md: var(--font-size-md);
+  --admin-typo-sm: var(--font-size-sm);
+  --admin-typo-xs: var(--font-size-xs);
+  background: var(--color-bg-primary);
+  padding: var(--space-6);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-bg-tertiary);
+}
+
+.detailCard h3 {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  margin-bottom: var(--space-6);
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--color-bg-secondary);
+}
+
+.infoList {
+  display: flex;
+  flex-direction: column;
+}
+
+.infoItem {
+  display: flex;
+  padding: 0.85rem 0;
+  border-bottom: 1px solid var(--color-bg-secondary);
+  align-items: flex-start;
+  gap: var(--space-4);
+}
+
+.infoItem:last-child {
+  border-bottom: none;
+}
+
+.infoKey {
+  width: 200px;
+  flex-shrink: 0;
+  color: var(--color-text-tertiary);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--admin-typo-sm);
+  display: inline-block;
+}
+
+.infoValue {
+  color: var(--color-text-primary);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--admin-typo-sm);
+  line-height: 1.5;
+  flex: 1;
+  word-break: break-word;
+}
+
+/* Status Colors */
+.infoValue.approved {
+  color: var(--color-success-dark);
+}
+.infoValue.rejected {
+  color: var(--color-error-dark);
+}
+.infoValue.pending {
+  color: var(--color-warning-dark);
+}
+
+/* Document Specifics */
+.docGallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-top: var(--space-1);
+}
+
+.docItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border-medium);
+  border-radius: var(--radius-md);
+  font-size: var(--admin-typo-xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.docItem:hover {
+  border-color: var(--color-primary-500);
+  color: var(--color-primary-500);
+  background: var(--color-primary-50);
+}
+
+.noDocs {
+  color: var(--color-text-tertiary);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--admin-typo-sm);
+  font-style: italic;
+}
+
+/* Remark specific */
+.remarkBox {
+  background: var(--color-error-light);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  border-left: var(--space-1) solid var(--color-error);
+  width: 100%;
+  margin-top: var(--space-1);
+}
+
+.remarkValue {
+  color: var(--color-error-dark);
+  font-size: var(--admin-typo-sm);
+  font-weight: var(--font-weight-semibold);
+  margin: 0;
+  line-height: 1.4;
+}
+
+@media (max-width: 768px) {
+  .detailCard {
+    padding: var(--space-5);
+  }
+  .infoItem {
+    flex-direction: column;
+    gap: 0.35rem;
+    padding: var(--space-2) 0;
+  }
+  .infoKey {
+    width: 100%;
+    font-size: var(--admin-typo-sm);
+  }
+  .infoValue {
+    width: 100%;
+    font-size: var(--admin-typo-sm);
+  }
+  .docItem {
+    width: 100%;
+    justify-content: center;
+  }
+}

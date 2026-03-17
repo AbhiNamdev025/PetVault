@@ -1,62 +1,41 @@
 .leftImageBox {
   flex: 1;
   min-width: 280px;
-  max-width: 450px;
-  background: #f3e9ff;
-  border-radius: 18px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 1rem;
+  max-width: 440px;
+  border: 1px solid var(--color-border-medium);
+  border-radius: var(--radius-xl);
+  background: var(--color-bg-secondary);
+  padding: var(--space-3);
   position: relative;
 }
 
 .doctorImage {
   width: 100%;
-  max-height: 420px;
+  aspect-ratio: 1 / 1;
   object-fit: contain;
-  border-radius: 16px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border-light);
+  background: var(--color-bg-primary);
 }
 
 .availabilityBadge {
   position: absolute;
-  top: 1rem;
-  left: 1rem;
-  background: white;
-  padding: 0.5rem 1rem;
-  border-radius: 20px;
-  border: 2px solid;
-  font-weight: 600;
-  font-size: 0.9rem;
+  top: var(--space-4);
+  left: var(--space-4);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  background: var(--color-bg-primary);
+  border: 1px solid;
+  border-radius: var(--radius-full);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-xs);
+  padding: 2px var(--space-3);
 }
 
-@media (max-width: 768px) {
+@media (max-width: 900px) {
   .leftImageBox {
     max-width: 100%;
-    padding: 0.8rem;
-  }
-
-  .doctorImage {
-    max-height: 300px;
-  }
-
-  .availabilityBadge {
-    font-size: 0.8rem;
-    padding: 0.4rem 0.8rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .leftImageBox {
-    padding: 0.6rem;
-  }
-
-  .doctorImage {
-    max-height: 240px;
-  }
-
-  .availabilityBadge {
-    font-size: 0.75rem;
-    padding: 0.3rem 0.6rem;
+    width: 100%;
   }
 }

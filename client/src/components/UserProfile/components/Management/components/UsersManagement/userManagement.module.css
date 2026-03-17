@@ -1,0 +1,85 @@
+/* ========================================
+   MANAGEMENT - USER MANAGEMENT STYLES
+   ======================================== */
+
+.container {
+  composes: managementContainer from "../common/ManagementCardTheme.module.css";
+  padding: 0 0 var(--space-4);
+  background: var(--color-bg-secondary);
+  min-height: auto;
+}
+
+.topRow {
+  composes: managementTopRow from "../common/ManagementCardTheme.module.css";
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-8);
+  flex-wrap: wrap;
+  gap: var(--space-4);
+}
+
+.title {
+  composes: managementTitle from "../common/ManagementCardTheme.module.css";
+  font-size: var(--ui-heading-section);
+  font-weight: var(--ui-heading-weight);
+  letter-spacing: var(--ui-heading-letter-spacing);
+  line-height: var(--ui-heading-line-height);
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.titleBlock {
+  composes: managementHeadingGroup from "../common/ManagementCardTheme.module.css";
+  row-gap: var(--space-2) !important;
+  gap: var(--space-2) !important;
+}
+
+.subtitle {
+  composes: managementSubtitle from "../common/ManagementCardTheme.module.css";
+  font-size: var(--font-size-md);
+}
+
+.tableContainer {
+  background: var(--color-bg-primary);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  border: 1px solid var(--color-border-light);
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 600px;
+}
+
+.table th,
+.table td {
+  padding: var(--space-4) var(--space-6);
+  text-align: left;
+  border-bottom: 1px solid var(--color-border-light);
+}
+
+.table th {
+  background: var(--color-bg-secondary);
+  color: var(--color-text-secondary);
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.table td {
+  color: var(--color-text-primary);
+  font-size: var(--font-size-sm);
+}
+
+.table tr:last-child td {
+  border-bottom: none;
+}
+
+.table tr:hover {
+  background-color: var(--color-bg-secondary);
+}

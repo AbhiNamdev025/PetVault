@@ -2,12 +2,13 @@ import React from "react";
 import styles from "./vetFeatures.module.css";
 import {
   Stethoscope,
-  Scissors,
+  Building2,
   Activity,
   HeartPulse,
   Bone,
   Clock,
 } from "lucide-react";
+import { SectionHeader } from "../../../common";
 
 const features = [
   {
@@ -23,13 +24,14 @@ const features = [
   },
   {
     id: 2,
-    icon: <Scissors size={30} />,
-    title: "Pet Grooming",
+    icon: <Building2 size={30} />,
+    title: "Hospital Facility",
     points: [
-      "Cat & Dog Baths",
-      "Haircuts & Styling",
-      "Tick & Flea Treatments",
-      "Skin & Coat Care",
+      "Advanced ICU & Critical Care Unit",
+      "Modular Operation Theatres",
+      "In-House Laboratory",
+      "Advanced Imaging Equipment",
+      "Infection-Controlled Wards",
     ],
   },
   {
@@ -76,14 +78,14 @@ const features = [
 const VetFeatures = () => {
   return (
     <section className={styles.featuresSection}>
-      <div className={styles.header}>
-        <h2 className={styles.title}>
-          What to Expect When Visiting Our Veterinary Center
-        </h2>
-        <p className={styles.subtitle}>
-          Trusted and compassionate care, from checkups to critical care 🩺
-        </p>
-      </div>
+      <SectionHeader
+        className={styles.sectionHeader}
+        align="center"
+        level="section"
+        icon={<Stethoscope size={30} className={styles.titleIcon} />}
+        title="What to Expect When Visiting Our Veterinary Center"
+        subtitle="Trusted and compassionate care, from checkups to critical care."
+      />
 
       <div className={styles.grid}>
         {features.map((f) => (

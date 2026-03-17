@@ -1,0 +1,403 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  color: var(--color-text-primary);
+}
+
+.banner {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-3);
+  background: var(--color-bg-secondary);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border-light);
+}
+
+.avatarMain {
+  width: var(--size-avatar-sm);
+  height: var(--size-avatar-sm);
+  border-radius: var(--radius-md);
+  object-fit: cover;
+  border: 2px solid var(--color-bg-primary);
+  box-shadow: var(--shadow-sm);
+}
+
+.headerInfo {
+  flex: 1;
+}
+
+.userName {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  margin: 0 0 2px 0;
+  color: var(--color-text-primary);
+}
+
+.roleRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-tertiary);
+}
+
+.roleTag {
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+}
+
+.roleTag.admin {
+  color: var(--color-error-dark);
+}
+.roleTag.doctor {
+  color: var(--color-info-dark);
+}
+.roleTag.hospital {
+  color: var(--color-success-dark);
+}
+.roleTag.shop {
+  color: var(--color-warning-dark);
+}
+.roleTag.daycare {
+  color: var(--color-secondary-700);
+}
+.roleTag.user {
+  color: var(--color-text-secondary);
+}
+
+.dot {
+  color: var(--color-border-medium);
+}
+
+.mainGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
+}
+
+.mainGrid.singleCol {
+  grid-template-columns: 1fr;
+}
+
+.glassCard {
+  background: var(--color-bg-primary);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  border: 1px solid var(--color-border-light);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.cardTitle {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-extrabold);
+  text-transform: uppercase;
+  color: var(--color-text-tertiary);
+  margin: 0;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid var(--color-bg-secondary);
+  padding-bottom: var(--space-1);
+}
+
+.credentialsList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.credItem {
+  display: flex;
+  gap: var(--space-3);
+  align-items: flex-start;
+}
+
+.credItem svg {
+  margin-top: 2px;
+  color: var(--color-primary-500);
+  opacity: 0.6;
+}
+
+.credText {
+  display: flex;
+  flex-direction: column;
+}
+
+.credLabel {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-tertiary);
+  margin: 0;
+}
+
+.credValue {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+.roleContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.infoRowDetailed {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2);
+  background: var(--color-bg-secondary);
+  border-radius: var(--radius-md);
+}
+
+.infoLabelDetailed {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-tertiary);
+  margin: 0;
+}
+
+.infoValueDetailed {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  margin: 0;
+}
+
+.descriptionText {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-tertiary);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.miniCard {
+  padding: var(--space-2);
+  background: var(--color-bg-secondary);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border-medium);
+}
+
+.miniText {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  margin: 2px 0;
+}
+
+.miniSubText {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+.licenseTag {
+  display: inline-block;
+  margin-top: var(--space-1);
+  font-size: var(--font-size-xs);
+  background: var(--color-success-light);
+  color: var(--color-success-dark);
+  padding: 1px 6px;
+  border-radius: var(--radius-sm);
+}
+
+.availabilityBox {
+  padding: var(--space-2);
+  background: var(--color-bg-primary);
+  border: 1px dashed var(--color-border-medium);
+  border-radius: var(--radius-md);
+}
+
+.availabilityRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-primary-500);
+  margin-bottom: var(--space-1);
+}
+
+.daysList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+}
+
+.dayBadge {
+  font-size: var(--font-size-xs);
+  background: var(--color-bg-tertiary);
+  padding: 1px 6px;
+  border-radius: var(--radius-sm);
+}
+
+.gallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.galleryImg {
+  width: var(--size-avatar-sm);
+  height: var(--size-avatar-sm);
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border-light);
+}
+
+.footer {
+  display: flex;
+  justify-content: flex-end;
+  border-top: 1px solid var(--color-border-light);
+  padding-top: var(--space-3);
+}
+
+.closeBtn {
+  padding: var(--space-1) var(--space-4);
+  background: var(--color-primary-500);
+  color: var(--color-text-inverse);
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  cursor: pointer;
+}
+
+.closeBtn:hover {
+  opacity: 0.9;
+}
+
+@media (max-width: 600px) {
+  .mainGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.statusTag {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-extrabold);
+  text-transform: uppercase;
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-full);
+  letter-spacing: 0.05em;
+}
+
+.statusTag.pending {
+  background: var(--color-warning-light);
+  color: var(--color-warning-dark);
+  border: 1px solid var(--color-warning-light);
+}
+
+.statusTag.approved {
+  background: var(--color-success-light);
+  color: var(--color-success-dark);
+  border: 1px solid var(--color-success-light);
+}
+
+.statusTag.rejected {
+  background: var(--color-error-light);
+  color: var(--color-error-dark);
+  border: 1px solid var(--color-error-light);
+}
+.statusTag.archivedBadge {
+  background: var(--color-text-primary);
+  color: var(--color-bg-tertiary);
+  border: 1px solid var(--color-text-primary);
+}
+
+.actionFooter {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-4);
+  align-items: center;
+}
+
+.btn {
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  border: none;
+  transition: all var(--transition-base);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn.primary {
+  background: var(--color-primary-500);
+  color: var(--color-text-inverse);
+}
+
+.btn.green {
+  background: var(--color-success);
+  color: var(--color-text-inverse);
+}
+
+.btn.green:hover {
+  background: var(--color-success-dark);
+}
+
+.btn.red {
+  background: var(--color-error);
+  color: var(--color-text-inverse);
+}
+
+.btn.red:hover {
+  background: var(--color-error-dark);
+}
+
+.btn.outline {
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border-medium);
+  color: var(--color-text-secondary);
+}
+
+.btn.outline:hover {
+  background: var(--color-bg-secondary);
+}
+
+.docItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2);
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border-medium);
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  color: var(--color-text-primary);
+  font-size: var(--font-size-sm);
+  transition: all var(--transition-base);
+}
+
+.docItem:hover {
+  background: var(--color-bg-tertiary);
+  border-color: var(--color-border-dark);
+}
+.btn:disabled,
+.closeBtn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.loader {
+  width: var(--space-4);
+  height: var(--space-4);
+  border: 2px solid color-mix(in srgb, var(--color-text-inverse) 30%, transparent);
+  border-radius: var(--radius-full);
+  border-top-color: var(--color-bg-primary);
+  animation: spin 0.8s linear infinite;
+  margin: 0 auto;
+}
+
+.btn.outline .loader {
+  border-top-color: var(--color-primary-500);
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

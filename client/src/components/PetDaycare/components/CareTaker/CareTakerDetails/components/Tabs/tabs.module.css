@@ -1,30 +1,37 @@
 .tabs {
-  display: flex;
-  gap: 2rem;
-  justify-content: center;
-  flex-wrap: wrap;
+  width: min(100%, 1320px);
+  margin: 0 auto;
+  border: 1px solid var(--color-border-medium);
+  border-radius: var(--radius-xl);
+  background: var(--color-bg-primary);
+  padding: var(--space-1);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
 }
 
-.tabs button {
-  background: none;
-  border: none;
-  padding-bottom: 6px;
-  font-size: 1.1rem;
-  cursor: pointer;
-  color: #6b7280;
-  border-bottom: 2px solid transparent;
+.tabButton {
+  border: none !important;
+  background: transparent !important;
+  color: var(--color-text-secondary) !important;
+}
+
+.tabButton:hover {
+  border: none !important;
+  background: var(--color-neutral-50) !important;
+  color: var(--color-text-primary) !important;
 }
 
 .activeTab {
-  color: #6d28d9 !important;
-  border-bottom: 2px solid #6d28d9 !important;
+  border: none !important;
+  background: var(--color-primary-50) !important;
+  color: var(--color-primary-700) !important;
 }
 
-@media (max-width: 480px) {
+@media (max-width: 900px) {
   .tabs {
-    gap: 1rem;
-  }
-  .tabs button {
-    font-size: 0.9rem;
+    width: 100%;
+    overflow-x: auto;
+    white-space: nowrap;
   }
 }

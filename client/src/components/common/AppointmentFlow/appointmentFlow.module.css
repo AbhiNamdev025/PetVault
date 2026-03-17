@@ -1,0 +1,862 @@
+.flowShell {
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border-medium);
+  border-radius: var(--radius-xl);
+  padding: var(--space-4);
+  box-shadow: var(--shadow-sm);
+  width: 100%;
+}
+
+.flowHeader {
+  display: grid;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+}
+
+.stepper {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-2);
+  margin-bottom: var(--space-3);
+}
+
+.stepItem {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.stepCircle {
+  width: 45px;
+  height: 45px;
+  border-radius: var(--radius-full);
+  border: 2px solid var(--color-border-dark);
+  background: var(--color-neutral-50);
+  color: var(--color-text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-bold);
+}
+
+.stepCircleActive {
+  border-color: var(--color-primary-600);
+  background: var(--color-primary-600);
+  color: var(--color-text-inverse);
+}
+
+.stepCircleCompleted {
+  border-color: var(--color-primary-700);
+  background: var(--color-primary-700);
+  color: var(--color-text-inverse);
+}
+
+.stepLabel {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-secondary);
+  text-align: center;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.stepConnector {
+  position: absolute;
+  top: var(--space-4);
+  right: -22%;
+  width: 44%;
+  height: 2px;
+  background: var(--color-border-medium);
+  border-radius: var(--radius-sm);
+}
+
+.stepConnectorActive {
+  background: var(--color-primary-600);
+}
+
+.flowTitle {
+  font-size: var(--font-size-xl);
+  margin: 0;
+  color: var(--color-text-primary);
+  text-align: center;
+}
+
+.flowSubtitle {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  text-align: center;
+}
+
+.flowBody {
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-lg);
+  padding: var(--space-3);
+}
+
+.flowControls {
+  margin-top: var(--space-3);
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-2);
+}
+
+.backBtn,
+.nextBtn,
+.confirmBtn,
+.successBtn,
+.secondaryBtn {
+  border: none;
+  border-radius: var(--radius-md);
+  height: var(--space-10);
+  padding: 0 var(--space-4);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+}
+
+.backBtn,
+.secondaryBtn {
+  background: var(--color-neutral-100);
+  color: var(--color-text-secondary);
+}
+
+.nextBtn,
+.confirmBtn,
+.successBtn {
+  background: var(--color-primary-600);
+  color: var(--color-text-inverse);
+}
+
+.nextBtn:hover,
+.confirmBtn:hover,
+.successBtn:hover {
+  background: var(--color-primary-700);
+}
+
+.backBtn:disabled,
+.nextBtn:disabled,
+.confirmBtn:disabled,
+.successBtn:disabled,
+.secondaryBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.scheduleCard {
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border-medium);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+  transition: border-color var(--transition-base);
+}
+
+.scheduleCard:hover {
+  border-color: var(--color-border-dark);
+}
+
+.scheduleHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-bottom: var(--space-3);
+}
+
+.scheduleHeading {
+  display: grid;
+  gap: 2px;
+  text-align: left;
+  flex: 1;
+}
+
+.scheduleTitle {
+  margin: 0;
+  font-size: var(--font-size-lg);
+  color: var(--color-text-primary);
+}
+
+.scheduleSubTitle {
+  margin: var(--space-1) 0 0;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+}
+
+.monthNav {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.monthBtn {
+  width: 30px;
+  height: 30px;
+  min-width: 30px;
+  padding: 0 !important;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border-medium);
+  background: var(--color-bg-primary);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--color-text-primary);
+}
+
+.monthBtn svg {
+  width: var(--space-4);
+  height: var(--space-4);
+  stroke-width: 2.3;
+}
+
+.monthBtn:disabled {
+  opacity: 0.72;
+  cursor: not-allowed;
+}
+
+.monthLabel {
+  min-width: 116px;
+  text-align: center;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-secondary);
+}
+
+.dayRow {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: var(--space-2);
+  margin-bottom: var(--space-3);
+}
+
+.dayButton {
+  border: 1px solid var(--color-border-medium);
+  border-radius: var(--radius-md);
+  background: var(--color-neutral-50);
+  min-height: 68px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  cursor: pointer;
+}
+
+.dayButtonActive {
+  background: var(--color-primary-600);
+  border-color: var(--color-primary-600);
+  color: var(--color-text-inverse);
+  box-shadow: 0 var(--space-2) 18px
+    color-mix(in srgb, var(--color-neutral-900) 14%, transparent);
+}
+
+.dayButtonRangeMiddle {
+  background: var(--color-primary-100);
+  border-color: var(--color-primary-200);
+  color: var(--color-primary-700);
+  box-shadow: none;
+}
+
+.dayButtonRangeStart {
+  border-top-right-radius: var(--radius-sm);
+  border-bottom-right-radius: var(--radius-sm);
+}
+
+.dayButtonRangeEnd {
+  border-top-left-radius: var(--radius-sm);
+  border-bottom-left-radius: var(--radius-sm);
+}
+
+.dayButton:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.dayButton:hover:not(:disabled) {
+  border-color: var(--color-primary-500);
+}
+
+.dayName {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+}
+
+.dayDate {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  line-height: 1;
+}
+
+.slotGroup {
+  margin-top: var(--space-3);
+}
+
+.noSlotsText {
+  margin: var(--space-3) 0 0;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  text-align: center;
+}
+
+.bookingWindowNote {
+  margin: var(--space-2) 0 0;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-tertiary);
+  text-align: center;
+}
+
+.slotGroupHeader {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--color-text-secondary);
+  font-weight: var(--font-weight-semibold);
+  margin-bottom: var(--space-2);
+  font-size: var(--font-size-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.slotGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-2);
+}
+
+.slotButton {
+  border: 1px solid var(--color-border-medium);
+  background: var(--color-bg-primary);
+  border-radius: var(--radius-md);
+  min-height: var(--space-9);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+}
+
+.slotButton:hover:not(:disabled) {
+  border-color: var(--color-primary-500);
+}
+
+.slotButtonActive {
+  background: var(--color-primary-600);
+  border-color: var(--color-primary-600);
+  color: var(--color-text-inverse);
+}
+
+.slotButton:disabled {
+  opacity: 0.42;
+  cursor: not-allowed;
+  text-decoration: line-through;
+}
+
+.selectedMeta {
+  margin-top: var(--space-3);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-primary-200);
+  background: var(--color-primary-50);
+  padding: 10px var(--space-3);
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: var(--font-size-sm);
+  color: var(--color-primary-700);
+  font-weight: var(--font-weight-semibold);
+}
+
+.metaDot {
+  opacity: 0.5;
+}
+
+.reviewGrid {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.reviewGridTwoCol {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+}
+
+.reviewFullWidth {
+  grid-column: 1 / -1;
+}
+
+.reviewLayout {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  gap: var(--space-3);
+  align-items: start;
+}
+
+.reviewItem {
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-md);
+  padding: 10px var(--space-3);
+  width: 100%;
+  transition: border-color var(--transition-base);
+}
+
+.reviewItem:hover {
+  border-color: var(--color-border-dark);
+}
+
+.reviewLabel {
+  font-size: var(--font-size-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-text-tertiary);
+  font-weight: var(--font-weight-bold);
+}
+
+.reviewValue {
+  margin-top: 3px;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-primary);
+  font-weight: var(--font-weight-semibold);
+  word-break: break-word;
+}
+
+.checkList {
+  margin-top: var(--space-2);
+  display: grid;
+  gap: var(--space-2);
+}
+
+.checkItem {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  font-weight: var(--font-weight-medium);
+}
+
+.feeCard {
+  border: 1px solid var(--color-border-medium);
+  background: var(--color-bg-primary);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+  display: grid;
+  gap: var(--space-2);
+  transition: border-color var(--transition-base);
+}
+
+.feeCard:hover {
+  border-color: var(--color-border-dark);
+}
+
+.feeTitle {
+  margin: 0;
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+}
+
+.feeRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+.feeRow span:last-child {
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+}
+
+.feeTotal {
+  margin-top: var(--space-1);
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--color-border-light);
+  font-weight: var(--font-weight-bold);
+}
+
+.feeTotal span:last-child {
+  color: var(--color-primary-700);
+}
+
+.coinsCard {
+  border: 1px solid var(--color-border-medium);
+  background: var(--color-bg-primary);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+  display: grid;
+  gap: var(--space-2);
+  transition: border-color var(--transition-base);
+}
+
+.coinsCard:hover {
+  border-color: var(--color-border-dark);
+}
+
+.coinsHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.coinsTitle {
+  margin: 0;
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+}
+
+.coinsSubTitle {
+  margin: 0;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  font-weight: var(--font-weight-medium);
+}
+
+.coinsBalance {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+.coinsBalance strong {
+  color: var(--color-text-primary);
+}
+
+.coinsInputRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.coinsInput {
+  flex: 1;
+  min-width: 0;
+  height: 38px;
+  border: 1px solid var(--color-border-medium);
+  border-radius: var(--radius-md);
+  background: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  padding: 0 10px;
+  font-size: var(--font-size-sm);
+}
+
+.coinsInput:focus {
+  outline: none;
+  border-color: var(--color-primary-500);
+  box-shadow: 0 0 0 3px
+    color-mix(in srgb, var(--color-primary-600) 15%, transparent);
+}
+
+.coinsInput:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  background: var(--color-neutral-50);
+}
+
+.useMaxBtn {
+  border: 1px solid var(--color-border-medium);
+  border-radius: var(--radius-md);
+  height: 38px;
+  padding: 0 var(--space-3);
+  background: var(--color-neutral-100);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+}
+
+.useMaxBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.coinsMetaRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-tertiary);
+}
+
+.successCard {
+  border: 1px solid var(--color-border-medium);
+  background: var(--color-bg-primary);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  text-align: center;
+  transition: border-color var(--transition-base);
+}
+
+.successCard:hover {
+  border-color: var(--color-border-dark);
+}
+
+.successIcon {
+  width: 68px;
+  height: 68px;
+  border-radius: var(--radius-full);
+  margin: 0 auto var(--space-3);
+  background: var(--color-primary-600);
+  color: var(--color-text-inverse);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.successTitle {
+  margin: 0;
+  font-size: var(--font-size-xl);
+  color: var(--color-text-primary);
+}
+
+.successText {
+  margin: var(--space-2) 0 0;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+}
+
+.successMeta {
+  margin: var(--space-3) auto 0;
+  border: 1px solid var(--color-border-medium);
+  border-radius: var(--radius-md);
+  padding: var(--space-2);
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-2);
+}
+
+.successMeta .reviewItem {
+  width: auto;
+  min-width: 0;
+  text-align: center;
+}
+
+.successMeta .reviewValue {
+  word-break: normal;
+  overflow-wrap: normal;
+}
+
+.successActions {
+  margin-top: var(--space-3);
+  display: flex;
+  justify-content: center;
+  gap: var(--space-2);
+}
+
+@media (max-width: 900px) {
+  .slotGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 680px) {
+  .flowShell {
+    padding: var(--space-3);
+  }
+
+  .stepper {
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    gap: var(--space-2);
+    padding: 0 var(--space-1) var(--space-3);
+    margin: 0;
+    scrollbar-width: none !important;
+  }
+
+  .stepper::-webkit-scrollbar {
+    display: none;
+  }
+
+  .stepItem {
+    flex: 0 0 var(--size-avatar-lg);
+    min-width: var(--size-avatar-lg);
+  }
+
+  .stepLabel {
+    display: block;
+    font-size: var(--font-size-xs);
+    text-align: center;
+    max-width: 100%;
+    white-space: normal;
+    line-height: 1.1;
+  }
+
+  .stepCircle {
+    width: var(--space-8);
+    height: var(--space-8);
+    font-size: var(--font-size-xs);
+  }
+
+  .stepConnector {
+    display: none;
+  }
+
+  .dayRow {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    gap: var(--space-2);
+    margin: var(--space-2) 0 var(--space-3);
+    padding: 0 2px var(--space-2);
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .dayRow::-webkit-scrollbar {
+    display: none;
+  }
+
+  .dayButton {
+    min-width: 68px;
+    min-height: var(--space-16);
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+  }
+
+  .dayDate {
+    font-size: var(--font-size-md);
+  }
+
+  .slotGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+  }
+
+  .slotButton {
+    min-height: 34px;
+  }
+
+  .reviewLayout {
+    grid-template-columns: 1fr;
+  }
+
+  .reviewGridTwoCol {
+    grid-template-columns: 1fr;
+  }
+
+  .flowControls {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-2);
+  }
+
+  .flowControls button {
+    width: 100%;
+    margin: 0;
+    min-width: 0;
+  }
+
+  .successCard {
+    padding: var(--space-3);
+  }
+
+  .successMeta {
+    max-width: 100%;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .successActions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-2);
+  }
+
+  .successActions button {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .coinsInputRow {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .useMaxBtn {
+    width: 100%;
+  }
+
+  .coinsMetaRow {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 480px) {
+  .flowShell {
+    padding: var(--space-4) var(--space-2);
+    border-radius: var(--radius-lg);
+  }
+
+  .flowBody {
+    padding: var(--space-2);
+  }
+
+  .scheduleHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-2);
+  }
+
+  .monthNav {
+    width: 100%;
+    justify-content: center;
+    margin-bottom: 2px;
+  }
+
+  .monthLabel {
+    min-width: 104px;
+    font-size: var(--font-size-xs);
+  }
+
+  .dayButton {
+    min-width: var(--space-8);
+    min-height: var(--space-8);
+    flex: 0 0 var(--space-8);
+  }
+
+  .dayName {
+    font-size: var(--font-size-xs);
+  }
+
+  .dayDate {
+    font-size: var(--font-size-base);
+  }
+
+  .scheduleTitle {
+    font-size: var(--font-size-md);
+  }
+
+  .slotButton {
+    min-height: 38px;
+    font-size: var(--font-size-xs);
+  }
+
+  .selectedMeta {
+    width: 100%;
+    justify-content: center;
+    flex-wrap: wrap;
+    text-align: center;
+  }
+
+  .successMeta {
+    grid-template-columns: 1fr;
+  }
+
+  .flowControls {
+    grid-template-columns: 1fr;
+  }
+
+  .successActions {
+    grid-template-columns: 1fr;
+  }
+
+  .checkItem {
+    align-items: flex-start;
+  }
+}

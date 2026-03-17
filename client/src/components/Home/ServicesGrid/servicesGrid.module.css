@@ -1,69 +1,60 @@
+/* ========================================
+   SERVICES GRID STYLES
+   ======================================== */
+
 .services {
-  padding-bottom: 6rem;
-  background: #f5f1e8;
+  padding: var(--ui-section-padding-y) var(--ui-page-padding-x);
+  background: var(--color-bg-secondary);
 }
 
 .container {
-  max-width: 1200px;
+  max-width: var(--ui-page-max-width);
   margin: 0 auto;
-  padding: 0 20px;
+  padding: 0 var(--ui-page-padding-x);
 }
 
 .sectionHeader {
-  text-align: center;
-  margin-bottom: 4rem;
-}
-
-.sectionTitle {
-  font-size: 3rem;
-  font-weight: 900;
-  color: #000;
-  margin-bottom: 1rem;
-  font-family: "Poppins", sans-serif;
-}
-
-.sectionSubtitle {
-  font-size: 1.1rem;
-  color: #666;
-  max-width: 650px;
-  margin: 0 auto;
-  line-height: 1.6;
-  font-family: "Poppins", sans-serif;
+  margin-bottom: var(--ui-section-gap);
 }
 
 .servicesGrid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
+  gap: var(--space-8);
 }
 
 .serviceCard {
-  background: white;
-  padding: 2.5rem 2rem;
-  border-radius: 20px;
+  background: var(--color-bg-primary);
+  padding: var(--space-12) var(--space-8);
+  border-radius: var(--radius-3xl);
   text-decoration: none;
   color: inherit;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  border: 2px solid transparent;
+  transition: all var(--transition-slow);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--color-border-light);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  height: 100%;
 }
 
 .serviceCard:hover {
   transform: translateY(-10px);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-  border-color: #a78bfa;
+  box-shadow: var(--shadow-lg);
+  border-color: var(--color-primary-400);
 }
 
 .serviceIcon {
-  width: 90px;
-  height: 90px;
-  border-radius: 20px;
+  width: var(--size-avatar-md);
+  height: var(--size-avatar-md);
+  border-radius: var(--radius-3xl);
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 1.5rem;
-  color: white;
-  transition: transform 0.3s ease;
+  margin-bottom: var(--space-6);
+  color: var(--color-text-inverse);
+  transition: transform var(--transition-base);
 }
 
 .serviceCard:hover .serviceIcon {
@@ -71,81 +62,153 @@
 }
 
 .serviceTitle {
-  font-size: 1.5rem;
-  font-weight: 700;
-  margin-bottom: 1rem;
-  color: #000;
-  font-family: "Poppins", sans-serif;
+  font-family: var(--font-family);
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--space-4);
+  color: var(--color-text-primary);
 }
 
 .serviceDescription {
-  color: #666;
-  line-height: 1.7;
-  margin-bottom: 1.5rem;
-  font-size: 1rem;
-  font-family: "Poppins", sans-serif;
+  font-family: var(--font-family);
+  color: var(--color-text-secondary);
+  line-height: var(--line-height-relaxed);
+  margin-bottom: var(--space-6);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-normal);
 }
 
 .serviceArrow {
-  color: #a78bfa;
-  font-weight: 600;
-  font-size: 0.95rem;
-  transition: all 0.3s ease;
-  font-family: "Poppins", sans-serif;
+  color: var(--color-primary-400);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-base);
+  transition: all var(--transition-base);
+  font-family: var(--font-family);
 }
 
 .serviceCard:hover .serviceArrow {
   transform: translateX(5px);
 }
 
+.titleWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+  margin-bottom: var(--space-4);
+}
+
+.titleIcon {
+  color: var(--color-primary-400);
+}
+
+/* ===== RESPONSIVE ===== */
 @media (max-width: 768px) {
   .services {
-    padding: 4rem 0;
-  }
-
-  .sectionTitle {
-    font-size: 2.5rem;
+    padding: var(--ui-section-padding-y) 0;
   }
 
   .servicesGrid {
     grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
+    gap: var(--space-4);
+    padding: 0 var(--space-2);
   }
 
   .serviceCard {
-    padding: 1.5rem 1rem;
-    max-width: 100%;
+    padding: var(--space-6) var(--space-4);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    justify-content: space-between;
+    height: 100%;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--color-border-light);
   }
 
   .serviceIcon {
-    width: 70px;
-    height: 70px;
-    margin-bottom: 1rem;
+    width: var(--size-avatar-sm);
+    height: var(--size-avatar-sm);
+    margin-bottom: var(--space-4);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .serviceIcon svg {
+    width: 30px;
+    height: 30px;
   }
 
   .serviceTitle {
-    font-size: 1.2rem;
-    margin-bottom: 0.75rem;
+    font-size: var(--font-size-md);
+    margin-bottom: var(--space-2);
   }
 
   .serviceDescription {
-    font-size: 0.9rem;
-    margin-bottom: 1rem;
-    line-height: 1.5;
+    font-size: var(--font-size-sm);
+    margin-bottom: var(--space-4);
+    line-height: var(--line-height-normal);
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    opacity: 0.8;
+  }
+
+  .serviceArrow {
+    font-size: var(--font-size-sm);
+    margin-top: auto;
+    padding: var(--space-2) var(--space-4);
+    background: var(--color-neutral-100);
+    border-radius: var(--radius-full);
+    color: var(--color-text-secondary);
   }
 }
 
 @media (max-width: 480px) {
-  .sectionTitle {
-    font-size: 2rem;
+  .titleIcon {
+    width: var(--space-6);
+    height: var(--space-6);
   }
 
   .servicesGrid {
-    grid-template-columns: 1fr;
-    gap: 1rem;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-3);
+    padding: 0 var(--space-2);
   }
 
   .serviceCard {
-    padding: 1.5rem 1.2rem;
+    padding: var(--space-5) var(--space-3);
+    border-radius: var(--radius-xl);
+  }
+
+  .serviceIcon {
+    width: var(--space-12);
+    height: var(--space-12);
+    margin-bottom: var(--space-3);
+    border-radius: var(--radius-lg);
+  }
+
+  .serviceIcon svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  .serviceTitle {
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-tight);
+  }
+
+  .serviceDescription {
+    font-size: var(--font-size-xs);
+    margin-bottom: var(--space-3);
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+  }
+
+  .serviceArrow {
+    font-size: var(--font-size-xs);
+    padding: var(--space-1) var(--space-3);
   }
 }

@@ -1,0 +1,99 @@
+.topBar {
+  --admin-typo-md: var(--font-size-md);
+  --admin-typo-sm: var(--font-size-sm);
+  --admin-typo-xs: var(--font-size-xs);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-3) var(--space-8);
+  background: var(--color-bg-primary);
+  border-bottom: 1px solid var(--color-bg-tertiary);
+  border-radius: var(--radius-lg);
+}
+
+.backBtn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  background: none;
+  border: none;
+  color: var(--color-text-secondary);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--admin-typo-xs);
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.backBtn:hover {
+  color: var(--color-primary-500);
+}
+
+.headerActions {
+  display: flex;
+  gap: 0.6rem;
+}
+
+.actionBtn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-md);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--admin-typo-xs);
+  cursor: pointer;
+  border: none;
+}
+
+.actionBtn.approve {
+  background: var(--color-primary-500);
+  color: var(--color-text-inverse);
+}
+.actionBtn.approve:hover {
+  background: var(--color-primary-600);
+}
+
+.actionBtn.reject {
+  background: var(--color-error-light);
+  color: var(--color-error-dark);
+  border: 1px solid var(--color-error-light);
+}
+.actionBtn.reject:hover {
+  background: var(--color-error-light);
+}
+
+.actionBtn.archive {
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border-medium);
+  color: var(--color-text-secondary);
+}
+.actionBtn.archive:hover {
+  background: var(--color-bg-secondary);
+  border-color: var(--color-primary-500);
+  color: var(--color-primary-500);
+}
+
+@media (max-width: 768px) {
+  .topBar {
+    padding: var(--space-4);
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-4);
+    text-align: center;
+    border-radius: 0;
+  }
+
+  .headerActions {
+    width: 100%;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  .actionBtn {
+    flex: 1;
+    min-width: calc(50% - 0.5rem);
+    justify-content: center;
+    padding: 0.6rem;
+  }
+}

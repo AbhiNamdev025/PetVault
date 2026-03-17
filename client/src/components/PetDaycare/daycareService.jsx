@@ -1,46 +1,81 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import DaycareHero from "./components/DaycareHero/daycareHero";
 import DaycareFeatured from "./components/Featured/daycareFeatured";
 import DaycareCTA from "./components/DaycareCTA/DycareCTA";
-import ServiceBookingForm from "./components/ServicesBooking/serviceBookingForm";
-import styles from "./daycareService.module.css";
 import ServiceShowcase from "./components/Services Showcase/serviceShowcase";
 import DaycareReviews from "./components/DaycareReviews/daycareReviews";
 import CaretakerCards from "./components/CareTaker/CareTakerCards/caretakerCards";
 
-const DaycareService = () => {
-  const [showForm, setShowForm] = useState(false);
-  const [selectedService, setSelectedService] = useState(null);
+import AuthModal from "../Auth/AuthModal/authModal";
+import { openAuthModal } from "../../utils/authModalNavigation";
 
-  const handleBookNow = (service) => {
-    setSelectedService(service);
-    setShowForm(true);
+const DaycareService = () => {
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [joinRole, setJoinRole] = useState(null);
+
+  const caretakerRef = useRef(null);
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const scrollToCaretakers = () => {
+    caretakerRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  const closeForm = () => {
-    setShowForm(false);
-    setSelectedService(null);
+  const isAuthenticated = () =>
+    !!(localStorage.getItem("token") || sessionStorage.getItem("token"));
+
+  const openFormFromCaretaker = (caretaker, serviceType) => {
+    if (!isAuthenticated()) {
+      openAuthModal(navigate, {
+        location,
+        view: "login",
+        from: location.pathname,
+      });
+      return;
+    }
+    const selected = typeof serviceType === "string" ? serviceType : "";
+    const selectedProviderId = caretaker?._id || "";
+    const queryParts = [];
+    if (selected) queryParts.push(`service=${encodeURIComponent(selected)}`);
+    if (selectedProviderId) queryParts.push(`providerId=${encodeURIComponent(selectedProviderId)}`);
+    queryParts.push("providerType=caretaker");
+    const query = queryParts.length ? `?${queryParts.join("&")}` : "";
+    navigate(`/book/daycare${query}`, {
+      state: {
+        from: location.pathname,
+        caretaker: caretaker || null,
+      },
+    });
+  };
+
+  const handleJoinRole = (role) => {
+    setJoinRole(role);
+    setShowAuthModal(true);
   };
 
   return (
     <>
-      <DaycareHero />
-      <CaretakerCards/>
-      <ServiceShowcase onBookNow={handleBookNow} />
-      <DaycareCTA />
+      <DaycareHero onBookClick={scrollToCaretakers} />
+
+      <div ref={caretakerRef}>
+        <CaretakerCards onBookNow={openFormFromCaretaker} />
+      </div>
+
+      <ServiceShowcase onJoinNow={handleJoinRole} />
+      <DaycareCTA onBookNow={scrollToCaretakers} />
       <DaycareFeatured />
       <DaycareReviews />
 
-      {showForm && (
-        <div className={styles.overlay}>
-          <div className={styles.modal}>
-            <button className={styles.closeBtn} onClick={closeForm}>
-              ✕
-            </button>
-            <ServiceBookingForm defaultService={selectedService?.type || ""} />
-          </div>
-        </div>
-      )}
+      <AuthModal
+        isOpen={showAuthModal}
+        onClose={() => {
+          setShowAuthModal(false);
+          setJoinRole(null);
+        }}
+        defaultView="signup"
+        selectedRole={joinRole}
+      />
     </>
   );
 };

@@ -1,13 +1,17 @@
 import React from "react";
-import styles from "./availabilityBadge";
+import { Badge } from "../../../../../../common";
 
 export default function AvailabilityBadge({ availabilityInfo }) {
   return (
-    <div
-      className={styles.statusBadge}
-      style={{ backgroundColor: availabilityInfo.color }}
+    <Badge
+      variant="secondary"
+      size="sm"
+      style={{
+        backgroundColor: availabilityInfo.color,
+        color: "var(--color-text-inverse)",
+      }}
     >
       {availabilityInfo.text}
-    </div>
+    </Badge>
   );
 }

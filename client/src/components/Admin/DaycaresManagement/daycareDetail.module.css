@@ -1,0 +1,491 @@
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.loading,
+.error {
+  text-align: center;
+  padding: var(--space-12);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-md);
+}
+
+.error {
+  color: var(--color-error);
+}
+
+.backBtn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-5);
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border-medium);
+  border-radius: var(--radius-md);
+  color: var(--color-text-primary);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  margin-bottom: var(--space-6);
+}
+
+.backBtn:hover {
+  background: var(--color-bg-secondary);
+  border-color: var(--color-border-dark);
+}
+
+.daycareHeader {
+  display: flex;
+  gap: var(--space-6);
+  background: var(--color-bg-primary);
+  padding: var(--space-8);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  margin-bottom: var(--space-8);
+  position: relative;
+}
+
+.daycareIcon {
+  width: var(--size-avatar-md);
+  height: var(--size-avatar-md);
+  background: linear-gradient(135deg, var(--color-warning) 0%, var(--color-warning-dark) 100%);
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-inverse);
+  flex-shrink: 0;
+}
+
+.daycareInfo {
+  flex: 1;
+}
+
+.daycareInfo h1 {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  margin: 0 0 var(--space-4) 0;
+}
+
+.daycareMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-6);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  margin-bottom: var(--space-4);
+}
+
+.daycareMeta span {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+.address {
+  display: flex;
+  gap: var(--space-2);
+  color: var(--color-text-secondary);
+  margin: 0;
+  align-items: flex-start;
+}
+
+.address p {
+  margin: 0;
+  line-height: 1.4;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--space-6);
+  margin-bottom: var(--space-8);
+}
+
+.statCard {
+  background: var(--color-bg-primary);
+  padding: var(--space-6);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  color: var(--color-warning);
+}
+
+.statCard h3 {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.statCard p {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  margin: 0;
+}
+
+.earningCard {
+  border-left: var(--space-1) solid var(--color-success);
+}
+
+.archivedCard {
+  color: var(--color-text-secondary);
+  border-left: var(--space-1) solid var(--color-text-secondary);
+}
+
+.section {
+  background: var(--color-bg-primary);
+  padding: var(--space-8);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-6);
+  color: var(--color-text-primary);
+}
+
+.sectionHeader h2 {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  margin: 0;
+}
+
+.tableContainer {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th {
+  padding: var(--space-4);
+  text-align: left;
+  background: var(--color-bg-secondary);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  font-size: var(--font-size-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 2px solid var(--color-border-medium);
+}
+
+.table td {
+  padding: var(--space-4);
+  border-bottom: 1px solid var(--color-bg-tertiary);
+  color: var(--color-text-primary);
+}
+
+.clickableRow {
+  cursor: pointer;
+  transition: background-color var(--transition-base);
+}
+
+.clickableRow:hover {
+  background-color: var(--color-bg-secondary);
+}
+
+.caretakerName {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-weight: var(--font-weight-medium);
+}
+
+.caretakerImage {
+  width: var(--space-10);
+  height: var(--space-10);
+  object-fit: cover;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--color-border-medium);
+}
+
+.activeBadge {
+  display: inline-block;
+  padding: var(--space-1) var(--space-3);
+  background: var(--color-warning-light);
+  color: var(--color-warning-dark);
+  border-radius: var(--radius-lg);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+}
+
+.noData {
+  text-align: center;
+  padding: var(--space-12) !important;
+  color: var(--color-text-tertiary);
+  font-style: italic;
+}
+
+.archivedRow {
+  opacity: 0.6;
+  background-color: var(--color-bg-secondary);
+}
+
+.archivedBadge {
+  display: inline-block;
+  padding: 0.2rem var(--space-2);
+  background: var(--color-bg-tertiary);
+  color: var(--color-text-secondary);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  margin-left: var(--space-2);
+  vertical-align: middle;
+}
+
+.avatarPlaceholder {
+  width: var(--space-10);
+  height: var(--space-10);
+  background: var(--color-border-medium);
+  color: var(--color-text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-full);
+  font-weight: var(--font-weight-semibold);
+}
+
+.actionWrapper {
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+
+.miniAction {
+  padding: var(--space-2);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.miniAction:hover {
+  background: var(--color-bg-tertiary);
+  color: var(--color-text-primary);
+}
+
+.miniMenu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border-medium);
+  border-radius: var(--radius-md);
+  box-shadow: 0 var(--space-1) 6px -1px color-mix(in srgb, var(--color-neutral-900) 10%, transparent);
+  z-index: 10;
+  min-width: 160px;
+  overflow: hidden;
+  margin-top: var(--space-2);
+}
+
+.miniMenu div {
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-primary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  transition: background 0.2s;
+  text-align: left;
+}
+
+.miniMenu div:hover {
+  background: var(--color-bg-secondary);
+}
+
+.miniMenu .delete {
+  color: var(--color-error);
+}
+
+.miniMenu .delete:hover {
+  background: var(--color-error-light);
+}
+
+.miniMenu .restore {
+  color: var(--color-success);
+}
+
+.miniMenu .restore:hover {
+  background: var(--color-success-light);
+}
+
+@media (max-width: 1024px) {
+  .statsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: var(--space-3);
+  }
+
+  .daycareHeader {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: var(--space-6);
+    gap: var(--space-4);
+  }
+
+  .daycareIcon {
+    width: var(--size-avatar-sm);
+    height: var(--size-avatar-sm);
+  }
+
+  .daycareInfo h1 {
+    font-size: var(--font-size-xl);
+  }
+
+  .daycareMeta {
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
+  .address {
+    justify-content: center;
+    text-align: center;
+    width: 100%;
+  }
+
+  .headerActions {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .accountBtn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .statsGrid {
+    gap: var(--space-4);
+  }
+
+  .statCard {
+    padding: var(--space-5);
+  }
+
+  .section {
+    padding: var(--space-5);
+  }
+
+  .table,
+  .table thead,
+  .table tbody,
+  .table th,
+  .table td,
+  .table tr {
+    display: block;
+  }
+
+  .table thead tr {
+    position: absolute;
+    top: -9999px;
+    left: -9999px;
+  }
+
+  .table tr {
+    border: 1px solid var(--color-border-medium);
+    margin-bottom: var(--space-4);
+    border-radius: var(--radius-lg);
+    padding: var(--space-3);
+    background: var(--color-bg-primary);
+    box-shadow: 0 2px var(--space-1) color-mix(in srgb, var(--color-neutral-900) 2%, transparent);
+  }
+
+  .table td {
+    border: none;
+    border-bottom: 1px solid var(--color-bg-tertiary);
+    position: relative;
+    padding: 0.85rem var(--space-4);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-align: right;
+    min-height: 3.5rem;
+  }
+
+  .table td:last-child {
+    border-bottom: 0;
+  }
+
+  .table td::before {
+    content: attr(data-label);
+    flex-shrink: 0;
+    width: 40%;
+    text-align: left;
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+  }
+
+  .caretakerName {
+    justify-content: flex-end;
+    width: 100%;
+  }
+
+  .actionWrapper {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .miniMenu {
+    position: fixed;
+    top: auto;
+    bottom: var(--space-5);
+    left: var(--space-5);
+    right: var(--space-5);
+    width: calc(100% - 40px);
+    margin: 0;
+    box-shadow: 0 -4px var(--space-5) color-mix(in srgb, var(--color-neutral-900) 15%, transparent);
+  }
+}
+
+.headerActions {
+  display: flex;
+  align-items: center;
+}
+
+.accountBtn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-5);
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border-medium);
+  border-radius: var(--radius-md);
+  color: var(--color-text-primary);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  box-shadow: var(--shadow-xs);
+}
+
+.accountBtn:hover {
+  background: var(--color-bg-secondary);
+  border-color: var(--color-border-dark);
+  color: var(--color-warning);
+}
+
+.accountBtn svg {
+  color: var(--color-warning);
+}

@@ -7,8 +7,10 @@ import {
   ShoppingBag,
   Users,
   Shield,
+  BriefcaseBusiness,
 } from "lucide-react";
 import styles from "./servicesGrid.module.css";
+import { SectionHeader } from "../../common";
 
 const ServicesGrid = () => {
   const services = [
@@ -18,7 +20,7 @@ const ServicesGrid = () => {
       description:
         "Professional veterinary care for your beloved pets with expert doctors",
       link: "/vet-services",
-      color: "#a78bfa",
+      color: "var(--color-primary-400)",
     },
     {
       icon: <Home size={48} strokeWidth={1.5} />,
@@ -26,48 +28,49 @@ const ServicesGrid = () => {
       description:
         "Find your perfect furry companion and give them a forever home",
       link: "/pet-adoption",
-      color: "#ec4899",
+      color: "var(--color-secondary-500)",
     },
     {
       icon: <ShoppingBag size={48} strokeWidth={1.5} />,
       title: "Pet Shop",
       description: "Quality pets from trusted breeders with health guarantee",
       link: "/pet-shop",
-      color: "#3b82f6",
+      color: "var(--color-info)",
     },
     {
       icon: <Heart size={48} strokeWidth={1.5} />,
       title: "Pet Daycare",
       description: "Safe and fun daycare for your pets while you are away",
       link: "/pet-daycare",
-      color: "#f59e0b",
+      color: "var(--color-warning)",
     },
     {
       icon: <Shield size={48} strokeWidth={1.5} />,
       title: "Pet Products",
       description: "Premium products for pet care, food, and accessories",
       link: "/pet-products",
-      color: "#10b981",
+      color: "var(--color-success)",
     },
     {
       icon: <Users size={48} strokeWidth={1.5} />,
       title: "Pet Training",
       description: "Professional training sessions for better pet behavior",
-      link: "/vet-services",
-      color: "#8b5cf6",
+      link: "/pet-daycare",
+      color: "var(--color-primary-600)",
     },
   ];
 
   return (
     <section className={styles.services}>
       <div className={styles.container}>
-        <div className={styles.sectionHeader}>
-          <h2 className={styles.sectionTitle}>Our Services</h2>
-          <p className={styles.sectionSubtitle}>
-            Complete care for your furry friends. We provide everything your pet
-            needs for a happy and healthy life.
-          </p>
-        </div>
+        <SectionHeader
+          className={styles.sectionHeader}
+          align="center"
+          level="section"
+          icon={<BriefcaseBusiness size={32} className={styles.titleIcon} />}
+          title="Our Services"
+          subtitle="Complete care for your furry friends. We provide everything your pet needs for a happy and healthy life."
+        />
         <div className={styles.servicesGrid}>
           {services.map((service, index) => (
             <Link key={index} to={service.link} className={styles.serviceCard}>

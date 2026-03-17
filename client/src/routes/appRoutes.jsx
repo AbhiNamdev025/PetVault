@@ -1,127 +1,130 @@
 import React from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
-import HomePage from "../pages/homePage";
-import PetShopPage from "../pages/petShopPage";
-import VetServicesPage from "../pages/vetServices";
-import PetAdoptionPage from "../pages/petAdoptionPage";
-import PetDaycarePage from "../pages/petDaycarePage";
-import PetProductsPage from "../pages/petProductsPage";
-import AdminPage from "../pages/adminPage";
-import LoginPage from "../pages/loginPage";
-import RegisterPage from "../pages/registerPage";
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
+import HomePage from "../pages/Homepage/HomePage";
+import PetShopPage from "../pages/PetShopPage/petShopPage";
+import VetServicesPage from "../pages/VetServices/vetServices";
+import PetAdoptionPage from "../pages/PetAdoptionPage/petAdoptionPage";
+import PetDaycarePage from "../pages/PetDaycarePage/petDaycarePage";
+import PetProductsPage from "../pages/PetProductsPage/petProductsPage";
+import AppointmentBookingPage from "../pages/AppointmentBooking/appointmentBookingPage";
+import AdminPage from "../pages/Admin/adminPage";
 import AdminDashboard from "../components/Admin/AdminDashboard/adminDashboard";
 import PetManagement from "../components/Admin/PetManagement/petManagement";
 import ProductManagement from "../components/Admin/ProductManagement/productManagement";
 import ServiceManagement from "../components/Admin/ServiceManagement/serviceManagement";
 import UserManagement from "../components/Admin/UserManagement/userManagement";
+import ShopDetail from "../components/Admin/ShopsManagement/shopDetail";
+import HospitalDetail from "../components/Admin/HospitalsManagement/hospitalDetail";
+import DaycareDetail from "../components/Admin/DaycaresManagement/daycareDetail";
+import NgoDetail from "../components/Admin/NgoManagement/NgoDetail";
+import OrderManagement from "../components/Admin/Order Management/orderManagement";
+import AppointmentManagement from "../components/Admin/Appoinment Management/AppointmentManagement";
+import TenantManagement from "../components/Admin/TenantManagement/TenantManagement";
+import TenantDetail from "../components/Admin/TenantManagement/Components/TenantDetails/TenantDetail";
+import PayoutManagement from "../components/Admin/PayoutManagement/payoutManagement";
+import PayoutDetails from "../components/Admin/PayoutManagement/payoutDetails";
 import PetDetails from "../components/PetShop/PetDetails/petDetails";
 import AdoptionPetDetails from "../components/PetAdoption/AdoptionPetDetails/adoptionPetDetails";
 import GoogleAuthCallback from "../components/Auth/GoogleAuthCallback/googleAuthCallback";
-import CartPage from "../pages/cartPage";
+import CartPage from "../pages/Cartpage/CartPage";
 import ProtectedPath from "./protectPath";
 import ProductDetails from "../components/PetProducts/ProductDetails/productDetails";
 import Confirmation from "../components/Order/Confirmation/confirmation";
 import Order from "../components/Order/Orders/order";
+import OrderDetails from "../components/Order/OrderDetails/orderDetails";
 import CheckoutPage from "../components/Order/CheckoutPage/checkoutPage";
-import OrderManagement from "../components/Admin/Order Management/orderManagement";
-import AppointmentsPage from "../components/Appointments/appointmentsPage";
-import AppointmentManagement from "../components/Admin/Appoinment Management/AppointmentManagement";
-import Profile from "../components/UserProfile/userProfile";
-import ScrollToTop from "./scrollToTop";
-import DoctorDetails from "../components/VetServices/components/VetDetails/doctorDetailPage";
-import CaretakerDetails from "../components/PetDaycare/components/CareTaker/CareTakerDetails/caretakerDetails";
 import ShopDetails from "../components/ShopDetails/shopDetails";
-import NgoDetails from "../components/NgoDetails/ngoDetails";
+import DoctorDetails from "../components/VetServices/components/VetDetails/doctorDetailPage";
 import HospitalDetails from "../components/VetServices/HospitalDetails/hospitalDetails";
 import DaycareDetails from "../components/PetDaycare/components/DaycareDetails/daycareDetails";
-
-const PublicRoute = ({ children }) => {
-  const token =
-    localStorage.getItem("token") || sessionStorage.getItem("token");
-  const userData =
-    localStorage.getItem("user") || sessionStorage.getItem("user");
-  const user = userData ? JSON.parse(userData) : null;
-
-  if (token && user) {
-    if (user.role === "admin") return <Navigate to="/admin" />;
-    return <Navigate to="/" />;
-  }
-
-  return children;
-};
+import CaretakerDetails from "../components/PetDaycare/components/CareTaker/CareTakerDetails/caretakerDetails";
+import ProfilePage from "../components/UserProfile/userProfile";
+import AdminProductDetail from "../components/Admin/ProductManagement/AdminProductDetail";
+import AdminPetDetail from "../components/Admin/PetManagement/AdminPetDetail";
+import UserPetProfile from "../components/UserProfile/components/MyPets/PetProfile/PetProfile";
+import ScrollToTop from "./scrollToTop";
+import NgoDetails from "../components/NgoDetails/ngoDetails";
+import AdminNewsletter from "../pages/Admin/Newsletter/adminNewsletter";
 
 const AppRoutes = () => {
+  const location = useLocation();
+  const fallbackRedirect =
+    location.pathname === "/login"
+      ? "/?auth=login"
+      : location.pathname === "/register"
+        ? "/?auth=signup"
+        : "/";
+
   return (
     <>
       <ScrollToTop />
       <Routes>
-        {/* Public Pages */}
+        <Route path="/profile" element={<ProfilePage />} />
         <Route path="/" element={<HomePage />} />
         <Route path="/pet-shop" element={<PetShopPage />} />
         <Route path="/vet-services" element={<VetServicesPage />} />
         <Route path="/pet-adoption" element={<PetAdoptionPage />} />
         <Route path="/pet-daycare" element={<PetDaycarePage />} />
+        <Route path="/book/:type" element={<AppointmentBookingPage />} />
         <Route path="/pet-products" element={<PetProductsPage />} />
-        <Route path="/products/:id" element={<ProductDetails />} />
-
-        {/* Auth Pages */}
-        <Route
-          path="/login"
-          element={
-            <PublicRoute>
-              <LoginPage />
-            </PublicRoute>
-          }
-        />
-        <Route
-          path="/register"
-          element={
-            <PublicRoute>
-              <RegisterPage />
-            </PublicRoute>
-          }
-        />
-        {/* Pet Details */}
-        <Route path="/shop-pets/:id" element={<PetDetails />} />
-        <Route path="/adopt-pets/:id" element={<AdoptionPetDetails />} />
-        {/* User Pages */}
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/my-appointments" element={<AppointmentsPage />} />
-        <Route path="/my-orders" element={<Order />} />
         <Route path="/cart" element={<CartPage />} />
         <Route path="/checkout" element={<CheckoutPage />} />
-        <Route path="/confirmation" element={<Confirmation />} />
+        <Route path="/order-confirmation" element={<Confirmation />} />
+        <Route
+          path="/confirmation"
+          element={<Navigate to="/order-confirmation" replace />}
+        />
+        <Route path="/my-orders" element={<Order />} />
+        <Route path="/my-orders/:id" element={<OrderDetails />} />
+        <Route
+          path="/my-appointments"
+          element={<Navigate to="/profile?tab=appointments" replace />}
+        />
 
-        {/* Details Pages */}
+        <Route path="/auth/google/callback" element={<GoogleAuthCallback />} />
+
+        <Route path="/pet/:id" element={<PetDetails />} />
+        <Route path="/user-pet/:id" element={<UserPetProfile />} />
+        <Route path="/adopt-pets/:id" element={<AdoptionPetDetails />} />
+        <Route path="/products/:id" element={<ProductDetails />} />
+        <Route path="/shop-pets/:id" element={<PetDetails />} />
 
         <Route path="/doctor/:id" element={<DoctorDetails />} />
         <Route path="/caretaker/:id" element={<CaretakerDetails />} />
         <Route path="/shop/:id" element={<ShopDetails />} />
-        <Route path="/ngo/:id" element={<NgoDetails />} />
         <Route path="/hospital/:id" element={<HospitalDetails />} />
-        <Route path="/daycare/:id" element={<DaycareDetails /> } />
+        <Route path="/daycare/:id" element={<DaycareDetails />} />
+        <Route path="/ngo/:id" element={<NgoDetails />} />
 
-        {/* Admin Protected */}
         <Route
-          path="/admin/*"
+          path="/admin"
           element={
-            <ProtectedPath requiredRole="admin">
+            <ProtectedPath allowedRoles={["admin"]}>
               <AdminPage />
             </ProtectedPath>
           }
         >
           <Route index element={<AdminDashboard />} />
           <Route path="pets" element={<PetManagement />} />
+          <Route path="pets/:id" element={<AdminPetDetail />} />
           <Route path="products" element={<ProductManagement />} />
+          <Route path="products/:id" element={<AdminProductDetail />} />
           <Route path="services" element={<ServiceManagement />} />
           <Route path="users" element={<UserManagement />} />
+          <Route path="shops/:id" element={<ShopDetail />} />
+          <Route path="hospitals/:id" element={<HospitalDetail />} />
+          <Route path="daycares/:id" element={<DaycareDetail />} />
+          <Route path="ngos/:id" element={<NgoDetail />} />
           <Route path="orders" element={<OrderManagement />} />
           <Route path="appointments" element={<AppointmentManagement />} />
+          <Route path="payouts" element={<PayoutManagement />} />
+          <Route path="payouts/:id" element={<PayoutDetails />} />
+          <Route path="tenants" element={<TenantManagement />} />
+          <Route path="tenants/:id" element={<TenantDetail />} />
+          <Route path="newsletter" element={<AdminNewsletter />} />
         </Route>
-        {/* Google Auth */}
-        <Route path="/login/success" element={<GoogleAuthCallback />} />
-        {/* Fallback */}
-        <Route path="*" element={<Navigate to="/" />} />
+
+        <Route path="*" element={<Navigate to={fallbackRedirect} replace />} />
       </Routes>
     </>
   );

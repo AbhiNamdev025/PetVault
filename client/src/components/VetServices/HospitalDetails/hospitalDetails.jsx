@@ -1,32 +1,48 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft, Star, MapPin, Hospital } from "lucide-react";
+import {
+  ArrowLeft,
+  Star,
+  MapPin,
+  Phone,
+  MessageCircle,
+  Stethoscope,
+  GraduationCap,
+  IndianRupee,
+} from "lucide-react";
 import { API_BASE_URL, BASE_URL } from "../../../utils/constants";
 import styles from "./hospitalDetails.module.css";
 import toast from "react-hot-toast";
+import { DetailsSkeleton } from "../../Skeletons";
+import { openAuthModal } from "../../../utils/authModalNavigation";
+import {
+  Badge,
+  Button,
+  ListingCard,
+  Pagination,
+  ReviewSection,
+  SectionHeader,
+} from "../../common";
+
 const HospitalDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-
   const [hospital, setHospital] = useState(null);
   const [doctors, setDoctors] = useState([]);
   const [loading, setLoading] = useState(true);
-
   const [formRating, setFormRating] = useState(0);
   const [formReview, setFormReview] = useState("");
   const [submitting, setSubmitting] = useState(false);
-  const [showLoginPopup, setShowLoginPopup] = useState(false);
-
+  const [itemsPerPage, setItemsPerPage] = useState(3);
+  const [currentPage, setCurrentPage] = useState(1);
   const fetchHospital = useCallback(async () => {
     try {
       const [hRes, dRes] = await Promise.all([
         fetch(`${API_BASE_URL}/hospital/${id}`),
         fetch(`${API_BASE_URL}/hospital/doctors/${id}`),
       ]);
-
       if (hRes.ok) setHospital(await hRes.json());
       else toast.error("Failed to load hospital");
-
       if (dRes.ok) {
         const d = await dRes.json();
         setDoctors(d.doctors || []);
@@ -39,47 +55,70 @@ const HospitalDetails = () => {
       setLoading(false);
     }
   }, [id]);
-
   useEffect(() => {
     if (id) fetchHospital();
   }, [id, fetchHospital]);
 
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(max-width: 768px)");
+    const syncItemsPerPage = () => setItemsPerPage(mediaQuery.matches ? 1 : 3);
+    syncItemsPerPage();
+    if (typeof mediaQuery.addEventListener === "function") {
+      mediaQuery.addEventListener("change", syncItemsPerPage);
+      return () => mediaQuery.removeEventListener("change", syncItemsPerPage);
+    }
+    mediaQuery.addListener(syncItemsPerPage);
+    return () => mediaQuery.removeListener(syncItemsPerPage);
+  }, []);
+
+  const totalDoctorPages = Math.max(
+    1,
+    Math.ceil(doctors.length / itemsPerPage),
+  );
+  useEffect(() => {
+    setCurrentPage((prev) => Math.min(prev, totalDoctorPages));
+  }, [totalDoctorPages]);
+  const visibleDoctors = doctors.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage,
+  );
   const formatAddress = (addr) => {
     if (!addr) return "Address not available";
     const { street, city, state, zipCode } = addr;
     return [street, city, state, zipCode].filter(Boolean).join(", ");
   };
-
   const avgRating = (ratings) => {
     if (!ratings || ratings.length === 0) return 0;
     const total = ratings.reduce((s, r) => s + r.rating, 0);
     return (total / ratings.length).toFixed(1);
   };
-
   const isLoggedIn = () =>
     !!(localStorage.getItem("token") || sessionStorage.getItem("token"));
-
   const submitReview = async () => {
-    if (!isLoggedIn()) return setShowLoginPopup(true);
+    if (!isLoggedIn()) {
+      openAuthModal(navigate, {
+        view: "login",
+        from: `/hospital/${id}`,
+      });
+      return;
+    }
     if (!formRating) return toast.warning("Select a rating");
-
     try {
       setSubmitting(true);
-
       const token =
         localStorage.getItem("token") || sessionStorage.getItem("token");
-
       const res = await fetch(`${API_BASE_URL}/hospital/${id}/rate`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ rating: formRating, review: formReview }),
+        body: JSON.stringify({
+          rating: formRating,
+          review: formReview,
+        }),
       });
-
       const data = await res.json();
-
       if (res.ok) {
         const refreshed = await fetch(`${API_BASE_URL}/hospital/${id}`);
         if (refreshed.ok) setHospital(await refreshed.json());
@@ -93,29 +132,27 @@ const HospitalDetails = () => {
       setSubmitting(false);
     }
   };
-
   const openDoctor = (dId, doctorObj) =>
-    navigate(`/doctor/${dId}`, { state: { doctor: doctorObj } });
-
-  const openHospital = (hId) => navigate(`/hospital/${hId}`);
-
-  const handleLogin = () => {
-    setShowLoginPopup(false);
-    navigate("/login", { state: { from: `/hospital/${id}` } });
-  };
-
-  if (loading) return <div className={styles.loading}>Loading...</div>;
+    navigate(`/doctor/${dId}`, {
+      state: {
+        doctor: doctorObj,
+      },
+    });
+  if (loading) return <DetailsSkeleton />;
   if (!hospital)
     return <div className={styles.notFound}>Hospital not found</div>;
-
   const hospitalAvg = avgRating(hospital.ratings);
   const totalReviews = hospital.ratings?.length || 0;
-
   return (
     <div className={styles.hospitalDetails}>
-      <button className={styles.backBtn} onClick={() => navigate(-1)}>
+      <Button
+        className={styles.backBtn}
+        onClick={() => navigate(-1)}
+        variant="ghost"
+        size="sm"
+      >
         <ArrowLeft size={18} /> Back
-      </button>
+      </Button>
 
       <div className={styles.header}>
         <img
@@ -124,8 +161,8 @@ const HospitalDetails = () => {
             hospital.avatar
               ? `${BASE_URL}/uploads/avatars/${hospital.avatar}`
               : hospital.roleData?.hospitalImages?.[0]
-              ? `${BASE_URL}/uploads/roles/${hospital.roleData.hospitalImages[0]}`
-              : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS5gmlF6Ui768IGJDxuurDQjrhd782B21TmYw&s"
+                ? `${BASE_URL}/uploads/roles/${hospital.roleData.hospitalImages[0]}`
+                : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS5gmlF6Ui768IGJDxuurDQjrhd782B21TmYw&s"
           }
           alt={hospital.roleData?.hospitalName || hospital.name}
         />
@@ -151,19 +188,67 @@ const HospitalDetails = () => {
               {hospital.roleData.hospitalDescription}
             </p>
           )}
+
+          {hospital.phone && (
+            <div className={styles.actionButtons}>
+              <Button
+                as="a"
+                href={`tel:${hospital.phone}`}
+                className={styles.callButton}
+                variant="outline"
+                size="md"
+              >
+                <Phone size={20} /> <span>Call</span>
+              </Button>
+              <Button
+                as="a"
+                href={`https://wa.me/${hospital.phone}`}
+                target="_blank"
+                className={styles.whatsappButton}
+                variant="success"
+                size="md"
+              >
+                <MessageCircle size={20} /> <span>WhatsApp</span>
+              </Button>
+            </div>
+          )}
         </div>
       </div>
 
-      <div className={styles.section}>
-        <div className={styles.sectionHeader}>
-          <h2>Doctors ({doctors.length})</h2>
-        </div>
+      <div className={styles.quickNav}>
+        <Button
+          as="a"
+          href="#doctors-section"
+          className={styles.navButton}
+          variant="ghost"
+          size="sm"
+        >
+          Doctors
+        </Button>
+        <Button
+          as="a"
+          href="#reviews-section"
+          className={styles.navButton}
+          variant="ghost"
+          size="sm"
+        >
+          Reviews
+        </Button>
+      </div>
+
+      <div id="doctors-section" className={styles.section}>
+        <SectionHeader
+          className={styles.sectionHeader}
+          title="Doctors"
+          count={doctors.length}
+          level="section"
+        />
 
         {doctors.length === 0 ? (
           <div className={styles.empty}>No doctors listed.</div>
         ) : (
           <div className={styles.doctorsGrid}>
-            {doctors.map((d) => {
+            {visibleDoctors.map((d) => {
               const avg =
                 d.ratings?.length > 0
                   ? (
@@ -171,162 +256,90 @@ const HospitalDetails = () => {
                       d.ratings.length
                     ).toFixed(1)
                   : "No Ratings";
-
               return (
-                <div key={d._id} className={styles.doctorCard}>
-                  <img
-                    className={styles.doctorAvatar}
-                    src={
-                      d.avatar
-                        ? `${BASE_URL}/uploads/avatars/${d.avatar}`
-                        : d.roleData?.doctorImages?.[0]
+                <ListingCard
+                  key={d._id}
+                  imageSrc={
+                    d.avatar
+                      ? `${BASE_URL}/uploads/avatars/${d.avatar}`
+                      : d.roleData?.doctorImages?.[0]
                         ? `${BASE_URL}/uploads/roles/${d.roleData.doctorImages[0]}`
-                        : "https://static.vecteezy.com/system/resources/thumbnails/005/387/889/small/veterinary-doctor-doing-vaccination-for-dog-free-vector.jpg"
-                    }
-                    alt={d.roleData?.doctorName || d.name}
-                  />
-
-                  <div className={styles.doctorInfo}>
-                    <h3 className={styles.name}>
-                      {d.roleData?.doctorName || d.name}
-                    </h3>
-
-                    <p className={styles.spec}>
-                      {d.roleData?.doctorSpecialization || "-"}
-                    </p>
-
-                    <div className={styles.row}>
-                      <span className={styles.smallMeta}>
-                        {d.roleData?.doctorExperience || "-"} yrs
-                      </span>
-
-                      <button
-                        className={styles.hospitalLink}
-                        onClick={() => openHospital(hospital._id)}
-                      >
-                        <Hospital size={14} />
-                        {hospital.roleData?.hospitalName || hospital.name}
-                      </button>
-                    </div>
-
-                    <div className={styles.row}>
-                      <div className={styles.ratingRow}>
-                        <Star size={16} className={styles.starIcon} />
-                        <span>{avg}</span>
-                      </div>
-
-                      <button
-                        className={styles.viewBtn}
-                        onClick={() => openDoctor(d._id, d)}
-                      >
-                        View Profile
-                      </button>
-                    </div>
-                  </div>
-                </div>
+                        : ""
+                  }
+                  fallbackImageSrc="https://static.vecteezy.com/system/resources/thumbnails/005/387/889/small/veterinary-doctor-doing-vaccination-for-dog-free-vector.jpg"
+                  imageAlt={d.roleData?.doctorName || d.name}
+                  imageFit="contain"
+                  title={d.roleData?.doctorName || d.name}
+                  titleIcon={<Stethoscope size={16} />}
+                  subtitle={d.roleData?.doctorSpecialization || "-"}
+                  context={
+                    <Badge
+                      variant="warning-soft"
+                      size="sm"
+                      icon={<Star size={12} />}
+                    >
+                      {avg}
+                    </Badge>
+                  }
+                  metaItems={[
+                    {
+                      icon: <GraduationCap size={13} />,
+                      label: `${d.roleData?.doctorExperience || "0"} years exp.`,
+                    },
+                    {
+                      icon: <IndianRupee size={13} />,
+                      label: `${d.roleData?.consultationFee || 400}`,
+                    },
+                  ]}
+                  className={styles.listingCard}
+                  footer={
+                    <Button
+                      fullWidth
+                      size="sm"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        openDoctor(d._id, d);
+                      }}
+                      variant="primary"
+                    >
+                      View Profile
+                    </Button>
+                  }
+                  as="div"
+                />
               );
             })}
           </div>
         )}
-      </div>
-
-      <div className={styles.section}>
-        <div className={styles.sectionHeader}>
-          <h2>Reviews</h2>
-        </div>
-
-        {/* Review Form */}
-        <div className={styles.reviewForm}>
-          <div className={styles.starRow}>
-            {[1, 2, 3, 4, 5].map((s) => (
-              <Star
-                key={s}
-                size={22}
-                className={
-                  formRating >= s ? styles.starActive : styles.starInactive
-                }
-                onClick={() => setFormRating(s)}
-              />
-            ))}
-          </div>
-
-          <textarea
-            value={formReview}
-            onChange={(e) => setFormReview(e.target.value)}
-            className={styles.textarea}
-            placeholder="Share your experience..."
+        {doctors.length > 0 && (
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalDoctorPages}
+            hideIfSinglePage={false}
+            onPageChange={setCurrentPage}
           />
-
-          <button
-            className={styles.submit}
-            onClick={submitReview}
-            disabled={submitting}
-          >
-            {submitting ? "Submitting..." : "Submit Review"}
-          </button>
-        </div>
-
-        {/* Review List */}
-        <div className={styles.reviewsList}>
-          {!hospital.ratings?.length ? (
-            <div className={styles.empty}>No reviews yet.</div>
-          ) : (
-            hospital.ratings.map((r) => (
-              <div key={r._id} className={styles.reviewCard}>
-                <div className={styles.reviewHeaderRow}>
-                  <strong className={styles.reviewerName}>
-                    {r.userId?.name || "Anonymous"}
-                  </strong>
-
-                  <span className={styles.reviewDate}>
-                    {new Date(r.createdAt).toLocaleDateString()}
-                  </span>
-                </div>
-
-                <div className={styles.reviewRatingRow}>
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <Star
-                      key={star}
-                      size={18}
-                      className={
-                        r.rating >= star
-                          ? styles.starActive
-                          : styles.starInactive
-                      }
-                    />
-                  ))}
-                </div>
-
-                <p className={styles.reviewText}>{r.review}</p>
-              </div>
-            ))
-          )}
-        </div>
+        )}
       </div>
 
-      {/* LOGIN POPUP */}
-      {showLoginPopup && (
-        <div className={styles.popupOverlay}>
-          <div className={styles.popup}>
-            <h3>Login required</h3>
-            <p>Please login to continue</p>
-
-            <div className={styles.popupActions}>
-              <button className={styles.popupBtn} onClick={handleLogin}>
-                Login
-              </button>
-              <button
-                className={styles.popupBtnAlt}
-                onClick={() => setShowLoginPopup(false)}
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <div id="reviews-section" className={styles.sectionAnchor}>
+        <ReviewSection
+          title="Reviews"
+          count={totalReviews}
+          formTitle="Write a Review"
+          ratingValue={formRating}
+          onRatingChange={setFormRating}
+          reviewValue={formReview}
+          onReviewChange={setFormReview}
+          placeholder="Share your experience..."
+          onSubmit={submitReview}
+          submitting={submitting}
+          submitText="Submit Review"
+          submittingText="Submitting..."
+          reviews={hospital.ratings || []}
+          emptyText="No reviews yet."
+        />
+      </div>
     </div>
   );
 };
-
 export default HospitalDetails;

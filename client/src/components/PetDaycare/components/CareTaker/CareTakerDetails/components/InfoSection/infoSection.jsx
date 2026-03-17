@@ -10,13 +10,27 @@ import {
   MessageCircle,
 } from "lucide-react";
 import styles from "./infoSection.module.css";
-
+import { Button } from "../../../../../../common";
+import { formatAvailabilityDays } from "../../../../../../../utils/weekday";
 export default function InfoSection({
   caretaker,
   avg,
-  availabilityInfo,
   setShowForm,
 }) {
+  const dailyRate = Number(
+    caretaker.roleData?.hourlyRate ?? caretaker.roleData?.charges ?? 0,
+  );
+  const availabilityDayLabels = formatAvailabilityDays(
+    caretaker.availability?.days || [],
+  );
+
+  const formatTime = (time) => {
+    if (!time) return "";
+    const [h, m] = time.split(":").map(Number);
+    const ampm = h >= 12 ? "PM" : "AM";
+    const hours = h % 12 || 12;
+    return `${hours}:${(m || 0).toString().padStart(2, "0")} ${ampm}`;
+  };
   return (
     <div className={styles.rightBox}>
       <h2 className={styles.name}>
@@ -37,51 +51,63 @@ export default function InfoSection({
         </span>
 
         <span>
-          <BadgeIndianRupee /> {caretaker.roleData?.hourlyRate}/hour
+          <BadgeIndianRupee />{" "}
+          {dailyRate > 0 ? `₹${dailyRate}/day` : "Price on request"}
         </span>
 
         <span>
           <MapPin /> {caretaker.roleData?.daycareName}
         </span>
 
-        {caretaker.availability?.days && (
+        {availabilityDayLabels.length > 0 && (
           <span>
             <Calendar />
-            Available: {caretaker.availability.days.join(", ")}
+            Available: {availabilityDayLabels.join(", ")}
           </span>
         )}
 
         {caretaker.availability?.startTime && (
           <span>
             <Clock />
-            {caretaker.availability.startTime} -{" "}
-            {caretaker.availability.endTime}
+            {formatTime(caretaker.availability.startTime)} -{" "}
+            {formatTime(caretaker.availability.endTime)}
           </span>
         )}
       </div>
 
       <div className={styles.actions}>
-        <button
+        <Button
           className={styles.bookBtn}
           onClick={() => setShowForm(true)}
           disabled={!caretaker.availability?.available}
+          variant="primary"
+          size="md"
         >
           {caretaker.availability?.available
             ? "Book Caretaker"
             : "Currently Unavailable"}
-        </button>
+        </Button>
 
-        <a href={`tel:${caretaker.phone}`} className={styles.callBtn}>
-          <Phone /> Call
-        </a>
+        <Button
+          as="a"
+          href={`tel:${caretaker.phone}`}
+          className={styles.callBtn}
+          variant="outline"
+          size="md"
+        >
+          <Phone /> <span>Call</span>
+        </Button>
 
-        <a
+        <Button
+          as="a"
           href={`https://wa.me/${caretaker.phone}`}
           target="_blank"
           className={styles.wpBtn}
+          variant="success"
+          size="md"
         >
-          <MessageCircle /> WhatsApp
-        </a>
+          <MessageCircle /> <span>WhatsApp</span>
+        </Button>
       </div>
     </div>
   );

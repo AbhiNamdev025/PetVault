@@ -1,25 +1,16 @@
 import React from "react";
 import styles from "./statusPopup.module.css";
-
-const StatusPopup = ({ isOpen, onClose, onConfirm, status }) => {
+import { Button } from "../../../common";
+const StatusPopup = ({
+  isOpen,
+  onClose,
+  onConfirm,
+  status
+}) => {
   if (!isOpen) return null;
-
-  const statusText =
-    status === "confirmed"
-      ? "Confirm this order?"
-      : status === "delivered"
-      ? "Mark this order as delivered?"
-      : "Cancel this order?";
-
-  const confirmText =
-    status === "confirmed"
-      ? "Confirm Order"
-      : status === "delivered"
-      ? "Mark Delivered"
-      : "Cancel Order";
-
-  return (
-    <div className={styles.popupOverlay}>
+  const statusText = status === "confirmed" ? "Confirm this order?" : status === "delivered" ? "Mark this order as delivered?" : "Cancel this order?";
+  const confirmText = status === "confirmed" ? "Confirm Order" : status === "delivered" ? "Mark Delivered" : "Cancel Order";
+  return <div className={styles.popupOverlay}>
       <div className={styles.popupBox}>
         <h3>{statusText}</h3>
         <p>
@@ -29,19 +20,14 @@ const StatusPopup = ({ isOpen, onClose, onConfirm, status }) => {
         </p>
 
         <div className={styles.popupActions}>
-          <button className={styles.cancelBtn} onClick={onClose}>
+          <Button className={styles.cancelBtn} onClick={onClose} variant="ghost" size="md">
             No, Go Back
-          </button>
-          <button
-            className={`${styles.confirmBtn} ${styles[status]}`}
-            onClick={onConfirm}
-          >
+          </Button>
+          <Button className={`${styles.confirmBtn} ${styles[status]}`} onClick={onConfirm} variant="primary" size="md">
             {confirmText}
-          </button>
+          </Button>
         </div>
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default StatusPopup;

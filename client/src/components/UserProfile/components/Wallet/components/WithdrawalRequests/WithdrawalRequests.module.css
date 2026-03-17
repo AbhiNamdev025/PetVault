@@ -1,0 +1,170 @@
+.payoutCard {
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border-medium);
+  border-radius: var(--radius-2xl);
+  padding: var(--space-6);
+  box-shadow: var(--shadow-sm);
+}
+
+.payoutCard h3 {
+  margin: 0;
+  font-size: var(--font-size-lg);
+  color: var(--color-text-primary);
+  font-weight: var(--font-weight-bold);
+}
+
+.payoutHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+}
+
+.statusFilter {
+  max-width: 240px;
+  min-width: 140px;
+}
+
+.emptyHint {
+  margin: 0;
+  color: var(--color-text-tertiary);
+  font-size: var(--font-size-sm);
+  text-align: center;
+  padding: var(--space-8) 0;
+  border: 1px dashed var(--color-border-medium);
+  border-radius: var(--radius-xl);
+}
+
+.payoutList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.payoutRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-4) var(--space-5);
+  border: 1px solid var(--color-border-medium);
+  border-radius: var(--radius-xl);
+  background: var(--color-bg-primary);
+  transition: all var(--transition-base);
+}
+
+
+
+.payoutRowLeft {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.payoutRowLeft p {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+}
+
+.payoutRowLeft span {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  font-weight: var(--font-weight-medium);
+}
+
+.payoutRowMid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.payoutRowMid span {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-primary);
+  font-weight: var(--font-weight-bold);
+}
+
+.payoutRowMid small {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  font-weight: var(--font-weight-medium);
+}
+
+.payoutRowRight {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--space-1);
+  text-align: right;
+}
+
+.statusTag {
+  display: inline-flex;
+  align-items: center;
+  border-radius: var(--radius-full);
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.pending {
+  background: var(--color-warning-light);
+  color: var(--color-warning-dark);
+}
+
+.approved {
+  background: var(--color-primary-100);
+  color: var(--color-primary-700);
+}
+
+.processing {
+  background: var(--color-info-light);
+  color: var(--color-info-dark);
+}
+
+.disbursed {
+  background: var(--color-success-light);
+  color: var(--color-success);
+}
+
+.rejected {
+  background: var(--color-error-light);
+  color: var(--color-error-dark);
+}
+
+.cancelled {
+  background: var(--color-neutral-100);
+  color: var(--color-text-secondary);
+}
+
+.payoutRefText {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+.cancelRequestBtn {
+  border-color: var(--color-error-light) !important;
+  color: var(--color-error-dark) !important;
+}
+
+.payoutRowRight :global(.btn),
+.payoutRowRight button {
+  align-self: flex-start;
+}
+
+@media (max-width: 768px) {
+  .payoutHead {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .payoutRow {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

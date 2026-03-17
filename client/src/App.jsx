@@ -3,26 +3,57 @@ import { BrowserRouter as Router, useLocation } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import Navbar from "./components/Layout/Navbar/navbar";
 import Footer from "./components/Layout/Footer/footer";
+import ScrollToTop from "./components/ScrollToTop/scrollToTop";
+import ScrollRestoration from "./components/ScrollToTop/scrollRestoration";
+import NotificationPrompt from "./components/NotificationPrompt/NotificationPrompt";
 import AppRoutes from "./routes/appRoutes";
+import TermsAndConditionsModal from "./components/Layout/Footer/Terms/TermsAndConditionsModal";
 import "./styles/globals.css";
+import { CartProvider } from "./Context/CartContext";
 
 const AppContent = () => {
   const location = useLocation();
-  const hideHeaderFooter =
-    ["/login", "/register", "/admin"].includes(location.pathname) ||
+  const [showTerms, setShowTerms] = React.useState(false);
+  const hideOnAdmin =
+    ["/admin"].includes(location.pathname) ||
     location.pathname.startsWith("/admin/");
+  const hideNavbarOnProfile =
+    location.pathname === "/profile" ||
+    location.pathname.startsWith("/profile/");
+  const hideNavbar = hideOnAdmin || hideNavbarOnProfile;
+  const hideFooterOnProfile =
+    location.pathname === "/profile" ||
+    location.pathname.startsWith("/profile/") ||
+    location.pathname.startsWith("/user-pet");
+  const hideFooter = hideOnAdmin || hideFooterOnProfile;
 
   return (
     <div className="App">
-      {!hideHeaderFooter && <Navbar />}
-      <main>
-        <AppRoutes />
-      </main>
-      {!hideHeaderFooter && <Footer />}
+      <ScrollRestoration />
+      <CartProvider>
+        {!hideNavbar && <Navbar />}
+        <main
+          className={`appMain ${!hideNavbar ? "withNavbar" : ""}`}
+          data-scroll-root="true"
+        >
+          <ScrollToTop />
+
+          <AppRoutes />
+        </main>
+        {!hideFooter && (
+          <Footer setTermsAndConditionsPopup={setShowTerms} />
+        )}
+      </CartProvider>
+      {/* {!hideHeaderFooter && <ScrollToTop />} */}
+      <TermsAndConditionsModal
+        isOpen={showTerms}
+        onClose={() => setShowTerms(false)}
+      />
+      <NotificationPrompt />
       <Toaster
         position="top-right"
         toastOptions={{
-          duration: 3000,
+          duration: 1000,
           style: {
             background: "#363636",
             color: "#fff",

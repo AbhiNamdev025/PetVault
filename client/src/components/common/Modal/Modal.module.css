@@ -1,0 +1,259 @@
+/* ========================================
+   MODAL COMPONENT STYLES
+   ======================================== */
+
+.backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--color-bg-overlay);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: var(--z-modal);
+  padding: var(--space-4);
+  animation: none;
+}
+
+.modal {
+  background: var(--color-bg-primary);
+  border-radius: var(--radius-2xl);
+  max-height: 95vh;
+  overflow: hidden;
+  animation: none;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+/* ===== SIZES ===== */
+.sm {
+  width: 100%;
+  max-width: 380px;
+}
+
+.md {
+  width: 100%;
+  max-width: 550px;
+}
+
+.lg {
+  width: 100%;
+  max-width: 900px;
+}
+
+.xl {
+  width: 100%;
+  max-width: 1000px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-6) var(--space-6) var(--space-4) var(--space-6);
+  border-bottom: 1px solid var(--color-border-light);
+  background: var(--color-bg-primary);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.title {
+  font-family: var(--font-family);
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.closeButton {
+  background: transparent !important;
+  border: none !important;
+  color: var(--color-text-tertiary) !important;
+  cursor: pointer;
+  padding: 0 !important;
+  width: 32px !important;
+  height: 32px !important;
+  min-width: 32px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: var(--radius-full) !important;
+  transition: all var(--transition-base) !important;
+}
+
+.closeButton:hover {
+  background: var(--color-bg-secondary) !important;
+  color: var(--color-text-primary) !important;
+}
+
+/* ===== CONTENT ===== */
+.content {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  --modal-content-padding: var(--space-5);
+  --modal-content-pad-x: var(--modal-content-padding);
+  --modal-action-gap: var(--space-3);
+  --modal-action-pad-x: 0;
+  --modal-action-pad-bottom: 0;
+  padding: var(--modal-content-padding);
+  position: relative;
+  overscroll-behavior: contain;
+  gap: var(--modal-action-gap);
+}
+
+.contentNoPadding {
+  padding: 0;
+  --modal-content-padding: 0;
+  --modal-content-pad-x: 0;
+  --modal-action-gap: 0;
+  --modal-action-pad-x: var(--space-4);
+  --modal-action-pad-bottom: var(--space-3);
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+  border-top: 1px solid var(--color-border-light);
+  padding: var(--space-4) var(--space-5);
+  background: var(--color-bg-primary);
+}
+
+.content :global([data-modal-actions="true"]) {
+  position: sticky;
+  bottom: 0;
+  z-index: 15;
+  margin-top: auto !important;
+  background: var(--color-bg-primary);
+  padding: var(--space-4) var(--space-6) var(--space-6) var(--space-6);
+  border-top: 1px solid var(--color-border-light);
+  border-bottom-left-radius: inherit;
+  border-bottom-right-radius: inherit;
+  display: flex !important;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-3);
+}
+
+.content :global(form[data-modal-form-actions="true"]) {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Remove hover effects for buttons inside modals */
+.modal :global(button),
+.modal :global(a[role="button"]),
+.modal :global(input[type="button"]),
+.modal :global(input[type="submit"]),
+.modal :global([class*="Button_button"]) {
+  transition: none !important;
+}
+
+.modal :global(button:hover),
+.modal :global(a[role="button"]:hover),
+.modal :global(input[type="button"]:hover),
+.modal :global(input[type="submit"]:hover),
+.modal :global([class*="Button_button"]:hover) {
+  transform: none !important;
+  box-shadow: none !important;
+  filter: none !important;
+}
+
+.modal
+  :global([class*="Button_primary"]:hover:not([class*="Button_disabled"])) {
+  background: linear-gradient(
+    135deg,
+    var(--color-primary-600),
+    var(--color-primary-500)
+  ) !important;
+}
+
+.modal
+  :global([class*="Button_secondary"]:hover:not([class*="Button_disabled"])) {
+  background: var(--color-neutral-100) !important;
+  border-color: var(--color-border-medium) !important;
+  color: var(--color-text-primary) !important;
+}
+
+.modal
+  :global([class*="Button_outline"]:hover:not([class*="Button_disabled"])) {
+  background: transparent !important;
+  border-color: var(--color-primary-500) !important;
+  color: var(--color-primary-600) !important;
+}
+
+.modal :global([class*="Button_danger"]:hover:not([class*="Button_disabled"])) {
+  background: var(--color-error) !important;
+}
+
+.modal
+  :global([class*="Button_success"]:hover:not([class*="Button_disabled"])) {
+  background: var(--color-success) !important;
+}
+
+.modal :global([class*="Button_ghost"]:hover:not([class*="Button_disabled"])) {
+  background: transparent !important;
+  border-color: var(--color-border-medium) !important;
+  color: var(--color-text-secondary) !important;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .backdrop {
+    padding: var(--space-2);
+  }
+
+  .modal {
+    max-height: 90vh;
+  }
+
+  .header {
+    padding: var(--space-4);
+  }
+
+  .title {
+    font-size: var(--font-size-lg);
+  }
+
+  .content {
+    --modal-content-padding: var(--space-3);
+    --modal-content-pad-x: var(--space-3);
+    --modal-action-gap: var(--space-2);
+    --modal-action-pad-x: 0;
+    --modal-action-pad-bottom: 0;
+    padding: var(--modal-content-padding);
+  }
+
+  .contentNoPadding {
+    --modal-action-pad-x: var(--space-3);
+    --modal-action-pad-bottom: var(--space-2);
+  }
+
+  .contentNoPaddingMobile {
+    --modal-content-padding: 0;
+    --modal-content-pad-x: 0;
+    --modal-action-gap: 0;
+    --modal-action-pad-x: var(--space-3);
+    --modal-action-pad-bottom: var(--space-2);
+    padding: 0;
+  }
+
+  .footer {
+    padding: var(--space-4);
+  }
+
+  .content :global([data-modal-actions="true"]) {
+    bottom: 0;
+    padding: var(--space-3) var(--modal-action-pad-x);
+  }
+}

@@ -1,0 +1,146 @@
+.section {
+  border: 1px solid var(--color-border-medium);
+  border-radius: var(--radius-2xl);
+  background: var(--color-bg-primary);
+  padding: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-section-gap-sm);
+}
+
+.header {
+  margin-bottom: 0;
+}
+
+.formRow {
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-xl);
+  padding: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  background: var(--color-bg-secondary);
+}
+
+.formHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  width: 100%;
+}
+
+.formTitle {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+}
+
+.formDescription {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+}
+
+.starRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.starButton {
+  padding: var(--space-1);
+  border: 0;
+  background: transparent;
+  color: inherit;
+}
+
+.starButton:hover {
+  transform: none;
+}
+
+.starFilled {
+  color: var(--color-warning);
+}
+
+.starEmpty {
+  color: var(--color-border-dark);
+}
+
+.submitButton {
+  width: fit-content;
+  min-width: 180px;
+}
+
+.sliderRow {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-3);
+  align-items: stretch;
+}
+
+.reviewCard,
+.emptyCard {
+  min-height: 150px;
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-xl);
+  background: var(--color-bg-secondary);
+  padding: var(--space-4);
+  min-width: 0;
+}
+
+.emptyCard {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-secondary);
+  text-align: center;
+}
+
+.reviewHeader {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-2);
+  margin-bottom: var(--space-2);
+}
+
+.reviewer {
+  color: var(--color-text-primary);
+  font-size: var(--font-size-sm);
+}
+
+.reviewDate {
+  color: var(--color-text-tertiary);
+  font-size: var(--font-size-xs);
+}
+
+.reviewStars {
+  display: flex;
+  gap: 2px;
+  margin-bottom: var(--space-2);
+}
+
+.reviewText {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-normal);
+  white-space: pre-wrap;
+}
+
+@media (max-width: 768px) {
+  .section {
+    padding: var(--space-4);
+  }
+
+  .formRow {
+    padding: var(--space-4);
+  }
+
+  .sliderRow {
+    grid-template-columns: 1fr;
+  }
+
+  .reviewCard,
+  .emptyCard {
+    min-height: 130px;
+  }
+}

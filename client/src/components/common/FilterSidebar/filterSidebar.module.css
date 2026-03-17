@@ -1,0 +1,198 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: color-mix(in srgb, var(--color-neutral-900) 40%, transparent);
+  backdrop-filter: blur(4px);
+  z-index: var(--z-modal-backdrop);
+  animation: fadeIn 0.3s ease;
+}
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: min(360px, 100vw);
+  background: var(--color-bg-primary);
+  z-index: var(--z-modal);
+  box-shadow: -5px 0 25px color-mix(in srgb, var(--color-neutral-900) 10%, transparent);
+  display: flex;
+  flex-direction: column;
+  animation: slideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  padding: var(--space-4);
+  border-bottom: 1px solid var(--color-border-medium);
+  background: var(--color-bg-primary);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header h3 {
+  margin: 0;
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+}
+
+.closeBtn {
+  background: none;
+  border: none;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  padding: var(--space-2);
+  border-radius: var(--radius-md);
+  transition: all var(--transition-base);
+}
+
+.closeBtn:hover {
+  background: var(--color-bg-secondary);
+  color: var(--color-text-primary);
+}
+
+.content {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.filterSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.filterSection label {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  text-transform: capitalize;
+  letter-spacing: 0.04em;
+}
+
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sectionHeader button {
+  background: none;
+  border: none;
+  color: var(--color-primary-500);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+}
+
+.searchWrapper {
+  position: relative;
+}
+
+.searchWrapper svg {
+  position: absolute;
+  left: var(--space-4);
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-text-tertiary);
+}
+
+.searchWrapper input {
+  width: 100%;
+  padding: var(--space-3) var(--space-4) var(--space-3) var(--space-11);
+  border: 1px solid var(--color-border-medium);
+  border-radius: var(--radius-md);
+  background: var(--color-bg-secondary);
+  font-size: var(--font-size-sm);
+}
+
+.optionsList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  align-items: flex-start;
+}
+
+.optionItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  cursor: pointer;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+.optionItem input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--color-primary-500);
+}
+
+.count {
+  margin-left: auto;
+  color: var(--color-text-tertiary);
+  font-size: var(--font-size-xs);
+  background: var(--color-bg-tertiary);
+  padding: 0.1rem 0.45rem;
+  border-radius: var(--radius-sm);
+}
+.resetBtnWrapper {
+  position: sticky;
+  bottom: 0;
+  padding: var(--space-4);
+  border-top: 1px solid var(--color-border-medium);
+  background: var(--color-bg-primary);
+}
+
+.resetBtn {
+  width: 100%;
+  padding: var(--space-3);
+  background: var(--color-bg-tertiary);
+  border: 1px solid var(--color-border-medium);
+  border-radius: var(--radius-lg);
+  color: var(--color-text-secondary);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.resetBtn:hover {
+  background: var(--color-border-medium);
+  color: var(--color-text-primary);
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    max-width: 70%;
+  }
+
+  .header {
+    padding: var(--space-4);
+  }
+}

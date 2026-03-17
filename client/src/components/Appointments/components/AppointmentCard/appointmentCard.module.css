@@ -1,0 +1,149 @@
+/* ========================================
+   APPOINTMENTS - CARD STYLES
+   ======================================== */
+
+.card {
+  background: var(--color-neutral-50);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--color-border-light);
+  padding: var(--space-6);
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-base);
+  cursor: pointer;
+}
+
+.card:hover {
+  
+  box-shadow: 0 15px 35px color-mix(in srgb, var(--color-primary-600) 15%, transparent);
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-4);
+}
+
+.serviceType {
+  font-family: var(--font-family);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  font-size: var(--font-size-lg);
+}
+
+.statusBadge {
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-sm);
+  font-family: var(--font-family);
+  font-weight: var(--font-weight-semibold);
+  text-transform: capitalize;
+}
+
+.pending {
+  background: var(--color-warning-light);
+  color: var(--color-warning-dark);
+}
+
+.confirmed {
+  background: var(--color-success-light);
+  color: var(--color-success-dark);
+}
+
+.completed {
+  background: var(--color-info-light);
+  color: var(--color-info-dark);
+}
+
+.cancelled {
+  background: var(--color-error-light);
+  color: var(--color-error-dark);
+}
+
+.cardBody {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.petInfo,
+.detail {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--color-text-secondary);
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+}
+
+.cancellationReason {
+  background: var(--color-error-light);
+  color: var(--color-error-dark);
+  border: 1px solid var(--color-error-light);
+  padding: var(--space-2);
+  border-radius: var(--radius-md);
+  align-items: flex-start;
+}
+
+.providerBar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) 0;
+  border-bottom: 1px solid var(--color-border-medium);
+  margin-bottom: var(--space-3);
+}
+
+.providerImg {
+  width: 50px;
+  height: 50px;
+  border-radius: var(--radius-full);
+  object-fit: contain;
+}
+
+.providerName {
+  font-family: var(--font-family);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-md);
+  color: var(--color-text-primary);
+}
+
+.providerInfo {
+  font-family: var(--font-family);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+.cancelBtn {
+  margin-top: var(--space-4);
+  width: 100%;
+  background: var(--color-error-light);
+  color: var(--color-error-dark);
+  border: none;
+  border-radius: var(--radius-lg);
+  padding: var(--space-2);
+  font-family: var(--font-family);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+}
+
+.cancelBtn:hover {
+  background: var(--color-error-dark);
+  color: var(--color-text-inverse);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 600px) {
+  .card {
+    padding: var(--space-5);
+  }
+
+  .serviceType {
+    font-size: var(--font-size-base);
+  }
+}

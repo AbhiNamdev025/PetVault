@@ -1,0 +1,39 @@
+
+.authModal {
+  width: 100%;
+  max-width: 650px !important;
+}
+
+.tabs {
+  display: flex;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+}
+
+.tabs button {
+  flex: 1;
+  padding: var(--space-2);
+  border-radius: var(--radius-lg);
+  border: none;
+  font-family: var(--font-family);
+  font-weight: var(--font-weight-bold);
+  cursor: pointer;
+  background: var(--color-neutral-200);
+  color: var(--color-text-secondary);
+  transition: all var(--transition-fast);
+}
+
+.active {
+  background: linear-gradient(
+    135deg,
+    var(--color-primary-600),
+    var(--color-primary-800)
+  ) !important;
+  color: var(--color-text-inverse) !important;
+}
+
+@media (max-width: 768px) {
+  .authModal {
+    max-width: calc(100vw - var(--space-4)) !important;
+  }
+}

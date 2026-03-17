@@ -1,30 +1,44 @@
 import React, { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import styles from "./orderManagement.module.css";
 import { API_BASE_URL } from "../../../utils/constants";
 import toast from "react-hot-toast";
-import {
-  Package,
-  CheckCircle,
-  Clock,
-  XCircle,
-  Truck,
-  User,
-  Filter,
-  Trash2,
-} from "lucide-react";
 import StatusPopup from "./Status Popup/statusPopup";
+import OrderDetailsModal from "./OrderDetailsModal";
+import { GridSkeleton } from "../../Skeletons";
+import DeleteConfirmationModal from "../DeleteConfirmationModal/deleteConfirmationModal";
+import FilterSidebar from "../../common/FilterSidebar/FilterSidebar";
+import OrderHeader from "./components/OrderHeader";
+import OrderList from "./components/OrderList";
+import { Pagination } from "../../common";
 
 const OrderManagement = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
   const [orders, setOrders] = useState([]);
-  const [filteredOrders, setFilteredOrders] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [statusFilter, setStatusFilter] = useState("all");
+  const [view, setView] = useState("list"); // 'list' or 'details'
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [showFilters, setShowFilters] = useState(false);
+  const [filters, setFilters] = useState({
+    status: "all",
+    period: "all",
+  });
+
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+
   const [popup, setPopup] = useState({
     open: false,
     orderId: null,
     newStatus: "",
   });
   const [updatingId, setUpdatingId] = useState(null);
+
+  // New Delete Modal state
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [orderToDelete, setOrderToDelete] = useState(null);
 
   const fetchOrders = async () => {
     try {
@@ -36,7 +50,6 @@ const OrderManagement = () => {
       const data = await res.json();
       if (res.ok) {
         setOrders(data);
-        setFilteredOrders(data);
       } else toast.error(data.message || "Failed to fetch orders");
     } catch {
       toast.error("Error fetching orders");
@@ -49,10 +62,63 @@ const OrderManagement = () => {
     fetchOrders();
   }, []);
 
+  // Handle order detail navigation from global search
   useEffect(() => {
-    if (statusFilter === "all") setFilteredOrders(orders);
-    else setFilteredOrders(orders.filter((o) => o.status === statusFilter));
-  }, [orders, statusFilter]);
+    if (location.state?.orderId && orders.length > 0 && !selectedOrder) {
+      const order = orders.find((o) => o._id === location.state.orderId);
+      if (order) {
+        setSelectedOrder(order);
+        setView("details");
+        // Clear the state after opening
+        navigate(location.pathname + location.search, {
+          replace: true,
+          state: { ...location.state, orderId: null },
+        });
+      }
+    }
+  }, [
+    location.state,
+    orders,
+    selectedOrder,
+    navigate,
+    location.pathname,
+    location.search,
+  ]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [filters]);
+
+  const filteredOrders = React.useMemo(() => {
+    let result = orders;
+    if (filters.status !== "all") {
+      result = result.filter((o) => o.status === filters.status);
+    }
+    if (filters.period !== "all") {
+      const now = new Date();
+      const start = new Date(now);
+      switch (filters.period) {
+        case "today":
+          start.setHours(0, 0, 0, 0);
+          break;
+        case "week": {
+          const day = now.getDay();
+          const diff = day === 0 ? 6 : day - 1;
+          start.setDate(now.getDate() - diff);
+          start.setHours(0, 0, 0, 0);
+          break;
+        }
+        case "month":
+          start.setDate(1);
+          start.setHours(0, 0, 0, 0);
+          break;
+        default:
+          break;
+      }
+      result = result.filter((o) => new Date(o.createdAt) >= start);
+    }
+    return result;
+  }, [orders, filters]);
 
   const handleStatusUpdate = async () => {
     const { orderId, newStatus } = popup;
@@ -74,8 +140,13 @@ const OrderManagement = () => {
       if (res.ok) {
         toast.success(`Order marked as ${newStatus}`);
         setOrders((prev) =>
-          prev.map((o) => (o._id === orderId ? { ...o, status: newStatus } : o))
+          prev.map((o) =>
+            o._id === orderId ? { ...o, status: newStatus } : o,
+          ),
         );
+        if (selectedOrder && selectedOrder._id === orderId) {
+          setSelectedOrder({ ...selectedOrder, status: newStatus });
+        }
       } else {
         toast.error("Failed to update order status");
       }
@@ -87,172 +158,130 @@ const OrderManagement = () => {
     }
   };
 
-  const handleDeleteOrder = async (id) => {
+  const confirmDeleteOrder = async () => {
+    if (!orderToDelete) return;
+
     try {
       const token =
         localStorage.getItem("token") || sessionStorage.getItem("token");
-      const res = await fetch(`${API_BASE_URL}/orders/${id}`, {
+      const res = await fetch(`${API_BASE_URL}/orders/${orderToDelete}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       });
 
       if (res.ok) {
-        setOrders((prev) => prev.filter((o) => o._id !== id));
-        toast.info("Order deleted");
+        setOrders((prev) => prev.filter((o) => o._id !== orderToDelete));
+        toast.success("Order deleted");
+        if (selectedOrder?._id === orderToDelete) {
+          setView("list");
+          setSelectedOrder(null);
+        }
       } else {
         toast.error("Failed to delete order");
       }
     } catch {
       toast.error("Error deleting order");
+    } finally {
+      setShowDeleteModal(false);
+      setOrderToDelete(null);
     }
   };
 
-  const renderStatusIcon = (status) => {
-    if (status === "confirmed")
-      return (
-        <CheckCircle className={`${styles.statusIcon} ${styles.confirmed}`} />
-      );
-    else if (status === "shipped")
-      return <Truck className={`${styles.statusIcon} ${styles.shipped}`} />;
-    else if (status === "delivered")
-      return <Package className={`${styles.statusIcon} ${styles.delivered}`} />;
-    else if (status === "cancelled")
-      return <XCircle className={`${styles.statusIcon} ${styles.cancelled}`} />;
-    else return <Clock className={`${styles.statusIcon} ${styles.pending}`} />;
+  const handleViewDetails = (order) => {
+    setSelectedOrder(order);
+    setView("details");
   };
 
-  if (loading) return <div className={styles.loading}>Loading orders...</div>;
+  const handleBackToList = () => {
+    setView("list");
+    setSelectedOrder(null);
+  };
+
+  const triggerStatusUpdate = (id, status) => {
+    setPopup({
+      open: true,
+      orderId: id,
+      newStatus: status,
+    });
+  };
+
+  const triggerDelete = (id) => {
+    setOrderToDelete(id);
+    setShowDeleteModal(true);
+  };
+
+  if (loading) return <GridSkeleton count={8} />;
+
+  const hasActiveFilters = filters.status !== "all" || filters.period !== "all";
+
+  const filterOptions = [
+    {
+      id: "status",
+      label: "Order Status",
+      values: [
+        { id: "all", label: "All Orders" },
+        { id: "pending", label: "Pending" },
+        { id: "confirmed", label: "Confirmed" },
+        { id: "delivered", label: "Delivered" },
+        { id: "cancelled", label: "Cancelled" },
+      ],
+    },
+    {
+      id: "period",
+      label: "Time Period",
+      values: [
+        { id: "all", label: "All Time" },
+        { id: "today", label: "Today" },
+        { id: "week", label: "This Week" },
+        { id: "month", label: "This Month" },
+      ],
+    },
+  ];
 
   return (
     <div className={styles.orderManagement}>
-      <div className={styles.headerBar}>
-        <h1 className={styles.title}>Order Management</h1>
-        <div className={styles.filterBar}>
-          <Filter size={18} />
-          <select
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
-            className={styles.filterSelect}
-          >
-            <option value="all">All</option>
-            <option value="pending">Pending</option>
-            <option value="confirmed">Confirmed</option>
-            <option value="delivered">Delivered</option>
-            <option value="cancelled">Cancelled</option>
-          </select>
-        </div>
-      </div>
+      <FilterSidebar
+        isOpen={showFilters}
+        onClose={() => setShowFilters(false)}
+        filters={filters}
+        setFilters={setFilters}
+        options={filterOptions}
+        onReset={() => setFilters({ status: "all", period: "all" })}
+        showSearch={false}
+      />
+      {view === "list" ? (
+        <>
+          <OrderHeader
+            onOpenFilters={() => setShowFilters(true)}
+            hasActiveFilters={hasActiveFilters}
+          />
 
-      {filteredOrders.length === 0 ? (
-        <div className={styles.emptyState}>
-          <Package size={60} />
-          <h2>No Orders Found</h2>
-        </div>
+          <OrderList
+            orders={filteredOrders.slice(
+              (currentPage - 1) * itemsPerPage,
+              currentPage * itemsPerPage,
+            )}
+            onViewDetails={handleViewDetails}
+            onDelete={triggerDelete}
+            onStatusUpdate={triggerStatusUpdate}
+            updatingId={updatingId}
+          />
+
+          <Pagination
+            currentPage={currentPage}
+            totalPages={Math.ceil(filteredOrders.length / itemsPerPage)}
+            onPageChange={setCurrentPage}
+            showPageInfo={true}
+            className={styles.pagination}
+          />
+        </>
       ) : (
-        <div className={styles.ordersGrid}>
-          {filteredOrders.map((order) => (
-            <div key={order._id} className={styles.orderCard}>
-              <div className={styles.header}>
-                <div>
-                  <h3>#{order._id.slice(-8)}</h3>
-                  <p>{new Date(order.createdAt).toLocaleDateString()}</p>
-                </div>
-                <button
-                  className={styles.deleteBtn}
-                  onClick={() => handleDeleteOrder(order._id)}
-                >
-                  <Trash2 size={18} />
-                </button>
-                <div className={styles.status}>
-                  {renderStatusIcon(order.status)}
-                  <span
-                    className={`${styles.statusText} ${styles[order.status]}`}
-                  >
-                    {order.status}
-                  </span>
-                </div>
-              </div>
-
-              <div className={styles.userInfo}>
-                <User size={18} />
-                <p>
-                  {order.user?.name || "Unknown"} •{" "}
-                  <span>{order.user?.email || "No Email"}</span>
-                </p>
-              </div>
-
-              <div className={styles.items}>
-                {order.items.map((item, i) => (
-                  <div key={i} className={styles.item}>
-                    <span>{item.name}</span>
-                    <span>×{item.quantity}</span>
-                    <strong>₹{item.price.toFixed(2)}</strong>
-                  </div>
-                ))}
-              </div>
-
-              <div className={styles.footer}>
-                <p>
-                  <strong>Total:</strong> ₹{order.totalAmount.toFixed(2)}
-                </p>
-                <p>
-                  <strong>Payment:</strong> {order.paymentMethod}
-                </p>
-              </div>
-
-              <div className={styles.actions}>
-                {order.status !== "cancelled" &&
-                  order.status !== "delivered" && (
-                    <>
-                      {order.status === "pending" && (
-                        <button
-                          onClick={() =>
-                            setPopup({
-                              open: true,
-                              orderId: order._id,
-                              newStatus: "confirmed",
-                            })
-                          }
-                          disabled={updatingId === order._id}
-                          className={styles.confirmBtn}
-                        >
-                          Confirm
-                        </button>
-                      )}
-                      {order.status === "confirmed" && (
-                        <button
-                          onClick={() =>
-                            setPopup({
-                              open: true,
-                              orderId: order._id,
-                              newStatus: "delivered",
-                            })
-                          }
-                          disabled={updatingId === order._id}
-                          className={styles.deliverBtn}
-                        >
-                          Mark Delivered
-                        </button>
-                      )}
-                      <button
-                        onClick={() =>
-                          setPopup({
-                            open: true,
-                            orderId: order._id,
-                            newStatus: "cancelled",
-                          })
-                        }
-                        disabled={updatingId === order._id}
-                        className={styles.cancelBtn}
-                      >
-                        Cancel
-                      </button>
-                    </>
-                  )}
-              </div>
-            </div>
-          ))}
-        </div>
+        <OrderDetailsModal
+          order={selectedOrder}
+          onBack={handleBackToList}
+          onStatusUpdate={triggerStatusUpdate}
+          onDelete={triggerDelete}
+        />
       )}
 
       <StatusPopup
@@ -261,6 +290,19 @@ const OrderManagement = () => {
         onConfirm={handleStatusUpdate}
         status={popup.newStatus}
       />
+
+      {showDeleteModal && (
+        <DeleteConfirmationModal
+          isOpen={showDeleteModal}
+          onClose={() => {
+            setShowDeleteModal(false);
+            setOrderToDelete(null);
+          }}
+          onConfirm={confirmDeleteOrder}
+          itemType="order"
+          itemName={`#${orderToDelete?.slice(-8).toUpperCase()}`}
+        />
+      )}
     </div>
   );
 };

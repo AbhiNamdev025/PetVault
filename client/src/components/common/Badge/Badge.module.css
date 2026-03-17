@@ -1,0 +1,103 @@
+/* ========================================
+   BADGE COMPONENT STYLES
+   ======================================== */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  font-family: var(--font-family);
+  font-weight: var(--font-weight-semibold);
+  border-radius: var(--radius-full);
+  white-space: nowrap;
+  line-height: 1.2;
+}
+
+/* ===== SIZES ===== */
+.sm {
+  font-size: var(--font-size-xs);
+  padding: var(--space-1) var(--space-3);
+}
+
+.md {
+  font-size: var(--font-size-sm);
+  padding: var(--space-2) var(--space-4);
+}
+
+.lg {
+  font-size: var(--font-size-base);
+  padding: var(--space-3) var(--space-5);
+}
+
+/* ===== VARIANTS ===== */
+.primary {
+  background: var(--color-primary-500);
+  color: var(--color-text-inverse);
+}
+
+.secondary {
+  background: var(--color-neutral-200);
+  color: var(--color-text-primary);
+}
+
+.success {
+  background: var(--color-success);
+  color: var(--color-text-inverse);
+}
+
+.warning {
+  background: var(--color-warning);
+  color: var(--color-text-inverse);
+}
+
+.danger {
+  background: var(--color-error);
+  color: var(--color-text-inverse);
+}
+
+.error {
+  background: var(--color-error);
+  color: var(--color-text-inverse);
+}
+
+.info {
+  background: var(--color-info);
+  color: var(--color-text-inverse);
+}
+
+/* Soft variants (light background) */
+.primary-soft {
+  background: var(--color-primary-100);
+  color: var(--color-primary-700);
+}
+
+.success-soft {
+  background: var(--color-success-light);
+  color: var(--color-success-dark);
+}
+
+.warning-soft {
+  background: var(--color-warning-light);
+  color: var(--color-warning-dark);
+}
+
+.danger-soft {
+  background: var(--color-error-light);
+  color: var(--color-error-dark);
+}
+
+.accent {
+  background: var(--color-secondary-100);
+  color: var(--color-secondary-700);
+}
+
+.error-soft {
+  background: var(--color-error-light);
+  color: var(--color-error-dark);
+}
+
+.info-soft {
+  background: var(--color-info-light);
+  color: var(--color-info-dark);
+}

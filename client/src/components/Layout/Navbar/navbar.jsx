@@ -1,59 +1,179 @@
-import React, { useState, useEffect, useRef } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import {
-  PawPrint,
-  Menu,
-  X,
-  User,
-  ShoppingCart,
-  ChevronDown,
-  LogOut,
-} from "lucide-react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import styles from "./navbar.module.css";
 import { BASE_URL } from "../../../utils/constants";
+import AuthModal from "../../Auth/AuthModal/authModal";
+import {
+  AUTH_STATE_CHANGED_EVENT,
+  emitAuthStateChanged,
+} from "../../../utils/authState";
+
+// Subcomponents
+import Logo from "./Logo/Logo";
+import DesktopMenu from "./DesktopMenu/DesktopMenu";
+import AdminButton from "./AdminButton/AdminButton";
+import CartButton from "./CartButton/CartButton";
+import UserDropdown from "./UserDropdown/UserDropdown";
+import LoginButton from "./LoginButton/LoginButton";
+import MobileToggle from "./MobileToggle/MobileToggle";
+import MobileMenu from "./MobileMenu/MobileMenu";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [user, setUser] = useState(null);
-  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [authDefaultView, setAuthDefaultView] = useState("login");
+  const [storedUser, setStoredUser] = useState(null);
+  const refreshRequestIdRef = useRef(0);
   const location = useLocation();
   const navigate = useNavigate();
-  const dropdownRef = useRef(null);
 
-  useEffect(() => {
-    checkUserLogin();
-  }, []);
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setDropdownOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
-  const checkUserLogin = () => {
-    const token =
-      localStorage.getItem("token") || sessionStorage.getItem("token");
-    const userData =
-      localStorage.getItem("user") || sessionStorage.getItem("user");
-    if (token && userData) {
-      setUser(JSON.parse(userData));
-    } else {
-      setUser(null);
+  const readStoredUser = () => {
+    try {
+      return (
+        JSON.parse(localStorage.getItem("user")) ||
+        JSON.parse(sessionStorage.getItem("user"))
+      );
+    } catch {
+      localStorage.removeItem("user");
+      sessionStorage.removeItem("user");
+      return null;
     }
   };
 
+  const normalizeAvatarUser = useCallback(async () => {
+    const stored = readStoredUser();
+    const token =
+      localStorage.getItem("token") || sessionStorage.getItem("token");
+    if (!stored || !token) return null;
+    if (stored.avatar) return stored;
+
+    try {
+      const res = await fetch(`${BASE_URL}/api/user/${stored._id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!res.ok) {
+        if (res.status === 401 || res.status === 403) {
+          localStorage.removeItem("token");
+          localStorage.removeItem("user");
+          sessionStorage.removeItem("token");
+          sessionStorage.removeItem("user");
+          return null;
+        }
+        return stored;
+      }
+
+      const freshUser = await res.json();
+      localStorage.setItem("user", JSON.stringify(freshUser));
+      sessionStorage.setItem("user", JSON.stringify(freshUser));
+      return freshUser;
+    } catch {
+      return stored;
+    }
+  }, []);
+
+  const refreshUser = useCallback(async () => {
+    const requestId = ++refreshRequestIdRef.current;
+    const user = await normalizeAvatarUser();
+    if (requestId !== refreshRequestIdRef.current) return;
+    setStoredUser(user);
+  }, [normalizeAvatarUser]);
+
+  useEffect(() => {
+    refreshUser();
+  }, [refreshUser]);
+
+  useEffect(() => {
+    refreshUser();
+  }, [location.pathname, location.search, refreshUser]);
+
+  useEffect(() => {
+    const handleAuthStateChanged = () => {
+      refreshUser();
+    };
+    const handleStorageChange = (event) => {
+      if (!event.key || event.key === "token" || event.key === "user") {
+        refreshUser();
+      }
+    };
+    window.addEventListener(AUTH_STATE_CHANGED_EVENT, handleAuthStateChanged);
+    window.addEventListener("storage", handleStorageChange);
+    return () => {
+      window.removeEventListener(
+        AUTH_STATE_CHANGED_EVENT,
+        handleAuthStateChanged,
+      );
+      window.removeEventListener("storage", handleStorageChange);
+    };
+  }, [refreshUser]);
+
+  // Close mobile menu on route change
+  useEffect(() => {
+    setIsOpen(false);
+  }, [location.pathname]);
+
+  // Handle automatic auth modal opening from route state/query.
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const queryAuth = params.get("auth");
+    const shouldOpenFromState =
+      location.state?.openAuthModal || location.state?.openLogin;
+    const shouldOpen = Boolean(shouldOpenFromState || queryAuth);
+
+    if (!shouldOpen) return;
+
+    const nextView =
+      queryAuth === "signup" || location.state?.authView === "signup"
+        ? "signup"
+        : "login";
+    setAuthDefaultView(nextView);
+    setShowAuthModal(true);
+
+    const cleanState =
+      location.state && typeof location.state === "object"
+        ? { ...location.state }
+        : {};
+    delete cleanState.openAuthModal;
+    delete cleanState.openLogin;
+    delete cleanState.authView;
+
+    if (queryAuth) {
+      params.delete("auth");
+      const nextSearch = params.toString();
+      navigate(
+        {
+          pathname: location.pathname,
+          search: nextSearch ? `?${nextSearch}` : "",
+        },
+        { replace: true, state: cleanState },
+      );
+    } else {
+      navigate(`${location.pathname}${location.search}`, {
+        replace: true,
+        state: cleanState,
+      });
+    }
+  }, [location.pathname, location.search, location.state, navigate]);
+
+  const handleOpenLoginModal = () => {
+    setAuthDefaultView("login");
+    setShowAuthModal(true);
+  };
+
+  const handleCloseAuthModal = () => {
+    setAuthDefaultView("login");
+    setShowAuthModal(false);
+  };
+
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    sessionStorage.removeItem("token");
-    sessionStorage.removeItem("user");
-    localStorage.removeItem("rememberMe");
-    setUser(null);
-    navigate("/login");
+    refreshRequestIdRef.current += 1;
+    localStorage.clear();
+    sessionStorage.clear();
+    setStoredUser(null);
+    emitAuthStateChanged({ status: "logged_out", source: "navbar" });
+    navigate("/", { state: { openLogin: true } });
   };
 
   const navItems = [
@@ -68,179 +188,47 @@ const Navbar = () => {
   return (
     <nav className={styles.navbar}>
       <div className={`container ${styles.navContainer}`}>
-        <Link to="/" className={styles.logo}>
-          <PawPrint className={styles.logoIcon} />
-          <span>PetVault</span>
-        </Link>
+        {/* LOGO */}
+        <Logo />
 
-        <div className={styles.navMenu}>
-          {navItems.map((item) => (
-            <Link
-              key={item.path}
-              to={item.path}
-              className={`${styles.navLink} ${
-                location.pathname === item.path ? styles.activeLink : ""
-              }`}
-            >
-              {item.label}
-            </Link>
-          ))}
-        </div>
+        {/* DESKTOP MENU */}
+        <DesktopMenu navItems={navItems} />
 
+        {/* ACTIONS */}
         <div className={styles.navActions}>
-          {user ? (
-            <div className={styles.userMenu} ref={dropdownRef}>
-              <button
-                className={styles.userButton}
-                onClick={() => setDropdownOpen((prev) => !prev)}
-              >
-                <img
-                  src={
-                    user.avatar
-                      ? `${BASE_URL}/uploads/avatars/${user.avatar}`
-                      : "https://i.pinimg.com/236x/d5/ef/b5/d5efb56c3aff04b52ef374e9ae99eb39.jpg"
-                  }
-                  className={styles.avatar}
-                  alt="avatar"
-                />
+          <AdminButton user={storedUser} />
 
-                <ChevronDown size={16} />
-              </button>
-
-              {dropdownOpen && (
-                <div className={styles.dropdownMenu}>
-                  <Link
-                    to="/profile"
-                    className={styles.dropdownItem}
-                    onClick={() => setDropdownOpen(false)}
-                  >
-                    Profile
-                  </Link>
-                  <Link
-                    to="/my-orders"
-                    className={styles.dropdownItem}
-                    onClick={() => setDropdownOpen(false)}
-                  >
-                    My Orders
-                  </Link>
-                  <Link
-                    to="/my-appointments"
-                    className={styles.dropdownItem}
-                    onClick={() => setDropdownOpen(false)}
-                  >
-                    My Appointments
-                  </Link>
-                  <button
-                    onClick={handleLogout}
-                    className={`${styles.dropdownItem} ${styles.mobileItem}`}
-                  >
-                    <LogOut size={16} />
-                    Logout
-                  </button>
-                </div>
-              )}
-            </div>
+          {storedUser ? (
+            <UserDropdown user={storedUser} onLogout={handleLogout} />
           ) : (
-            <Link to="/login" className={styles.authLink}>
-              <User size={18} />
-              <span>Login</span>
-            </Link>
+            <LoginButton onClick={handleOpenLoginModal} />
           )}
 
-          <button className={styles.cartBtn} onClick={() => navigate("/cart")}>
-            <ShoppingCart size={18} />
-            <span className={styles.cartCount}>●</span>
-          </button>
+          <CartButton />
         </div>
 
-        <button
-          className={styles.mobileToggle}
-          onClick={() => setIsOpen(!isOpen)}
-        >
-          {isOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
-
-        {isOpen && (
-          <div className={styles.mobileDropdown}>
-            {navItems.map((item) => (
-              <Link
-                key={item.path}
-                to={item.path}
-                className={styles.mobileItem}
-                onClick={() => setIsOpen(false)}
-              >
-                {item.label}
-              </Link>
-            ))}
-
-            <div className={styles.divider}></div>
-
-            {user ? (
-              <>
-                <Link
-                  to="/profile"
-                  className={styles.mobileItem}
-                  onClick={() => setIsOpen(false)}
-                >
-                  Profile
-                </Link>
-
-                <Link
-                  to="/my-orders"
-                  className={styles.mobileItem}
-                  onClick={() => setIsOpen(false)}
-                >
-                  Orders
-                </Link>
-
-                <Link
-                  to="/my-appointments"
-                  className={styles.mobileItem}
-                  onClick={() => setIsOpen(false)}
-                >
-                  Appointments
-                </Link>
-
-                <Link
-                  to="/cart"
-                  className={styles.mobileItem}
-                  onClick={() => setIsOpen(false)}
-                >
-                  Cart
-                </Link>
-
-                <button
-                  className={styles.mobileItem}
-                  onClick={() => {
-                    handleLogout();
-                    setIsOpen(false);
-                  }}
-                >
-                  Logout
-                </button>
-              </>
-            ) : (
-              <>
-                <Link
-                  to="/login"
-                  className={styles.mobileItem}
-                  onClick={() => setIsOpen(false)}
-                >
-                  Login
-                </Link>
-
-                <Link
-                  to="/cart"
-                  className={styles.mobileItem}
-                  onClick={() => setIsOpen(false)}
-                >
-                  Cart
-                </Link>
-              </>
-            )}
-          </div>
-        )}
+        {/* MOBILE TOGGLE */}
+        <MobileToggle isOpen={isOpen} onClick={() => setIsOpen(!isOpen)} />
       </div>
+
+      {/* MOBILE MENU */}
+      {isOpen && (
+        <MobileMenu
+          navItems={navItems}
+          user={storedUser}
+          onLogout={handleLogout}
+          onLogin={handleOpenLoginModal}
+          onClose={() => setIsOpen(false)}
+        />
+      )}
+
+      {/* AUTH MODAL */}
+      <AuthModal
+        isOpen={showAuthModal}
+        onClose={handleCloseAuthModal}
+        defaultView={authDefaultView}
+        onAuthSuccess={refreshUser}
+      />
     </nav>
   );
 };

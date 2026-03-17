@@ -1,24 +1,31 @@
+/* ========================================
+   PET ADOPTION - GRID STYLES
+   ======================================== */
+
 .petGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 1.2rem;
-  padding: 1rem 0;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  justify-content: center;
+  gap: var(--space-5);
+  padding: var(--space-4) 0;
+  max-width: 1320px;
+  margin: 0 auto;
 }
 
 .loadingContainer {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: var(--space-4);
   align-items: center;
-  padding: 4rem 2rem;
+  padding: var(--space-16) var(--space-8);
 }
 
 .loadingSpinner {
   width: 50px;
   height: 50px;
-  border: 3px solid #f5f1e8;
-  border-top-color: #a78bfa;
-  border-radius: 50%;
+  border: 3px solid var(--color-neutral-100);
+  border-top-color: var(--color-primary-400);
+  border-radius: var(--radius-full);
   animation: spin 1s linear infinite;
 }
 
@@ -30,29 +37,26 @@
 
 .emptyState {
   text-align: center;
-  padding: 4rem 2rem;
-  background: white;
-  border-radius: 18px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  padding: var(--space-16) var(--space-8);
+  background: var(--color-bg-primary);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-xs);
+  font-family: var(--font-family);
 }
 
-@media (max-width: 768px) {
+/* ===== RESPONSIVE ===== */
+@media (max-width: 1100px) {
   .petGrid {
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: 1rem;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    max-width: 980px;
   }
 }
 
 @media (max-width: 600px) {
   .petGrid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 10px;
+    gap: var(--space-3);
     padding: 0;
-  }
-}
-
-@media (max-width: 400px) {
-  .petGrid {
-    grid-template-columns: repeat(2, minmax(130px, 1fr));
+    max-width: none;
   }
 }

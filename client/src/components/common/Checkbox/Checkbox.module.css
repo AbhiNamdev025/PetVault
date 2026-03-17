@@ -1,0 +1,54 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  cursor: pointer;
+  width: fit-content;
+}
+
+.control {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--color-primary-600);
+  cursor: pointer;
+}
+
+.labelText {
+  color: var(--color-text-primary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+}
+
+.required {
+  color: var(--color-error);
+  margin-left: var(--space-1);
+}
+
+.error {
+  outline: 1px solid var(--color-error);
+  outline-offset: 1px;
+}
+
+.disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.helperText,
+.errorText {
+  font-size: var(--font-size-xs);
+}
+
+.helperText {
+  color: var(--color-text-tertiary);
+}
+
+.errorText {
+  color: var(--color-error);
+}

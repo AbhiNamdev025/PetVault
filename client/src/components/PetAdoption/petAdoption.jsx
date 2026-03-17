@@ -1,32 +1,55 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import PetFilters from "../PetShop/PetFilters/petFilters";
 import PetGrid from "./AdoptionPetGrid/adoptionPetGrid";
-import EnquiryModal from "./AdoptionEnquiryModal/adoptionEnquiryModal";
 import styles from "./petAdoption.module.css";
 import { API_BASE_URL } from "../../utils/constants";
-import Image from "../../../public/images/petAdoption/heroAdoption.png";
+import { HandHeart, Headset, PawPrint } from "lucide-react";
+import { SearchFilterBar, SectionHeader } from "../common";
+import FilterSidebar from "../common/FilterSidebar/FilterSidebar";
+import { openAuthModal } from "../../utils/authModalNavigation";
+import { useLocation } from "react-router-dom";
 
 const PetAdoption = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [pets, setPets] = useState([]);
   const [filteredPets, setFilteredPets] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selectedPet, setSelectedPet] = useState(null);
-  const [showEnquiryModal, setShowEnquiryModal] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [filterType, setFilterType] = useState("all");
-  const [filterGender, setFilterGender] = useState("all");
+  const [filters, setFilters] = useState({
+    search: "",
+    type: "all",
+    gender: "all",
+  });
+  const [showFilters, setShowFilters] = useState(false);
 
-  const categories = [
-    { value: "all", label: "All Pets" },
-    { value: "dog", label: "Dogs" },
-    { value: "cat", label: "Cats" },
-    { value: "bird", label: "Birds" },
-    { value: "rabbit", label: "Rabbits" },
-    { value: "fish", label: "Fish" },
-    { value: "other", label: "Others" },
+  const isUserLoggedIn = () => {
+    return localStorage.getItem("token") || sessionStorage.getItem("token");
+  };
+
+  const filterOptions = [
+    {
+      id: "type",
+      label: "Pet Type",
+      values: [
+        { id: "all", label: "All Pets" },
+        { id: "dog", label: "Dogs" },
+        { id: "cat", label: "Cats" },
+        { id: "bird", label: "Birds" },
+        { id: "rabbit", label: "Rabbits" },
+        { id: "fish", label: "Fish" },
+        { id: "other", label: "Others" },
+      ],
+    },
+    {
+      id: "gender",
+      label: "Gender",
+      values: [
+        { id: "all", label: "All Genders" },
+        { id: "male", label: "Male" },
+        { id: "female", label: "Female" },
+      ],
+    },
   ];
 
   useEffect(() => {
@@ -35,7 +58,7 @@ const PetAdoption = () => {
 
   useEffect(() => {
     filterPets();
-  }, [pets, searchTerm, filterType, filterGender]);
+  }, [pets, filters]);
 
   const fetchPetsForAdoption = async () => {
     try {
@@ -43,13 +66,13 @@ const PetAdoption = () => {
       if (response.ok) {
         const data = await response.json();
         const adoptionPets = (data.pets || []).filter(
-          (pet) => pet.category === "adoption" && pet.available
+          (pet) => pet.category === "adoption" && pet.available,
         );
         setPets(adoptionPets);
       } else {
         toast.error("Failed to fetch pets");
       }
-    } catch (error) {
+    } catch {
       toast.error("Failed to fetch pets");
     } finally {
       setLoading(false);
@@ -58,12 +81,27 @@ const PetAdoption = () => {
 
   const filterPets = () => {
     let filtered = pets.filter((pet) => {
+      const q = filters.search.trim().toLowerCase();
+      const ngoName = pet.ngoId?.businessName || pet.ngoId?.name || "";
       const searchMatch =
-        pet.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        pet.breed.toLowerCase().includes(searchTerm.toLowerCase());
+        !q ||
+        [
+          pet.name,
+          pet.breed,
+          pet.type,
+          pet.description,
+          pet.category,
+          ngoName,
+          pet.ngoId ? "ngo" : "",
+        ].some((value) =>
+          String(value || "")
+            .toLowerCase()
+            .includes(q),
+        );
 
-      const typeMatch = filterType === "all" || pet.type === filterType;
-      const genderMatch = filterGender === "all" || pet.gender === filterGender;
+      const typeMatch = filters.type === "all" || pet.type === filters.type;
+      const genderMatch =
+        filters.gender === "all" || pet.gender === filters.gender;
 
       return searchMatch && typeMatch && genderMatch;
     });
@@ -76,103 +114,67 @@ const PetAdoption = () => {
   };
 
   const handleEnquiry = (pet) => {
-    setSelectedPet(pet);
-    setShowEnquiryModal(true);
-  };
-
-  const handleEnquirySubmit = async (enquiryData) => {
-    try {
-      const token =
-        localStorage.getItem("token") || sessionStorage.getItem("token");
-      const user =
-        JSON.parse(localStorage.getItem("user")) ||
-        JSON.parse(sessionStorage.getItem("user"));
-
-      if (!token || !user) {
-        toast.error("Please login first");
-        return;
-      }
-
-      if (!selectedPet || !selectedPet.ngoId) {
-        toast.error("NGO ID missing");
-        return;
-      }
-
-      // NGO ID (same as shopId logic)
-      const ngoId =
-        typeof selectedPet.ngoId === "string"
-          ? selectedPet.ngoId
-          : selectedPet.ngoId._id;
-
-      // FETCH NGO DETAILS
-      const ngoRes = await fetch(`${API_BASE_URL}/user/${ngoId}`);
-      const ngo = await ngoRes.json();
-
-      if (!ngo || !ngo.email) {
-        toast.error("NGO email not found");
-        return;
-      }
-
-      // Create appointment
-      const appointmentBody = {
-        providerType: "ngo",
-        providerId: ngoId,
-        service: "pet_adoption",
-        petName: selectedPet.name,
-        petType: selectedPet.type,
-        parentPhone: enquiryData.phone,
-        date: enquiryData.preferredDate,
-        time: enquiryData.preferredTime,
-        reason: enquiryData.message,
-        healthIssues: "N/A",
-        userName: enquiryData.name,
-        userEmail: enquiryData.email,
-      };
-
-      const appointmentRes = await fetch(`${API_BASE_URL}/appointments`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(appointmentBody),
+    if (!isUserLoggedIn()) {
+      openAuthModal(navigate, {
+        location,
+        view: "login",
+        from: location.pathname,
       });
-
-      const appointment = await appointmentRes.json();
-
-      // SEND ENQUIRY TO BACKEND
-      await fetch(`${API_BASE_URL}/enquiries`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: enquiryData.name,
-          email: enquiryData.email,
-          phone: enquiryData.phone,
-          message: enquiryData.message,
-          petId: selectedPet._id,
-          petName: selectedPet.name,
-          providerEmail: ngo.email,
-          providerName: ngo.name || ngo.businessName,
-          providerType: "ngo",
-          appointmentId: appointment._id,
-        }),
-      });
-
-      toast.success("Enquiry sent");
-      setShowEnquiryModal(false);
-      setSelectedPet(null);
-    } catch (error) {
-      toast.error("Failed to send enquiry");
+      return;
     }
+
+    const ngoId = typeof pet.ngoId === "string" ? pet.ngoId : pet.ngoId?._id;
+    if (!ngoId) {
+      toast.error("NGO not found for this pet.");
+      return;
+    }
+
+    const petType =
+      typeof pet.type === "string" && pet.type.length > 0
+        ? pet.type.charAt(0).toUpperCase() + pet.type.slice(1).toLowerCase()
+        : "";
+
+    navigate(
+      `/book/adoption?providerId=${ngoId}&service=pet_adoption&mode=enquiry&petId=${pet._id}&petName=${encodeURIComponent(
+        pet.name || "",
+      )}&petType=${encodeURIComponent(petType)}`,
+      {
+        state: {
+          from: "/pet-adoption",
+          petContext: {
+            id: pet._id,
+            name: pet.name || "",
+            type: petType,
+          },
+        },
+      },
+    );
   };
+
+  const hasActiveFilters =
+    filters.search.trim() !== "" ||
+    filters.type !== "all" ||
+    filters.gender !== "all";
 
   return (
     <div className={styles.petShop}>
-      <div className={styles.heroSection}>
+      <FilterSidebar
+        isOpen={showFilters}
+        onClose={() => setShowFilters(false)}
+        filters={filters}
+        setFilters={setFilters}
+        options={filterOptions}
+        showSearch={false}
+        onReset={() => setFilters({ search: "", type: "all", gender: "all" })}
+      />
+      {/* <div className={styles.heroSection}>
         <div className={styles.heroContent}>
           <div className={styles.heroImage}>
             <div className={styles.imagePlaceholder}>
-              <img src={Image} alt="Adopt a pet - happy dog and cat" />
+              <img
+                src="/images/petAdoption/HeroAdoption.png"
+                alt="Adopt a pet - happy dog and cat"
+              />
             </div>
           </div>
           <div className={styles.heroText}>
@@ -186,16 +188,86 @@ const PetAdoption = () => {
             </p>
             <div className={styles.heroStats}>
               <div className={styles.stat}>
-                <span className={styles.statNumber}>200+</span>
+                <span className={styles.statNumber}>
+                  <span className={styles.statIcon}>
+                    <PawPrint />
+                  </span>
+                  200+
+                </span>
                 <span className={styles.statLabel}>Pets Adopted</span>
               </div>
               <div className={styles.stat}>
-                <span className={styles.statNumber}>150+</span>
+                <span className={styles.statNumber}>
+                  {" "}
+                  <span className={styles.statIcon}>
+                    <HandHeart />
+                  </span>
+                  150+
+                </span>
                 <span className={styles.statLabel}>Families United</span>
               </div>
               <div className={styles.stat}>
-                <span className={styles.statNumber}>24/7</span>
+                <span className={styles.statNumber}>
+                  {" "}
+                  <span className={styles.statIcon}>
+                    <Headset />
+                  </span>
+                  24/7
+                </span>
                 <span className={styles.statLabel}>Care & Support</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div> */}
+
+      <div className={styles.heroSection}>
+        <video className={styles.heroVideo} autoPlay muted loop playsInline>
+          <source src="/video/adoption/Adoption.mp4" type="video/mp4" />
+        </video>
+
+        <div className={styles.heroOverlay}></div>
+
+        <div className={styles.heroContent}>
+          <div className={styles.heroText}>
+            <h1 className={styles.heroTitle}>
+              Find Your <span className={styles.highlight}>Forever Friend</span>{" "}
+              Today
+            </h1>
+            <p className={styles.heroSubtitle}>
+              Give a loving home to a pet — because every tail deserves
+              a happy ending.
+            </p>
+
+            <div className={styles.heroStats}>
+              <div className={styles.stat}>
+                <span className={styles.statNumber}>
+                  <span className={styles.statIcon}>
+                    <PawPrint />
+                  </span>
+                  100+
+                </span>
+                <span className={styles.statLabel}>Pets Adopted</span>
+              </div>
+
+              <div className={styles.stat}>
+                <span className={styles.statNumber}>
+                  <span className={styles.statIcon}>
+                    <HandHeart />
+                  </span>
+                  50+
+                </span>
+                <span className={styles.statLabel}>Families United</span>
+              </div>
+
+              <div className={styles.stat}>
+                <span className={styles.statNumber}>
+                  <span className={styles.statIcon}>
+                    <Headset />
+                  </span>
+                  24/7
+                </span>
+                <span className={styles.statLabel}>Support</span>
               </div>
             </div>
           </div>
@@ -203,39 +275,30 @@ const PetAdoption = () => {
       </div>
 
       <div className={styles.container}>
-        <PetFilters
-          searchTerm={searchTerm}
-          onSearchChange={setSearchTerm}
-          filterType={filterType}
-          onTypeChange={setFilterType}
-          filterGender={filterGender}
-          onGenderChange={setFilterGender}
+        <SectionHeader
+          className={styles.resultsInfo}
+          title="Available Pets"
+          subtitle="Find pets by name, breed, and adoption filters."
+          level="section"
+          align="center"
+          icon={<PawPrint />}
+          actions={
+            <SearchFilterBar
+              searchPlaceholder="Search by name, breed, type, or NGO..."
+              searchValue={filters.search}
+              onSearchChange={(value) =>
+                setFilters((prev) => ({ ...prev, search: value }))
+              }
+              resultText={`${filteredPets.length} ${filteredPets.length === 1 ? "pet" : "pets"} found`}
+              showFilterButton
+              onFilterClick={() => setShowFilters(true)}
+              hasActiveFilters={hasActiveFilters}
+              onClear={() =>
+                setFilters({ search: "", type: "all", gender: "all" })
+              }
+            />
+          }
         />
-
-        <div className={styles.categorySection}>
-          <h2 className={styles.categoryTitle}>Browse by Category</h2>
-          <div className={styles.categoryGrid}>
-            {categories.map((category) => (
-              <button
-                key={category.value}
-                className={`${styles.categoryButton} ${
-                  filterType === category.value ? styles.active : ""
-                }`}
-                onClick={() => setFilterType(category.value)}
-              >
-                {category.label}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <div className={styles.resultsInfo}>
-          <h2>Available Pets</h2>
-          <span className={styles.resultsCount}>
-            {filteredPets.length} {filteredPets.length === 1 ? "pet" : "pets"}{" "}
-            found
-          </span>
-        </div>
 
         <PetGrid
           pets={filteredPets}
@@ -244,17 +307,6 @@ const PetAdoption = () => {
           loading={loading}
         />
       </div>
-
-      {showEnquiryModal && selectedPet && (
-        <EnquiryModal
-          pet={selectedPet}
-          onClose={() => {
-            setShowEnquiryModal(false);
-            setSelectedPet(null);
-          }}
-          onSubmit={handleEnquirySubmit}
-        />
-      )}
     </div>
   );
 };

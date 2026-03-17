@@ -1,26 +1,32 @@
 import React, { useState } from "react";
-import { X, Eye, EyeOff } from "lucide-react";
-import styles from "./ForgotPasswordModal.module.css";
+import { Mail, Lock, Eye, EyeOff } from "lucide-react";
+import styles from "./forgotPasswordModal.module.css";
 import { API_BASE_URL } from "../../../../../utils/constants";
 import toast from "react-hot-toast";
-const ForgotPasswordModal = ({ onClose }) => {
+import { Button, Input } from "../../../../../components/common";
+
+const ForgotPasswordModal = ({
+  onClose,
+  showHeader = true,
+  initialEmail = "",
+}) => {
   const [step, setStep] = useState("forgot");
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState(initialEmail);
   const [otp, setOtp] = useState(["", "", "", ""]);
   const [newPassword, setNewPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const handleOtpChange = (e, i) => {
-    const value = e.target.value.slice(-1); // cuts last digit
+    const value = e.target.value.slice(-1);
     const updated = [...otp];
     updated[i] = value;
     setOtp(updated);
 
     if (value && i < otp.length - 1) {
-      e.target.parentNode.children[i + 1].focus(); // next
+      e.target.parentNode.children[i + 1].focus();
     } else if (!value && i > 0) {
-      e.target.parentNode.children[i - 1].focus(); // back
+      e.target.parentNode.children[i - 1].focus();
     }
   };
 
@@ -80,7 +86,7 @@ const ForgotPasswordModal = ({ onClose }) => {
       const data = await res.json();
       if (res.ok) {
         toast.success("Password reset successful");
-        onClose();
+        onClose(); // Go back to login
       } else toast.error(data.message);
     } catch {
       toast.error("Network error");
@@ -90,97 +96,148 @@ const ForgotPasswordModal = ({ onClose }) => {
   };
 
   return (
-    <div className={styles.overlay}>
-      <div className={styles.modal}>
-        <button className={styles.closeBtn} onClick={onClose}>
-          <X size={22} />
-        </button>
-        {/* Forgot pass */}
-        {step === "forgot" && (
-          <>
-            <h2 className={styles.title}>Forgot Password?</h2>
-            <p className={styles.subtitle}>
-              Enter your registered email to receive an OTP.
-            </p>
-            <input
+    <div className={styles.modalContent}>
+      {step === "forgot" && (
+        <>
+          {showHeader && (
+            <>
+              <h2 className={styles.title}>Forgot Password?</h2>
+              <p className={styles.subtitle}>
+                Enter your registered email to receive an OTP.
+              </p>
+            </>
+          )}
+
+          <div className={styles.formGroup}>
+            <Input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className={styles.input}
               placeholder="Enter your email"
+              fullWidth
+              icon={<Mail size={20} />}
             />
-            <button
-              className={styles.btn}
-              onClick={handleSendOtp}
-              disabled={loading}
-            >
-              {loading ? "Sending..." : "Send OTP"}
-            </button>
-          </>
-        )}
-        {/* OTP */}
-        {step === "otp" && (
-          <>
-            <h2 className={styles.title}>Enter OTP</h2>
-            <p className={styles.subtitle}>
-              Check your email for a 4-digit code.
-            </p>
-            <div className={styles.otpBox}>
-              {otp.map((v, i) => (
-                <input
-                  key={i}
-                  type="text"
-                  maxLength="1"
-                  value={v}
-                  onChange={(e) => handleOtpChange(e, i)}
-                  className={styles.otpInput}
-                />
-              ))}
-            </div>
-            <button
-              className={styles.btn}
-              onClick={handleVerifyOtp}
-              disabled={loading}
-            >
-              {loading ? "Verifying..." : "Verify OTP"}
-            </button>
-          </>
-        )}
-        {/* Reset pass */}
-        {step === "reset" && (
-          <>
-            <h2 className={styles.title}>Reset Password</h2>
-            <p className={styles.subtitle}>Enter your new password below.</p>
-            <form onSubmit={(e) => e.preventDefault()}>
-              <div className={styles.passwordWrapper}>
-                <input
-                  type={showPassword ? "text" : "password"}
-                  value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
-                  placeholder="New password"
-                  className={styles.input}
-                  autoComplete="password"
-                />
-                <button
-                  type="button"
-                  className={styles.eyeToggle}
-                  onClick={() => setShowPassword(!showPassword)}
-                >
-                  {showPassword ? <EyeOff size={22} /> : <Eye size={22} />}
-                </button>
-              </div>
-            </form>
+          </div>
 
-            <button
-              className={styles.btn}
-              onClick={handleResetPassword}
-              disabled={loading}
+          <Button
+            fullWidth
+            onClick={handleSendOtp}
+            isLoading={loading}
+            loadingText="Sending..."
+            variant="primary"
+            size="md"
+          >
+            Send OTP
+          </Button>
+
+          <div className={styles.backLink}>
+            Remember your password?
+            <Button
+              className={styles.link}
+              onClick={onClose}
+              variant="ghost"
+              size="sm"
+              usePresetStyle={false}
             >
-              {loading ? "Saving..." : "Save Password"}
-            </button>
-          </>
-        )}
-      </div>
+              Log In
+            </Button>
+          </div>
+        </>
+      )}
+
+      {step === "otp" && (
+        <>
+          {showHeader && (
+            <>
+              <h2 className={styles.title}>Enter OTP</h2>
+              <p className={styles.subtitle}>
+                Check your email for a 4-digit code.
+              </p>
+            </>
+          )}
+          <div className={styles.otpBox}>
+            {otp.map((v, i) => (
+              <input
+                key={i}
+                type="text"
+                maxLength="1"
+                value={v}
+                onChange={(e) => handleOtpChange(e, i)}
+                className={styles.otpInput}
+              />
+            ))}
+          </div>
+
+          <Button
+            fullWidth
+            onClick={handleVerifyOtp}
+            isLoading={loading}
+            loadingText="Verifying..."
+            variant="primary"
+            size="md"
+          >
+            Verify OTP
+          </Button>
+
+          <div className={styles.backLink}>
+            <Button
+              className={styles.link}
+              onClick={() => setStep("forgot")}
+              variant="ghost"
+              size="sm"
+              usePresetStyle={false}
+            >
+              Resend / Change Email
+            </Button>
+          </div>
+        </>
+      )}
+
+      {step === "reset" && (
+        <>
+          {showHeader && (
+            <>
+              <h2 className={styles.title}>Reset Password</h2>
+              <p className={styles.subtitle}>Enter your new password below.</p>
+            </>
+          )}
+          <form onSubmit={(e) => e.preventDefault()}>
+            <div className={styles.formGroup}>
+              <Input
+                type={showPassword ? "text" : "password"}
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                placeholder="New password"
+                fullWidth
+                icon={<Lock size={20} />}
+                autoComplete="new-password"
+                rightElement={
+                  <Button
+                    type="button"
+                    className={styles.passwordToggle}
+                    onClick={() => setShowPassword(!showPassword)}
+                    variant="primary"
+                    size="md"
+                  >
+                    {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                  </Button>
+                }
+              />
+            </div>
+          </form>
+
+          <Button
+            fullWidth
+            onClick={handleResetPassword}
+            isLoading={loading}
+            loadingText="Saving..."
+            variant="primary"
+            size="md"
+          >
+            Save Password
+          </Button>
+        </>
+      )}
     </div>
   );
 };

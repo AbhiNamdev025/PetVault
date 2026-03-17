@@ -1,38 +1,49 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import styles from "./ngoManagement.module.css";
-import { API_BASE_URL, BASE_URL } from "../../../../../../utils/constants";
-import { Plus, Search, Edit, Trash2 } from "lucide-react";
+import { API_BASE_URL } from "../../../../../../utils/constants";
+import { PROFILE_SEARCH_EVENT } from "../../../../../../utils/profileSearch";
 import toast from "react-hot-toast";
-import AddPetModal from "../PetManagement/addPetModal";
-import EditPetModal from "../PetManagement/editPetModal";
+import PetFormModal from "../PetManagement/PetFormModal";
+import SellPetModal from "../PetManagement/sellPetModal";
+import SoldAdoptedInfoModal from "../PetManagement/components/SoldAdoptedInfoModal";
 import ConfirmationModal from "../../../../../ConfirmationModal/ConfirmationModal";
+import { ManagementCardSkeleton } from "../../../../../Skeletons";
+import FilterSidebar from "../../../../../common/FilterSidebar/FilterSidebar";
+import NgoHeader from "./components/NgoHeader";
+import NgoPetGrid from "./components/NgoPetGrid";
+import ManagementEmptyState from "../common/ManagementEmptyState";
+import { Dog } from "lucide-react";
+import { Pagination } from "../../../../../common";
 
-const NgoManagement = ({ user }) => {
+const NgoManagement = () => {
   const [pets, setPets] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState("");
+  const [filters, setFilters] = useState({
+    search: "",
+    availability: "available",
+  });
+  const [showFilters, setShowFilters] = useState(false);
   const [showAdd, setShowAdd] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
   const [selectedPet, setSelectedPet] = useState(null);
+  const [showSell, setShowSell] = useState(false);
+  const [selectedPetForSale, setSelectedPetForSale] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [petToDelete, setPetToDelete] = useState(null);
+  const [adoptedInfoPet, setAdoptedInfoPet] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 8;
 
   const token =
     localStorage.getItem("token") || sessionStorage.getItem("token");
-  const savedUser = JSON.parse(
-    localStorage.getItem("user") || sessionStorage.getItem("user") || "null"
-  );
-  const ngoId = savedUser?._id || user?._id;
-
-  const loadPets = async () => {
-    if (!token || !ngoId) {
-      toast.error("Authentication required");
+  const loadPets = useCallback(async () => {
+    if (!token) {
       setLoading(false);
       return;
     }
 
     try {
-      const res = await fetch(`${API_BASE_URL}/ngo/${ngoId}/pets`, {
+      const res = await fetch(`${API_BASE_URL}/pets/provider/my-pets`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -43,15 +54,69 @@ const NgoManagement = ({ user }) => {
       toast.error("Failed to fetch pets");
     }
     setLoading(false);
-  };
+  }, [token]);
 
   useEffect(() => {
     loadPets();
+  }, [loadPets]);
+
+  useEffect(() => {
+    const handleProfileSearch = (event) => {
+      const { query = "", targetTab = "" } = event.detail || {};
+      if (targetTab && targetTab !== "management") return;
+
+      setFilters((previous) => ({
+        ...previous,
+        search: String(query || ""),
+      }));
+    };
+
+    window.addEventListener(PROFILE_SEARCH_EVENT, handleProfileSearch);
+    return () =>
+      window.removeEventListener(PROFILE_SEARCH_EVENT, handleProfileSearch);
   }, []);
 
   const handleDeleteClick = (pet) => {
     setPetToDelete(pet);
     setShowDeleteModal(true);
+  };
+
+  const handleAddClick = () => {
+    if (!token) {
+      toast.error("Please login to add pets");
+      return;
+    }
+    setShowAdd(true);
+  };
+
+  const handleEditClick = (pet) => {
+    if (!token) {
+      toast.error("Please login to edit pets");
+      return;
+    }
+    setSelectedPet(pet);
+    setShowEdit(true);
+  };
+
+  const handleDeleteRequest = (pet) => {
+    if (!token) {
+      toast.error("Please login to delete pets");
+      return;
+    }
+    handleDeleteClick(pet);
+  };
+
+  const handleSellClick = (pet) => {
+    setSelectedPetForSale(pet);
+    setShowSell(true);
+  };
+
+  const handleSellRequest = (pet) => {
+    if (!token) {
+      toast.error("Please login to continue");
+      return;
+    }
+    handleSellClick(pet);
   };
 
   const remove = async () => {
@@ -61,123 +126,166 @@ const NgoManagement = ({ user }) => {
     }
 
     try {
+      const deletionReason = `Listing removed by NGO provider from management panel (${petToDelete?.name || "pet"}).`;
       const res = await fetch(`${API_BASE_URL}/pets/${petToDelete._id}`, {
         method: "DELETE",
-        headers: { Authorization: `Bearer ${token}` },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ deletion_reason: deletionReason }),
       });
 
-      if (!res.ok) throw new Error();
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.message || "Failed to delete pet");
+      }
       toast.success("Pet deleted successfully");
       loadPets();
-    } catch {
-      toast.error("Failed to delete pet");
+    } catch (error) {
+      toast.error(error.message || "Failed to delete pet");
     } finally {
       setShowDeleteModal(false);
       setPetToDelete(null);
     }
   };
 
-  const filtered = pets.filter((p) =>
-    p.name.toLowerCase().includes(search.toLowerCase())
+  const filtered = pets.filter((p) => {
+    const q = String(filters.search || "")
+      .trim()
+      .toLowerCase();
+    const searchableFields = [
+      p?.name,
+      p?.type,
+      p?.species,
+      p?.breed,
+      p?.category,
+      p?.gender,
+      p?._id,
+      p?.soldToUserId?.name,
+    ]
+      .filter(Boolean)
+      .map((value) => String(value).toLowerCase());
+    const matchesSearch =
+      !q || searchableFields.some((value) => value.includes(q));
+    const isAvailable = p.available !== false;
+    const matchesAvailability =
+      filters.availability === "all" ||
+      (filters.availability === "available" && isAvailable) ||
+      ((filters.availability === "adopted" ||
+        filters.availability === "unavailable") &&
+        !isAvailable);
+    return matchesSearch && matchesAvailability;
+  });
+
+  // Reset to first page when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [filters]);
+
+  const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
+  const paginatedPets = filtered.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE,
   );
 
-  if (loading) return <p className={styles.loading}>Loading...</p>;
+  if (loading) return <ManagementCardSkeleton count={6} />;
+  const hasActiveFilters =
+    filters.search.trim() !== "" || filters.availability !== "available";
+
+  const filterOptions = [
+    {
+      id: "availability",
+      label: "Availability",
+      values: [
+        { id: "all", label: "All Pets" },
+        { id: "available", label: "Available" },
+        { id: "adopted", label: "Adopted" },
+      ],
+    },
+  ];
 
   return (
     <div className={styles.container}>
-      <div className={styles.topRow}>
-        <h2 className={styles.title}>Manage Pets for Adoption</h2>
-        <button
-          className={styles.addBtn}
-          onClick={() => {
-            if (!token) {
-              toast.error("Please login to add pets");
-              return;
-            }
-            setShowAdd(true);
-          }}
-        >
-          <Plus size={16} /> Add Pet
-        </button>
-      </div>
+      <FilterSidebar
+        isOpen={showFilters}
+        onClose={() => setShowFilters(false)}
+        filters={filters}
+        setFilters={setFilters}
+        options={filterOptions}
+        showSearch={false}
+        onReset={() => setFilters({ search: "", availability: "available" })}
+      />
 
-      <div className={styles.searchBox}>
-        <Search size={18} />
-        <input
-          type="text"
-          placeholder="Search pet..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-      </div>
+      <NgoHeader
+        hasActiveFilters={hasActiveFilters}
+        onOpenFilters={() => setShowFilters(true)}
+        onClearFilters={() =>
+          setFilters({ search: "", availability: "available" })
+        }
+        onAdd={handleAddClick}
+      />
 
       {filtered.length === 0 ? (
-        <p className={styles.noData}>No pets found</p>
+        <ManagementEmptyState
+          title={hasActiveFilters ? "No matches found" : "No Pets for Adoption"}
+          description={
+            hasActiveFilters
+              ? "Try adjusting your filters to find what you are looking for."
+              : "You haven't listed any pets for adoption yet. Start by adding a pet to find them a new home."
+          }
+          onAdd={hasActiveFilters ? null : handleAddClick}
+          icon={Dog}
+          buttonText="List a Pet"
+        />
       ) : (
-        <div className={styles.grid}>
-          {filtered.map((p) => (
-            <div className={styles.card} key={p._id}>
-              <div className={styles.imageBox}>
-                {p.images?.[0] ? (
-                  <img src={`${BASE_URL}/uploads/pets/${p.images[0]}`} alt="" />
-                ) : (
-                  <div className={styles.noImage}>No Image</div>
-                )}
-              </div>
-
-              <div className={styles.info}>
-                <h3 className={styles.name}>{p.name}</h3>
-                <p className={styles.brand}>{p.type}</p>
-                <p className={styles.price}>
-                  {p.category === "shop" ? `₹${p.price}` : "For Adoption"}
-                </p>
-              </div>
-
-              <div className={styles.actions}>
-                <button
-                  className={styles.editBtn}
-                  onClick={() => {
-                    if (!token) {
-                      toast.error("Please login to edit pets");
-                      return;
-                    }
-                    setSelectedPet(p);
-                    setShowEdit(true);
-                  }}
-                >
-                  <Edit size={16} />
-                </button>
-
-                <button
-                  className={styles.delBtn}
-                  onClick={() => {
-                    if (!token) {
-                      toast.error("Please login to delete pets");
-                      return;
-                    }
-                    handleDeleteClick(p);
-                  }}
-                >
-                  <Trash2 size={16} />
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
+        <>
+          <NgoPetGrid
+            pets={paginatedPets}
+            onEdit={handleEditClick}
+            onDelete={handleDeleteRequest}
+            onSell={handleSellRequest}
+            onViewAdoptedInfo={(pet) => setAdoptedInfoPet(pet)}
+          />
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+            showPageInfo
+          />
+        </>
       )}
 
       {showAdd && (
-        <AddPetModal onClose={() => setShowAdd(false)} onAdded={loadPets} />
+        <PetFormModal onClose={() => setShowAdd(false)} onSaved={loadPets} />
       )}
 
       {showEdit && selectedPet && (
-        <EditPetModal
+        <PetFormModal
           pet={selectedPet}
           onClose={() => {
             setShowEdit(false);
             setSelectedPet(null);
           }}
-          onUpdated={loadPets}
+          onSaved={loadPets}
+        />
+      )}
+
+      {showSell && selectedPetForSale && (
+        <SellPetModal
+          pet={selectedPetForSale}
+          onClose={() => {
+            setShowSell(false);
+            setSelectedPetForSale(null);
+          }}
+          onSold={loadPets}
+        />
+      )}
+
+      {adoptedInfoPet && (
+        <SoldAdoptedInfoModal
+          pet={adoptedInfoPet}
+          onClose={() => setAdoptedInfoPet(null)}
         />
       )}
 

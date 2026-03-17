@@ -1,35 +1,24 @@
 import React from "react";
 import styles from "./doctorTabs.module.css";
-
-export default function DoctorTabs({ tab, setTab }) {
-  return (
-    <div className={styles.tabs}>
-      <button
-        className={tab === "about" ? styles.activeTab : ""}
-        onClick={() => setTab("about")}
-      >
+import { Button } from "../../../../../common";
+export default function DoctorTabs({
+  tab,
+  setTab
+}) {
+  return <div className={styles.tabs}>
+      <Button className={`${styles.tabButton} ${tab === "about" ? styles.activeTab : ""}`} onClick={() => setTab("about")} variant="ghost" size="sm">
         About
-      </button>
+      </Button>
 
-      <button
-        className={tab === "services" ? styles.activeTab : ""}
-        onClick={() => setTab("services")}
-      >
+      <Button className={`${styles.tabButton} ${tab === "services" ? styles.activeTab : ""}`} onClick={() => setTab("services")} variant="ghost" size="sm">
         Services
-      </button>
-      <button
-        className={tab === "availability" ? styles.activeTab : ""}
-        onClick={() => setTab("availability")}
-      >
+      </Button>
+      <Button className={`${styles.tabButton} ${tab === "availability" ? styles.activeTab : ""}`} onClick={() => setTab("availability")} variant="ghost" size="sm">
         Availability
-      </button>
+      </Button>
 
-      <button
-        className={tab === "reviews" ? styles.activeTab : ""}
-        onClick={() => setTab("reviews")}
-      >
+      <Button className={`${styles.tabButton} ${tab === "reviews" ? styles.activeTab : ""}`} onClick={() => setTab("reviews")} variant="ghost" size="sm">
         Reviews
-      </button>
-    </div>
-  );
+      </Button>
+    </div>;
 }

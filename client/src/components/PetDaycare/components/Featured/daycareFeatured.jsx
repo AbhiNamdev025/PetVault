@@ -21,7 +21,7 @@ const features = [
     text: "We follow your pet’s unique meal plan and rest schedule so they feel right at home — even when you’re away.",
     text2:
       "Every pet has a cozy, private rest area to recharge after play sessions, ensuring they stay relaxed and happy.",
-    img: "https://mymodernmet.com/wp/wp-content/uploads/2020/11/doggie-daycare-puppy-spring-20.jpg",
+    img: "https://www.thesun.co.uk/wp-content/uploads/2020/12/NINTCHDBPICT000625793987.jpg?strip=all&w=645",
   },
   {
     title: "Trained & Loving Staff",

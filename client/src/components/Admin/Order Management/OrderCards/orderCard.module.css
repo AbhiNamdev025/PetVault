@@ -1,0 +1,279 @@
+.card {
+  background: var(--color-bg-primary);
+  padding: var(--space-4) var(--space-5);
+  border-bottom: 1px solid var(--color-bg-tertiary);
+  cursor: pointer;
+  display: grid;
+  grid-template-columns: 1.1fr 1.7fr 1fr 1fr 72px;
+  align-items: center;
+  gap: var(--space-4);
+  transition: background var(--transition-fast);
+}
+
+.card:last-child {
+  border-bottom: none;
+}
+
+.card:hover {
+  background: var(--color-bg-secondary);
+}
+
+.idCol {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.orderId {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  font-family: monospace;
+  letter-spacing: 0.02em;
+}
+
+.orderDate {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-tertiary);
+  font-weight: var(--font-weight-medium);
+}
+
+.customerCol {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.primaryInfo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.secondaryInfo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-tertiary);
+  font-weight: var(--font-weight-medium);
+}
+
+.statusCol {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.statusBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  max-width: 120px;
+  width: 100%;
+  justify-content: center;
+}
+
+.statusBadge.pending {
+  background: var(--color-warning-light);
+  color: var(--color-warning-dark);
+}
+
+.statusBadge.confirmed {
+  background: var(--color-success-light);
+  color: var(--color-success-dark);
+}
+
+.statusBadge.delivered {
+  background: var(--color-info-light);
+  color: var(--color-info-dark);
+}
+
+.statusBadge.cancelled {
+  background: var(--color-error-light);
+  color: var(--color-error-dark);
+}
+
+.statusBadge.shipped {
+  background: var(--color-primary-50);
+  color: var(--color-secondary-700);
+}
+
+.amountCol {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  text-align: right;
+  min-width: 0;
+  padding-right: var(--space-4);
+}
+
+.totalLabel {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0;
+}
+
+.totalAmount {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-extrabold);
+  color: var(--color-text-primary);
+  line-height: normal;
+}
+
+.actionsCol {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-1);
+}
+
+.menuContainer {
+  position: relative;
+}
+
+.menuBtn {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none !important;
+  background: none !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+  outline: none !important;
+  cursor: pointer;
+  appearance: none;
+}
+
+.menuBtn:hover {
+  background: var(--color-bg-tertiary) !important;
+  color: var(--color-text-primary);
+}
+
+.dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  z-index: 100;
+  min-width: 150px;
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border-medium);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  padding: var(--space-1);
+  margin-top: var(--space-1);
+  animation: slideIn 0.2s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dropdownItem {
+  width: 100%;
+  padding: var(--space-2) var(--space-3);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  border-radius: var(--radius-md);
+  transition: all var(--transition-fast);
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+}
+
+.dropdownItem:hover {
+  background: var(--color-bg-secondary);
+  color: var(--color-text-primary);
+}
+
+.dropdownItem.deleteItem {
+  color: var(--color-error-dark);
+}
+
+.dropdownItem.deleteItem:hover {
+  background: var(--color-error-light);
+  color: var(--color-error-dark);
+}
+
+@media (max-width: 992px) {
+  .card {
+    grid-template-columns: 1.1fr 1.6fr 1fr 1fr 72px;
+    gap: var(--space-3);
+    padding: var(--space-3) var(--space-4);
+  }
+}
+
+@media (max-width: 768px) {
+  .card {
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      "id status"
+      "customer customer"
+      "amount actions";
+    row-gap: var(--space-2);
+    column-gap: var(--space-3);
+    padding: var(--space-3) var(--space-4);
+  }
+
+  .idCol {
+    grid-area: id;
+  }
+
+  .statusCol {
+    grid-area: status;
+    justify-content: flex-end;
+  }
+
+  .customerCol {
+    grid-area: customer;
+  }
+
+  .amountCol {
+    grid-area: amount;
+    text-align: left;
+    align-items: flex-start;
+  }
+
+  .actionsCol {
+    grid-area: actions;
+  }
+
+  .dropdown {
+    bottom: 100%;
+    top: auto;
+    margin-top: 0;
+    margin-bottom: var(--space-1);
+  }
+}

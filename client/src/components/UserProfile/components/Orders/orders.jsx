@@ -9,11 +9,10 @@ import {
   Eye,
   MessageCircle,
 } from "lucide-react";
-
+import { Button } from "../../../common";
 const Orders = ({ list, onUpdateStatus }) => {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [showDetails, setShowDetails] = useState(false);
-
   const getStatusColor = (status) => {
     switch (status) {
       case "delivered":
@@ -30,7 +29,6 @@ const Orders = ({ list, onUpdateStatus }) => {
         return styles.statusPending;
     }
   };
-
   const getStatusIcon = (status) => {
     switch (status) {
       case "delivered":
@@ -45,17 +43,14 @@ const Orders = ({ list, onUpdateStatus }) => {
         return <Package size={16} />;
     }
   };
-
   const handleStatusUpdate = async (orderId, newStatus) => {
     if (onUpdateStatus) {
       await onUpdateStatus(orderId, newStatus);
     }
   };
-
   const calculateTotalItems = (items) => {
     return items?.reduce((total, item) => total + (item.quantity || 1), 0) || 0;
   };
-
   return (
     <div className={styles.card}>
       <h3 className={styles.sectionTitle}>My Orders</h3>
@@ -64,17 +59,26 @@ const Orders = ({ list, onUpdateStatus }) => {
         <div className={styles.emptyState}>
           <Package size={48} className={styles.emptyIcon} />
           <p>No orders placed yet</p>
-          <button
+          <Button
             className={styles.primaryButton}
-            onClick={() => (window.location.href = "/products")}
+            onClick={() => (window.location.href = "/pet-products")}
+            variant="primary"
+            size="md"
           >
             Start Shopping
-          </button>
+          </Button>
         </div>
       ) : (
         <div className={styles.ordersList}>
           {list.map((order) => (
-            <div key={order._id} className={styles.orderCard}>
+            <div
+              key={order._id}
+              className={styles.orderCard}
+              onClick={() => {
+                setSelectedOrder(order);
+                setShowDetails(true);
+              }}
+            >
               <div className={styles.orderHeader}>
                 <div className={styles.orderInfo}>
                   <h4 className={styles.orderId}>
@@ -91,9 +95,7 @@ const Orders = ({ list, onUpdateStatus }) => {
                 </div>
                 <div className={styles.orderStatus}>
                   <span
-                    className={`${styles.status} ${getStatusColor(
-                      order.status
-                    )}`}
+                    className={`${styles.status} ${getStatusColor(order.status)}`}
                   >
                     {getStatusIcon(order.status)}
                     {order.status}
@@ -128,48 +130,63 @@ const Orders = ({ list, onUpdateStatus }) => {
               </div>
 
               <div className={styles.orderActions}>
-                <button
+                <Button
                   className={styles.secondaryButton}
-                  onClick={() => {
+                  onClick={(e) => {
+                    e.stopPropagation();
                     setSelectedOrder(order);
                     setShowDetails(true);
                   }}
+                  variant="secondary"
+                  size="md"
                 >
                   <Eye size={16} />
                   View Details
-                </button>
+                </Button>
 
                 {order.status === "delivered" && (
-                  <button
+                  <Button
                     className={styles.primaryButton}
-                    onClick={() =>
-                      (window.location.href = `/orders/${order._id}/review`)
-                    }
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      window.location.href = `/orders/${order._id}/review`;
+                    }}
+                    variant="primary"
+                    size="md"
                   >
                     <MessageCircle size={16} />
                     Add Review
-                  </button>
+                  </Button>
                 )}
 
-                {(order.status === "pending" ||
-                  order.status === "processing") && (
-                  <button
+                {order.status === "pending" && (
+                  <Button
                     className={styles.dangerButton}
-                    onClick={() => handleStatusUpdate(order._id, "cancelled")}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleStatusUpdate(order._id, "cancelled");
+                    }}
+                    variant="danger"
+                    size="md"
                   >
                     <XCircle size={16} />
                     Cancel Order
-                  </button>
+                  </Button>
                 )}
 
                 {order.status === "shipped" && (
-                  <button
+                  <Button
                     className={styles.successButton}
-                    onClick={() => handleStatusUpdate(order._id, "delivered")}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleStatusUpdate(order._id, "delivered");
+                    }}
+                    variant="success"
+                    size="md"
                   >
                     <CheckCircle size={16} />
                     Mark Received
-                  </button>
+                  </Button>
                 )}
               </div>
             </div>
@@ -184,12 +201,14 @@ const Orders = ({ list, onUpdateStatus }) => {
               <h3>
                 Order Details #{selectedOrder._id.slice(-8).toUpperCase()}
               </h3>
-              <button
+              <Button
                 className={styles.closeButton}
                 onClick={() => setShowDetails(false)}
+                variant="ghost"
+                size="sm"
               >
                 <XCircle size={20} />
-              </button>
+              </Button>
             </div>
 
             <div className={styles.modalContent}>
@@ -203,9 +222,7 @@ const Orders = ({ list, onUpdateStatus }) => {
                   <p>
                     <strong>Status:</strong>
                     <span
-                      className={`${styles.status} ${getStatusColor(
-                        selectedOrder.status
-                      )}`}
+                      className={`${styles.status} ${getStatusColor(selectedOrder.status)}`}
                     >
                       {getStatusIcon(selectedOrder.status)}
                       {selectedOrder.status}
@@ -275,33 +292,38 @@ const Orders = ({ list, onUpdateStatus }) => {
             </div>
 
             <div className={styles.modalActions}>
-              <button
+              <Button
                 className={styles.secondaryButton}
                 onClick={() => setShowDetails(false)}
+                variant="secondary"
+                size="md"
               >
                 Close
-              </button>
-              {(selectedOrder.status === "pending" ||
-                selectedOrder.status === "processing") && (
-                <button
+              </Button>
+              {selectedOrder.status === "pending" && (
+                <Button
                   className={styles.dangerButton}
                   onClick={() => {
                     handleStatusUpdate(selectedOrder._id, "cancelled");
                     setShowDetails(false);
                   }}
+                  variant="danger"
+                  size="md"
                 >
                   Cancel Order
-                </button>
+                </Button>
               )}
               {selectedOrder.status === "delivered" && (
-                <button
+                <Button
                   className={styles.primaryButton}
                   onClick={() =>
                     (window.location.href = `/orders/${selectedOrder._id}/review`)
                   }
+                  variant="primary"
+                  size="md"
                 >
                   Write Review
-                </button>
+                </Button>
               )}
             </div>
           </div>
@@ -310,5 +332,4 @@ const Orders = ({ list, onUpdateStatus }) => {
     </div>
   );
 };
-
 export default Orders;

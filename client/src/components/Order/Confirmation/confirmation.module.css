@@ -1,97 +1,122 @@
+/* ========================================
+   ORDERS - CONFIRMATION PAGE STYLES
+   ======================================== */
+
 .confirmationContainer {
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 80vh;
-  background: #fafafa;
-  padding: 2rem;
+  background: var(--color-neutral-50);
+  padding: var(--space-8);
 }
 
 .card {
-  background: #fff;
-  border-radius: 20px;
-  padding: 2.5rem 1.75rem;
+  background: var(--color-bg-primary);
+  border-radius: var(--radius-2xl);
+  padding: var(--space-10) var(--space-7);
   text-align: center;
   max-width: 520px;
   width: 100%;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+  box-shadow: var(--shadow-md);
   animation: fadeInUp 0.6s ease;
 }
 
 .icon {
-  color: #22c55e;
-  margin-bottom: 1rem;
+  color: var(--color-success);
+  margin-bottom: var(--space-4);
   display: inline-block;
 }
 
-h2 {
-  font-size: 1.8rem;
-  color: #1e293b;
-  font-weight: 700;
-  margin-bottom: 0.75rem;
+.card h2 {
+  font-family: var(--font-family);
+  font-size: var(--font-size-2xl);
+  color: var(--color-text-primary);
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--space-3);
 }
 
-p {
-  color: #475569;
-  font-size: 1rem;
-  margin-bottom: 1rem;
-  line-height: 1.5;
+.card p {
+  font-family: var(--font-family);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-base);
+  margin-bottom: var(--space-4);
+  line-height: var(--line-height-normal);
 }
 
 p span {
-  color: #7c3aed;
-  font-weight: 600;
+  color: var(--color-primary-600);
+  font-weight: var(--font-weight-semibold);
 }
 
 .orderId {
-  font-weight: 600;
-  color: #4c1d95;
-  background: #f3e8ff;
-  padding: 0.45rem 0.85rem;
-  border-radius: 8px;
+  font-family: var(--font-family);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-primary-900);
+  background: var(--color-primary-100);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
   display: inline-block;
-  margin-bottom: 1rem;
+  margin-bottom: var(--space-4);
 }
 
 .miniSummary {
   text-align: left;
-  margin: 1rem auto;
+  margin: var(--space-4) auto;
   max-width: 320px;
 }
 
 .summaryRow {
   display: flex;
   justify-content: space-between;
-  padding: 0.4rem 0;
-  color: #374151;
-  font-weight: 600;
+  padding: var(--space-2) 0;
+  font-family: var(--font-family);
+  color: var(--color-text-primary);
+  font-weight: var(--font-weight-semibold);
 }
 
 .buttons {
   display: flex;
   justify-content: center;
-  gap: 0.75rem;
-  margin-top: 1rem;
+  gap: var(--space-3);
+  margin-top: var(--space-4);
 }
 
 .primaryBtn {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: #fff;
+  background: linear-gradient(
+    135deg,
+    var(--color-primary-600) 0%,
+    var(--color-primary-800) 100%
+  );
+  color: var(--color-text-inverse);
   border: none;
-  padding: 0.75rem 1.25rem;
-  border-radius: 10px;
-  font-weight: 600;
+  padding: var(--space-3) var(--space-5);
+  border-radius: var(--radius-lg);
+  font-family: var(--font-family);
+  font-weight: var(--font-weight-semibold);
   cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.primaryBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
 }
 
 .secondaryBtn {
-  background: #f8f8f8;
-  color: #6b7280;
-  border: 2px solid #e5e7eb;
-  padding: 0.75rem 1.25rem;
-  border-radius: 10px;
-  font-weight: 600;
+  background: var(--color-neutral-50);
+  color: var(--color-text-secondary);
+  border: 2px solid var(--color-border-medium);
+  padding: var(--space-3) var(--space-5);
+  border-radius: var(--radius-lg);
+  font-family: var(--font-family);
+  font-weight: var(--font-weight-semibold);
   cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.secondaryBtn:hover {
+  background: var(--color-neutral-100);
 }
 
 @keyframes fadeInUp {
@@ -105,13 +130,14 @@ p span {
   }
 }
 
+/* ===== RESPONSIVE ===== */
 @media (max-width: 480px) {
   .card {
-    padding: 1.5rem;
+    padding: var(--space-6);
   }
 
   h2 {
-    font-size: 1.4rem;
+    font-size: var(--font-size-xl);
   }
 
   .buttons {

@@ -1,218 +1,386 @@
-.overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(17, 17, 17, 0.55);
-  backdrop-filter: blur(10px) saturate(140%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 999999;
-  animation: fadeIn 0.3s ease;
-  padding: 2rem;
+/* Form Header (Top Section) */
+.formContainer {
+  padding: 0;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
+    Arial, sans-serif;
 }
-
-.modal {
-  background: #ffffff;
-  border-radius: 20px;
-  padding: 2rem;
-  width: 100%;
-  max-width: 500px;
-  box-shadow: 0 25px 60px rgba(91, 33, 182, 0.25);
-  position: relative;
-  overflow-y: auto;
-  max-height: 90vh;
-  animation: pop 0.3s ease;
-  scrollbar-width: none;
-}
-
-.closeButton {
-  position: absolute;
-  top: 14px;
-  right: 14px;
-  background: rgba(91, 33, 182, 0.1);
-  border: none;
-  color: #5b21b6;
-  font-size: 1.2rem;
-  border-radius: 50%;
-  width: 36px;
-  height: 36px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.25s ease;
-}
-
-.closeButton:hover {
-  background: rgba(91, 33, 182, 0.25);
-  transform: rotate(90deg);
-}
-
-.doctorInfoBox {
-  background: #f3e9ff;
-  padding: 1rem;
-  border-radius: 14px;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-}
-
-.doctorImg {
-  width: 90px;
-  height: 90px;
-  border-radius: 12px;
-  object-fit: cover;
-}
-
-.docDetails {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.docName {
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: #4c1d95;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.docSpec {
-  font-size: 0.9rem;
-  color: #6b21a8;
-  font-weight: 600;
-}
-
-.docHospital {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 0.9rem;
-  color: #4b5563;
-}
-
-.docFee {
-  font-size: 0.95rem;
-  font-weight: 700;
-  color: #6d28d9;
-}
-
 .formHeader {
   text-align: center;
-  margin-bottom: 1.6rem;
+  margin-bottom: var(--space-6);
+  margin-top: var(--space-2);
 }
 
 .title {
-  font-size: 1.6rem;
-  font-weight: 700;
-  color: #1f2937;
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-extrabold);
+  color: var(--color-text-primary);
   margin-bottom: 0.3rem;
+  letter-spacing: -0.02em;
 }
 
 .subtitle {
-  color: #6b7280;
-  font-size: 0.9rem;
+  font-size: var(--font-size-base);
+  color: var(--color-text-secondary);
 }
 
-.formGroup {
-  margin-bottom: 1rem;
+/* Doctor Info Box (Centered & Big) */
+.doctorInfoBox {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin-bottom: var(--space-8);
+  padding: var(--space-2) 0 var(--space-8) 0;
+  border-bottom: 1px solid var(--color-bg-tertiary);
+}
+
+.docInfo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  gap: 0.15rem;
+  min-width: 0; /* Important for ellipsis to work in flex */
+}
+
+.doctorImg {
+  width: var(--size-avatar-lg);
+  height: var(--size-avatar-lg);
+  border-radius: var(--radius-2xl);
+  object-fit: contain;
+  box-shadow: 0 10px 25px -5px
+    color-mix(in srgb, var(--color-primary-600) 15%, transparent);
+  border: var(--space-1) solid var(--color-bg-primary);
+  outline: 1px solid var(--color-bg-tertiary);
+}
+
+.docName {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-extrabold);
+  color: var(--color-primary-700);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.nameIcon {
+  color: var(--color-primary-500);
+}
+
+.docSpec {
+  font-size: var(--font-size-base);
+  color: var(--color-text-secondary);
+  font-weight: var(--font-weight-medium);
+}
+
+.docBadges {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--space-2);
+}
+
+.docHospital,
+.docFee {
+  font-size: var(--font-size-sm);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-weight: var(--font-weight-semibold);
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-md);
+}
+
+.docHospital {
+  background: var(--color-success-light);
+  color: var(--color-success-dark);
+}
+
+.pricingBox {
+  background: var(--color-bg-secondary);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border-medium);
   width: 100%;
+  max-width: 200px;
+}
+
+.priceRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-1);
+}
+
+.priceRow span:last-child {
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+}
+
+.totalPayable {
+  margin-top: var(--space-2);
+  padding-top: var(--space-2);
+  border-top: 1px dashed var(--color-border-dark);
+  color: var(--color-primary-700);
+  font-size: var(--font-size-sm);
+}
+
+.totalPayable span:last-child {
+  color: var(--color-primary-700);
+}
+
+/* Form Area */
+.form {
+  flex: 1;
+}
+
+/* Form Groups */
+.formGroup {
+  margin-bottom: var(--space-6);
 }
 
 .label {
   display: block;
-  margin-bottom: 0.4rem;
-  font-weight: 600;
-  color: #374151;
-  font-size: 0.9rem;
+  margin-bottom: var(--space-2);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
 }
 
 .inputWrapper {
   position: relative;
-  width: 100%;
-}
-
-.input,
-.textarea,
-select.input {
-  width: 100%;
-  padding: 12px 44px;
-  border: 2px solid #e5e7eb;
-  border-radius: 10px;
-  font-size: 0.95rem;
-  background: #fafafa;
-  color: #111827;
-  transition: all 0.3s ease;
-  appearance: none;
-}
-
-.input:focus,
-.textarea:focus,
-select.input:focus {
-  outline: none;
-  border-color: #8b5cf6;
-  background: #fff;
-  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+  display: flex;
+  align-items: center;
 }
 
 .inputIcon {
   position: absolute;
-  left: 16px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #9ca3af;
+  left: 14px;
+  color: var(--color-text-tertiary);
   pointer-events: none;
 }
 
-.textarea {
-  resize: none;
-  min-height: 70px;
-}
-
-.row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.6rem;
+.input,
+.textarea,
+.selectInput {
   width: 100%;
+  padding: var(--space-2) var(--space-4) var(--space-2) var(--space-12); /* Space for icon */
+  border: 2px solid var(--color-border-medium);
+  border-radius: var(--radius-lg);
+  font-size: var(--font-size-base);
+  transition: all var(--transition-base);
+  background: var(--color-bg-secondary);
+  color: var(--color-text-primary);
+  font-family: inherit;
+  outline: none;
 }
 
-.row .formGroup {
-  flex: 1 1 48%;
+.input:focus,
+.textarea:focus,
+.selectInput:focus {
+  border-color: var(--color-primary-500);
+  background: var(--color-bg-primary);
+  box-shadow: 0 0 0 var(--space-1)
+    color-mix(in srgb, var(--color-primary-500) 10%, transparent);
 }
 
+.textarea {
+  resize: vertical;
+  min-height: var(--size-avatar-md);
+}
+
+/* Select specific */
+.selectInput {
+  appearance: none;
+  cursor: pointer;
+  background-color: var(--color-bg-secondary);
+}
+
+.selectArrow {
+  position: absolute;
+  right: 14px;
+  color: var(--color-text-tertiary);
+  pointer-events: none;
+}
+
+/* Row Layout */
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+}
+
+/* Pet Options */
+.petOptionsRow {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.petOption {
+  flex: 1;
+  min-width: var(--size-avatar-md);
+  background: var(--color-bg-tertiary);
+  border: 2px solid transparent;
+  border-radius: var(--radius-xl);
+  padding: var(--space-2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.petOption:hover {
+  background: var(--color-border-medium);
+}
+
+.petOptionActive {
+  background: var(--color-primary-50);
+  border-color: var(--color-primary-500);
+  color: var(--color-primary-600);
+}
+
+.petIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: inherit;
+}
+
+.petLabel {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+}
+
+.placeholderRow {
+  height: var(--space-5);
+  margin-top: var(--space-1);
+}
+
+.placeholderText {
+  font-size: var(--font-size-xs);
+  color: var(--color-error);
+}
+
+/* File Input */
+.fileInput {
+  padding: var(--space-2);
+  border: 2px dashed var(--color-border-dark);
+  border-radius: var(--radius-lg);
+  width: 100%;
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.fileInput:hover {
+  border-color: var(--color-primary-500);
+  background: var(--color-bg-secondary);
+}
+
+.previewRow {
+  display: flex;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+  overflow-x: auto;
+  padding-bottom: var(--space-2);
+}
+
+.previewImg {
+  width: var(--size-avatar-sm);
+  height: var(--size-avatar-sm);
+  border-radius: var(--radius-md);
+  object-fit: contain;
+  border: 1px solid var(--color-border-medium);
+}
+
+/* Submit Button */
 .submitButton {
   width: 100%;
-  background: linear-gradient(135deg, #6d28d9 0%, #8b5cf6 100%);
-  color: white;
-  padding: 12px;
+  padding: var(--space-4);
+  background: linear-gradient(
+    135deg,
+    var(--color-primary-600) 0%,
+    var(--color-primary-700) 100%
+  );
+  color: var(--color-text-inverse);
   border: none;
-  border-radius: 10px;
-  font-size: 0.95rem;
-  font-weight: 600;
+  border-radius: var(--radius-xl);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-bold);
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all var(--transition-base);
+  margin-top: var(--space-4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 var(--space-1) var(--space-3)
+    color-mix(in srgb, var(--color-primary-600) 30%, transparent);
 }
 
-.submitButton:hover:not(.loading) {
+.submitButton:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(139, 92, 246, 0.35);
+  box-shadow: 0 6px var(--space-4)
+    color-mix(in srgb, var(--color-primary-600) 40%, transparent);
+}
+
+.submitButton:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.loading {
+  cursor: wait;
 }
 
 .buttonSpinner {
-  width: 22px;
-  height: 22px;
-  border: 3px solid transparent;
-  border-top: 3px solid white;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin: 0 auto;
+  width: var(--size-icon-lg);
+  height: var(--size-icon-lg);
+  border: 2px solid
+    color-mix(in srgb, var(--color-text-inverse) 30%, transparent);
+  border-top-color: var(--color-bg-primary);
+  border-radius: var(--radius-full);
+  animation: spin 0.8s linear infinite;
+}
+
+/* Divider */
+.divider {
+  height: 1px;
+  background: var(--color-bg-tertiary);
+  margin: var(--space-6) 0;
+}
+
+/* WhatsApp Button */
+.whatsappButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  width: 100%;
+  padding: 0.9rem;
+  background: var(--color-success);
+  color: var(--color-text-inverse);
+  border-radius: var(--radius-xl);
+  font-weight: var(--font-weight-semibold);
+  text-decoration: none;
+  transition: all var(--transition-base);
+}
+
+.whatsappButton:hover {
+  background: var(--color-success);
+  transform: translateY(-1px);
 }
 
 @keyframes spin {
@@ -221,154 +389,76 @@ select.input:focus {
   }
 }
 
-.divider {
-  border-top: 1px solid #ccc;
-  margin-top: 1rem;
-}
+/* Responsive */
+@media (max-width: 640px) {
+  .formContainer {
+    padding: 0;
+  }
 
-.whatsappButton {
-  margin-top: 14px;
-  width: 100%;
-  background: #25d366;
-  color: white;
-  padding: 12px;
-  border-radius: 10px;
-  font-size: 0.95rem;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  text-decoration: none;
-  transition: 0.3s ease;
-}
-
-.whatsappButton:hover {
-  background: #1ebe5c;
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(37, 211, 102, 0.35);
-}
-
-.whatsappIcon {
-  color: white;
-}
-
-/* ------------------------------- */
-/* NEW PET SELECTOR UI (Lucide Icons) */
-/* ------------------------------- */
-
-.petOptionsRow {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  margin-top: 8px;
-}
-
-.petOption {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 12px;
-  background: #f3f4f6;
-  border: 1px solid #e5e7eb;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: 0.3s ease;
-  font-weight: 600;
-  color: #374151;
-}
-
-.petOption:hover {
-  background: #eef2ff;
-  transform: translateY(-2px);
-}
-
-.petOptionActive {
-  background: linear-gradient(135deg, #eef2ff, #e9d5ff);
-  border-color: #c4b5fd;
-  color: #4c1d95;
-  box-shadow: 0 6px 15px rgba(139, 92, 246, 0.2);
-}
-
-.petIcon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #6d28d9;
-}
-
-.petLabel {
-  font-size: 0.9rem;
-}
-
-.placeholderRow {
-  margin-top: 6px;
-}
-
-.placeholderText {
-  font-size: 0.88rem;
-  color: #9ca3af;
-}
-
-/* ------------------------------- */
-/* IMAGE UPLOAD + PREVIEW */
-/* ------------------------------- */
-
-.fileInput {
-  padding: 6px 0;
-  border: none;
-  background: transparent;
-  font-size: 0.95rem;
-}
-
-.previewRow {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 10px;
-}
-
-.previewImg {
-  width: 70px;
-  height: 70px;
-  border-radius: 10px;
-  object-fit: cover;
-  border: 2px solid #e5e7eb;
-}
-
-
-@media (max-width: 540px) {
   .modal {
-    max-width: 90%;
-    padding: 1.6rem 1.2rem;
+    height: 100%;
+    max-height: 100vh;
+    border-radius: 0;
+    padding: var(--space-6);
+  }
+
+  .doctorInfoBox {
+    gap: var(--space-3);
+    padding-bottom: var(--space-6);
+    margin-bottom: var(--space-6);
+    flex-wrap: nowrap;
+    align-items: center;
+  }
+
+  .doctorImg {
+    width: var(--size-avatar-md);
+    height: var(--size-avatar-md);
+    border-radius: var(--radius-lg);
+    border-width: 2px;
+  }
+
+  .docName {
+    font-size: var(--font-size-md);
+    gap: 0.35rem;
+  }
+
+  .nameIcon {
+    width: 18px;
+    height: 18px;
+  }
+
+  .docSpec {
+    font-size: var(--font-size-sm);
+  }
+
+  .docBadges {
+    gap: 0.4rem;
+  }
+
+  .docHospital,
+  .docFee {
+    font-size: var(--font-size-xs);
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--radius-sm);
+    white-space: nowrap;
+  }
+
+  .docHospital svg {
+    width: var(--space-3);
+    height: var(--space-3);
+  }
+
+  .title {
+    font-size: var(--font-size-lg);
   }
 
   .row {
-    flex-direction: column;
+    grid-template-columns: 1fr;
   }
-
-  .previewImg {
-    width: 60px;
-    height: 60px;
-  }
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
+  .submitButton,
+  .whatsappButton {
+    padding: 0.7rem;
+    font-size: var(--font-size-sm);
   }
 }
 
-@keyframes pop {
-  from {
-    opacity: 0;
-    transform: translateY(40px) scale(0.9);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}

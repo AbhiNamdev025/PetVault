@@ -1,0 +1,70 @@
+.detailCard {
+  --admin-typo-md: var(--font-size-md);
+  --admin-typo-sm: var(--font-size-sm);
+  --admin-typo-xs: var(--font-size-xs);
+  background: var(--color-bg-primary);
+  padding: var(--space-6);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-bg-tertiary);
+}
+
+.detailCard h3 {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  margin-bottom: var(--space-6);
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--color-bg-secondary);
+}
+
+.infoList {
+  display: flex;
+  flex-direction: column;
+}
+
+.infoItem {
+  display: flex;
+  padding: 0.85rem 0;
+  border-bottom: 1px solid var(--color-bg-secondary);
+  align-items: flex-start;
+  gap: var(--space-4);
+}
+
+.infoItem:last-child {
+  border-bottom: none;
+}
+
+.infoKey {
+  width: 200px;
+  flex-shrink: 0;
+  color: var(--color-text-tertiary);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--admin-typo-sm);
+}
+
+.infoValue {
+  color: var(--color-text-primary);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--admin-typo-sm);
+  line-height: 1.5;
+  flex: 1;
+}
+
+@media (max-width: 768px) {
+  .detailCard {
+    padding: var(--space-5);
+  }
+  .infoItem {
+    flex-direction: column;
+    gap: 0.35rem;
+    padding: var(--space-2) 0;
+  }
+  .infoKey {
+    width: 100%;
+    font-size: var(--admin-typo-sm);
+  }
+  .infoValue {
+    width: 100%;
+    font-size: var(--admin-typo-sm);
+  }
+}

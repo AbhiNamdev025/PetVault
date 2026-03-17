@@ -1,0 +1,207 @@
+.card {
+  cursor: pointer;
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-2xl);
+  box-shadow: var(--shadow-sm);
+  padding: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  transition:
+    transform var(--transition-base),
+    box-shadow var(--transition-base),
+    border-color var(--transition-base);
+  animation: cardIn 280ms ease both;
+  height: 100%;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  border-color: var(--color-primary-200);
+  box-shadow: var(--shadow-lg);
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--space-3);
+}
+
+.orderRef {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  line-height: 1.2;
+}
+
+.date {
+  margin-top: var(--space-1);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-tertiary);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.itemsPreview {
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-lg);
+  padding: var(--space-3);
+  display: grid;
+  gap: 10px;
+  background: linear-gradient(
+    180deg,
+    var(--color-bg-primary) 0%,
+    var(--color-bg-secondary) 100%
+  );
+}
+
+.itemPreview {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.itemImage {
+  width: 42px;
+  height: 42px;
+  object-fit: cover;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border-light);
+  background: var(--color-neutral-100);
+}
+
+.itemText {
+  min-width: 0;
+}
+
+.itemName {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.itemMeta {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-tertiary);
+}
+
+.moreItems {
+  font-size: var(--font-size-xs);
+  color: var(--color-primary-700);
+  font-weight: var(--font-weight-semibold);
+}
+
+.summaryGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: auto;
+}
+
+.summaryItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  background: var(--color-bg-secondary);
+  border-radius: var(--radius-full);
+  padding: 6px 10px;
+}
+
+.cardFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: var(--space-3);
+  padding-top: var(--space-2);
+}
+
+.totalLabel {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-tertiary);
+}
+
+.totalValue {
+  font-size: var(--font-size-lg);
+  line-height: 1.1;
+  font-weight: var(--font-weight-extrabold);
+  color: var(--color-primary-800);
+}
+
+.actionGroup {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.cancelBtn {
+  height: 38px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-error-light);
+  padding: 0 var(--space-4);
+  color: var(--color-error-dark);
+  background: var(--color-error-light);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+}
+
+.cancelBtn:hover {
+  border-color: var(--color-error-light);
+  background: var(--color-error-light);
+}
+
+.detailsBtn {
+  height: 38px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-primary-300);
+  background: linear-gradient(
+    120deg,
+    var(--color-primary-600),
+    var(--color-primary-800)
+  );
+  color: var(--color-text-inverse);
+  padding: 0 var(--space-3);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+}
+
+.detailsBtn:hover {
+  filter: brightness(1.08);
+}
+
+@keyframes cardIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 640px) {
+  .card {
+    padding: var(--space-4);
+  }
+
+  .cardFooter {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .actionGroup {
+    justify-content: flex-end;
+  }
+}

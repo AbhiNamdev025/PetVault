@@ -1,0 +1,62 @@
+/* ========================================
+   CARD COMPONENT STYLES
+   ======================================== */
+
+.card {
+  background: var(--color-bg-primary);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--color-border-light);
+  box-shadow: none;
+  transition: all var(--transition-base);
+  width: 100%;
+}
+
+/* ===== VARIANTS ===== */
+.default {
+  background: var(--color-bg-primary);
+}
+
+.elevated {
+  box-shadow: var(--shadow-xs);
+}
+
+.outlined {
+  border: 1px solid var(--color-border-medium);
+  box-shadow: none;
+}
+
+/* ===== PADDING ===== */
+.padding-none {
+  padding: 0;
+}
+
+.padding-sm {
+  padding: var(--space-4);
+}
+
+.padding-md {
+  padding: var(--space-6);
+}
+
+.padding-lg {
+  padding: var(--space-8);
+}
+
+/* ===== STATES ===== */
+.hover:hover {
+  transform: none;
+  border-color: var(--color-border-medium);
+  box-shadow: none;
+}
+
+.clickable {
+  cursor: pointer;
+  text-align: left;
+  border: 1px solid var(--color-border-light);
+  font-family: inherit;
+  color: inherit;
+}
+
+.clickable:hover {
+  border-color: var(--color-border-medium);
+}

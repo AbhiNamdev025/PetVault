@@ -1,515 +1,334 @@
 .daycareDetails {
-  padding: 2rem;
-  max-width: 1200px;
+  width: min(100%, 1320px);
   margin: 0 auto;
+  padding: var(--ui-section-padding-y) var(--ui-section-padding-x);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.notFound {
+  width: min(100%, 1320px);
+  margin: 0 auto;
+  padding: var(--ui-section-padding-y) var(--ui-section-padding-x);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-lg);
+  text-align: center;
 }
 
 .backBtn {
-  background: none;
-  border: none;
-  color: #667eea;
-  font-weight: 600;
-  cursor: pointer;
+  width: fit-content;
+}
+
+.daycareHeader {
+  border: 1px solid var(--color-border-medium);
+  border-radius: var(--radius-2xl);
+  background: var(--color-bg-primary);
+  padding: var(--space-6);
   display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 2rem;
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
-  transition: all 0.2s;
-}
-.backBtn:hover {
-  background: #f8f9fa;
+  align-items: flex-start;
+  gap: var(--space-5);
 }
 
-.daycareHeader,
-.aboutSection,
-.caretakersSection,
-.reviewsSection {
-  background: #fff;
-  border-radius: 12px;
-  padding: 2rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  margin-bottom: 2rem;
+.daycareAvatar {
+  width: var(--size-avatar-xl);
+  height: var(--size-avatar-xl);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--color-border-light);
+  background: var(--color-bg-secondary);
+  object-fit: contain;
+  flex-shrink: 0;
+  padding: var(--space-2);
 }
 
-.reviewsSection {
-  background: linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
+.daycareInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.headerTop {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3);
 }
 
 .daycareName {
-  font-size: 2rem;
-  font-weight: 700;
-  margin-bottom: 0.5rem;
-  color: #333;
+  font-size: var(--ui-heading-page);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  line-height: var(--ui-heading-line-height);
 }
 
-.daycareType {
-  color: #666;
-  text-transform: capitalize;
-  margin-bottom: 1rem;
-  font-size: 1.1rem;
-}
-
-.location,
-.rating {
-  display: flex;
+.ratingBadge {
+  display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  color: #666;
-  margin-bottom: 0.5rem;
+  gap: var(--space-1);
+  padding: 2px var(--space-3);
+  border-radius: var(--radius-full);
+  background: var(--color-warning-light);
+  color: var(--color-warning-dark);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  white-space: nowrap;
 }
 
 .reviewCount {
-  color: #999;
-  font-size: 0.9rem;
+  color: inherit;
+  opacity: 0.9;
+  font-size: var(--font-size-xs);
+}
+
+.daycareType {
+  margin-top: var(--space-2);
+  display: inline-flex;
+  align-items: center;
+  padding: 2px var(--space-3);
+  border-radius: var(--radius-full);
+  background: var(--color-primary-50);
+  border: 1px solid var(--color-primary-100);
+  color: var(--color-primary-700);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.detailsRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-4);
+  margin-top: var(--space-3);
+}
+
+.detailItem {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+}
+
+.actionButtons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+}
+
+.callButton,
+.whatsappButton {
+  min-width: 140px;
+}
+
+.tabNavigation {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  border: 1px solid var(--color-border-medium);
+  border-radius: var(--radius-xl);
+  background: var(--color-bg-primary);
+  padding: var(--space-1);
+  width: fit-content;
+}
+
+.tab {
+  min-height: var(--space-10);
+  border: none !important;
+  background: transparent !important;
+  color: var(--color-text-secondary) !important;
+}
+
+.tab:hover {
+  border: none !important;
+  background: var(--color-neutral-50) !important;
+  color: var(--color-text-primary) !important;
+}
+
+.activeTab {
+  border: none !important;
+  background: var(--color-primary-50) !important;
+  color: var(--color-primary-700) !important;
+}
+
+.aboutSection,
+.caretakersSection {
+  border: 1px solid var(--color-border-medium);
+  border-radius: var(--radius-2xl);
+  background: var(--color-bg-primary);
+  padding: var(--space-6);
+  scroll-margin-top: var(--space-24);
+}
+
+.sectionAnchor {
+  scroll-margin-top: var(--space-24);
 }
 
 .sectionHeader {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-  flex-shrink: 0;
-}
-
-.sectionTitle {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: #333;
-  display: flex;
-  gap: 0.5rem;
-}
-
-.reviewsCount {
-  color: #666;
-  font-size: 1rem;
+  margin-bottom: 0;
 }
 
 .descriptionBox {
-  background: #f8f9fa;
-  padding: 1.5rem;
-  border-radius: 8px;
-  margin-bottom: 1.5rem;
-}
-.descriptionBox p {
-  color: #555;
-  margin: 0;
-  line-height: 1.6;
+  color: var(--color-text-secondary);
+  line-height: var(--line-height-relaxed);
+  margin-bottom: var(--space-4);
 }
 
 .detailsGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 1rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-4);
 }
 
-.detailItem {
+.aboutDetailItem {
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-lg);
+  background: var(--color-bg-secondary);
+  padding: var(--space-4);
   display: flex;
-  justify-content: space-between;
-  padding: 1rem;
-  background: #f8f9fa;
-  border-radius: 8px;
-  border-left: 4px solid #667eea;
-}
-.detailItem strong {
-  color: #374151;
-}
-.detailItem span {
-  color: #6b7280;
+  flex-direction: column;
+  gap: var(--space-1);
 }
 
-.caretakersScrollContainer,
-.reviewsScrollContainer {
-  flex: 1;
-  overflow-y: auto;
-  overflow-x: auto;
-  padding-right: 0.5rem;
-  margin-right: -0.5rem;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
+.aboutDetailItem strong {
+  color: var(--color-text-primary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
 }
-.caretakersScrollContainer::-webkit-scrollbar,
-.reviewsScrollContainer::-webkit-scrollbar {
-  display: none;
+
+.aboutDetailItem span {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+}
+
+.emptyAboutMessage {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+}
+
+.noCaretakers {
+  border: 1px dashed var(--color-border-medium);
+  border-radius: var(--radius-xl);
+  background: var(--color-bg-secondary);
+  color: var(--color-text-secondary);
+  text-align: center;
+  padding: var(--space-6);
+}
+
+.caretakersScrollContainer {
+  width: 100%;
 }
 
 .caretakersGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 1.5rem;
-  padding: 0.5rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-4);
 }
 
-.caretakerCard {
-  background: #f8f9fa;
-  padding: 1.5rem;
-  border-radius: 12px;
-  border: 1px solid #e9ecef;
-  text-align: center;
-  transition: 0.2s;
-}
-.caretakerCard:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-.caretakerImage {
-  width: 80px;
-  height: 80px;
-  margin: 0 auto 1rem;
-}
-.caretakerImage img {
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  object-fit: cover;
-}
-
-.caretakerName {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #333;
-  margin-bottom: 0.5rem;
-}
-.caretakerSpecialization {
-  color: #666;
-  font-size: 0.9rem;
-  margin-bottom: 0.25rem;
-}
-.caretakerExperience {
-  color: #888;
-  font-size: 0.85rem;
-  margin-bottom: 1rem;
-}
-
-.viewProfileBtn {
-  padding: 0.5rem 1rem;
-  background: #667eea;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background 0.2s;
-  width: 100%;
-}
-.viewProfileBtn:hover {
-  background: #5a67d8;
-}
-
-.noCaretakers,
-.noReviews {
-  text-align: center;
-  padding: 3rem;
-  color: #666;
-  background: #f8f9fa;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-}
-
-.reviewsGrid {
-  display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: minmax(350px, 1fr);
-  gap: 1.5rem;
-  padding: 0.5rem;
-  width: auto;
-  min-width: 100%;
-  overflow-x: auto;
-  scrollbar-width: none;
-  align-items: start;
-}
-
-.reviewCard {
-  background: #f8f9fa;
-  padding: 1.5rem;
-  border-radius: 12px;
-  border: 1px solid #e9ecef;
-  transition: 0.2s;
-  scroll-snap-align: start;
-  min-width: 350px;
-  box-sizing: border-box;
-}
-.reviewCard:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-.reviewHeader {
-  display: flex;
-  justify-content: space-between;
-  gap: 1rem;
-  margin-bottom: 1rem;
-}
-.reviewerInfo {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-.reviewerName {
-  font-weight: 600;
-  color: #333;
-  word-break: break-word;
-}
-.reviewDate {
-  color: #666;
-  font-size: 0.875rem;
-}
-.reviewText {
-  color: #555;
-  line-height: 1.5;
-  word-break: break-word;
-}
-
-.addReviewWrap {
-  display: flex;
-  gap: 0.75rem;
-  align-items: center;
-  margin-bottom: 1rem;
-  flex-wrap: wrap;
-}
-.addReviewBtn {
-  padding: 0.5rem 1rem;
-  background: #10b981;
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-.addReviewBtn:hover {
-  background: #059669;
-}
-
-.reviewFormBox {
-  background: #fff;
-  padding: 1.25rem;
-  border-radius: 12px;
-  border: 1px solid #e6eef6;
-  width: 100%;
-  box-sizing: border-box;
-  margin-bottom: 1rem;
-}
-.reviewFormBox h3 {
-  margin: 0 0 0.75rem 0;
-  color: #333;
-  font-size: 1.1rem;
-}
-
-.starRow {
-  display: flex;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
-}
-.starActive {
-  color: #facc15;
-  cursor: pointer;
-}
-.starInactive {
-  color: #d1d5db;
-  cursor: pointer;
-}
-
-.reviewTextarea {
-  width: 100%;
-  padding: 1rem;
-  border: 1px solid #e9ecef;
-  border-radius: 8px;
-  background: #fff;
-  resize: vertical;
-  margin-bottom: 1rem;
-  box-sizing: border-box;
-}
-.reviewTextarea:focus {
-  outline: none;
-  border-color: #667eea;
-}
-
-.submitReviewButton {
-  padding: 0.75rem 2rem;
-  background: #667eea;
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.2s;
-  width: 100%;
-}
-.submitReviewButton:hover:not(:disabled) {
-  background: #5a67d8;
-}
-.submitReviewButton:disabled {
-  background: #a0aec0;
-  cursor: not-allowed;
-}
-
-/* Colored indicators for reviews */
-.reviewPositive {
-  border-left: 6px solid #10b981;
-}
-.reviewNeutral {
-  border-left: 6px solid #f59e0b;
-}
-.reviewNegative {
-  border-left: 6px solid #ef4444;
-}
-
-/* Tabs and login popup */
-.tabNavigation {
-  display: flex;
-  gap: 8px;
-  margin: 24px 0;
-  border-bottom: 1px solid #e5e7eb;
-  padding-bottom: 8px;
-}
-.tab {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 12px 24px;
-  background: none;
-  border: none;
-  border-radius: 8px;
-  font-size: 16px;
-  font-weight: 500;
-  color: #6b7280;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-.tab:hover {
-  color: #000;
-}
-.activeTab {
-  background: #3b82f6;
-  color: #fff;
-}
-.activeTab:hover {
-  background: #2563eb;
+.listingCard {
+  min-height: 100%;
 }
 
 .loginPopupOverlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: var(--color-bg-overlay);
   display: flex;
-  justify-content: center;
   align-items: center;
-  z-index: 1000;
+  justify-content: center;
+  z-index: var(--z-modal);
+  padding: var(--space-4);
 }
+
 .loginPopup {
-  background: #fff;
-  padding: 2rem;
-  border-radius: 12px;
+  width: min(100%, 420px);
+  border: 1px solid var(--color-border-medium);
+  border-radius: var(--radius-2xl);
+  background: var(--color-bg-primary);
+  padding: var(--space-6);
   text-align: center;
-  max-width: 400px;
-  width: 90%;
 }
+
+.loginPopup h3 {
+  font-size: var(--font-size-xl);
+  margin-bottom: var(--space-1);
+}
+
+.loginPopup p {
+  color: var(--color-text-secondary);
+}
+
 .popupActions {
   display: flex;
-  gap: 1rem;
-  justify-content: center;
+  gap: var(--space-3);
+  margin-top: var(--space-5);
 }
+
 .loginButton,
 .cancelButton {
-  padding: 0.75rem 2rem;
-  border: none;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
   flex: 1;
 }
-.loginButton {
-  background: #667eea;
-  color: #fff;
-}
-.loginButton:hover {
-  background: #5a67d8;
-}
-.cancelButton {
-  background: #e2e8f0;
-  color: #4a5568;
-}
-.cancelButton:hover {
-  background: #cbd5e0;
-}
 
-.loading,
-.notFound {
-  text-align: center;
-  padding: 3rem;
-  color: #666;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .daycareDetails {
-    padding: 1rem;
-  }
-  .daycareHeader,
-  .aboutSection,
-  .caretakersSection,
-  .reviewsSection {
-    padding: 1.5rem;
-    height: auto;
-  }
-
-  .daycareName {
-    font-size: 1.5rem;
-  }
-
-  .caretakersGrid {
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 1rem;
-  }
-
-  .reviewsGrid {
-    grid-auto-columns: minmax(260px, 1fr);
-  }
-
-  .reviewCard {
-    min-width: 260px;
-    padding: 1rem;
-  }
-
+@media (max-width: 1180px) {
   .detailsGrid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .daycareHeader {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .daycareAvatar {
+    width: 100%;
+    height: 240px;
   }
 
   .tabNavigation {
-    flex-direction: column;
-    gap: 4px;
+    width: 100%;
+    overflow-x: auto;
   }
-  .tab {
-    justify-content: center;
-    padding: 10px 16px;
-  }
+
 }
 
-@media (max-width: 480px) {
+@media (max-width: 768px) {
+  .daycareDetails {
+    gap: var(--space-5);
+  }
+
+  .daycareHeader,
+  .aboutSection,
+  .caretakersSection {
+    padding: var(--space-4);
+  }
+
+  .daycareName {
+    font-size: var(--ui-heading-section);
+  }
+
+  .headerTop {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .detailsGrid,
   .caretakersGrid {
     grid-template-columns: 1fr;
   }
-  .reviewCard {
-    padding: 1rem;
-    min-width: 220px;
+
+  .actionButtons {
+    width: 100%;
   }
-  .sectionHeader {
+
+  .callButton,
+  .whatsappButton {
+    flex: 1;
+  }
+
+  .popupActions {
     flex-direction: column;
-    align-items: flex-start;
-    gap: 0.5rem;
-  }
-  .reviewFormBox {
-    padding: 1rem;
-  }
-  .addReviewBtn {
-    padding: 0.45rem 0.85rem;
-    font-size: 0.95rem;
   }
 }

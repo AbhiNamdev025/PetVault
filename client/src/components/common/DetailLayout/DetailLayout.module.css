@@ -1,0 +1,183 @@
+.page {
+  padding: var(--ui-section-padding-y) 0;
+}
+
+.container {
+  width: min(100%, 1320px);
+  margin: 0 auto;
+  padding: 0 var(--ui-section-padding-x);
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-section-gap-sm);
+}
+
+.backButton {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  border: 1px solid var(--color-border-medium);
+  border-radius: var(--ui-button-radius);
+  background: var(--color-bg-primary);
+  color: var(--color-text-secondary);
+  width: fit-content;
+}
+
+.backButton:hover {
+  border-color: var(--color-border-dark);
+  color: var(--color-text-primary);
+  transform: none;
+}
+
+.splitCard {
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border-medium);
+  border-radius: var(--radius-3xl);
+  padding: var(--space-8);
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+  gap: var(--space-8);
+}
+
+.galleryColumn,
+.contentColumn {
+  min-width: 0;
+}
+
+.gallery {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.mainImage {
+  width: 100%;
+  height: 400px;
+  aspect-ratio: 1 / 1;
+  border-radius: var(--radius-2xl);
+  border: 1px solid var(--color-border-light);
+  background: var(--color-bg-secondary);
+}
+
+.thumbnailRow {
+  display: flex;
+  gap: var(--space-3);
+  overflow-x: auto;
+  padding-bottom: var(--space-1);
+}
+
+.thumbnail {
+  width: var(--space-24);
+  height: var(--space-24);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border-light);
+  background: var(--color-bg-secondary);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.thumbnailActive {
+  border-color: var(--color-primary-500);
+}
+
+.entityCard {
+  border: 1px solid var(--color-border-medium);
+  border-radius: var(--radius-2xl);
+  background: var(--color-bg-primary);
+  padding: var(--space-5);
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.entityCardInteractive {
+  cursor: pointer;
+}
+
+.entityCardInteractive:hover {
+  border-color: var(--color-border-dark);
+}
+
+.entityAvatar {
+  width: 84px;
+  height: 84px;
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--color-border-light);
+  background: var(--color-bg-secondary);
+  flex-shrink: 0;
+}
+
+.entityBody {
+  flex: 1;
+  min-width: 0;
+}
+
+.entityTitle {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+}
+
+.entitySubtitle {
+  margin-top: var(--space-1);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+}
+
+.entityBadges {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  margin-top: var(--space-2);
+}
+
+.entityBadge {
+  font-size: var(--font-size-xs);
+  color: var(--color-primary-600);
+  border: 1px solid var(--color-primary-100);
+  background: var(--color-primary-50);
+  border-radius: var(--radius-full);
+  padding: var(--space-1) var(--space-2);
+}
+
+.entityCta {
+  color: var(--color-primary-600);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-sm);
+  white-space: nowrap;
+}
+
+@media (max-width: 960px) {
+  .splitCard {
+    grid-template-columns: 1fr;
+    padding: var(--space-4);
+  }
+}
+
+@media (max-width: 768px) {
+  .page {
+    padding: var(--space-5);
+  }
+  .container {
+    gap: var(--space-5);
+    padding: 0;
+  }
+
+  .entityCard {
+    padding: var(--space-4);
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .entityAvatar {
+    width: 68px;
+    height: 68px;
+  }
+  .mainImage {
+    height: 350px;
+  }
+  .thumbnail {
+    height: 60px;
+    width: 60px;
+  }
+}

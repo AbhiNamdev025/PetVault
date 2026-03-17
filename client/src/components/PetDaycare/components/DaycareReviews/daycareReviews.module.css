@@ -1,78 +1,83 @@
 .reviewsSection {
-  background: #f9f8ff;
-  padding: 5rem 2rem;
+  background: var(--color-bg-secondary);
+  padding: var(--ui-section-padding-y) var(--ui-page-padding-x);
   text-align: center;
 }
 
-.heading {
-  font-size: 2rem;
-  color: #1f2937;
-  font-weight: 800;
-  margin-bottom: 3rem;
+.sectionHeader {
+  margin-bottom: var(--ui-section-gap);
+}
+
+.titleIcon {
+  color: var(--color-primary-600);
 }
 
 .cardsContainer {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 2rem;
+  gap: var(--space-8);
 }
 
 .card {
-  background: #fff;
-  border-radius: 16px;
-  padding: 2rem;
+  background: var(--color-bg-primary);
+  border-radius: var(--radius-xl);
+  padding: var(--space-8);
   max-width: 320px;
   text-align: left;
-  box-shadow: 0 10px 25px rgba(109, 40, 217, 0.08);
-  transition: all 0.3s ease;
+  box-shadow: 0 10px 25px color-mix(in srgb, var(--color-primary-700) 8%, transparent);
+  transition: all var(--transition-slow);
 }
 
 .card:hover {
   transform: translateY(-6px);
-  box-shadow: 0 15px 35px rgba(109, 40, 217, 0.12);
+  box-shadow: 0 15px 35px color-mix(in srgb, var(--color-primary-700) 12%, transparent);
 }
 
 .header {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  margin-bottom: 1rem;
+  gap: var(--space-4);
+  margin-bottom: var(--space-4);
 }
 
 .image {
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  object-fit: cover;
+  width: var(--size-avatar-sm);
+  height: var(--size-avatar-sm);
+  border-radius: var(--radius-full);
+  object-fit: contain;
 }
 
 .name {
-  font-size: 1rem;
-  font-weight: 700;
-  color: #4c1d95;
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-primary-900);
 }
 
 .pet {
-  font-size: 0.85rem;
-  color: #6b7280;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
 }
 
 .feedback {
-  font-size: 0.95rem;
-  color: #374151;
-  margin-bottom: 1rem;
+  font-size: var(--font-size-base);
+  color: var(--color-text-primary);
+  margin-bottom: var(--space-4);
   line-height: 1.5;
 }
 
 .stars {
   display: flex;
-  gap: 4px;
+  gap: var(--space-1);
 }
 
 @media (max-width: 768px) {
   .cardsContainer {
     flex-direction: column;
     align-items: center;
+  }
+
+  .reviewsSection {
+    padding: var(--ui-section-padding-y) var(--ui-page-padding-x);
   }
 }

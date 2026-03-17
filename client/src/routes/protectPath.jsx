@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { ProfileSkeleton } from "../components/Skeletons";
+import { redirectToAuthHome } from "../utils/authModalNavigation";
 
 function ProtectedPath({ children, requiredRole }) {
   const [isAllowed, setIsAllowed] = useState(false);
@@ -13,7 +15,7 @@ function ProtectedPath({ children, requiredRole }) {
     const user = userData ? JSON.parse(userData) : null;
 
     if (!token || !user) {
-      navigate("/login");
+      redirectToAuthHome(navigate, "login", window.location.pathname);
       return;
     }
 
@@ -25,7 +27,7 @@ function ProtectedPath({ children, requiredRole }) {
     setIsAllowed(true);
   }, [navigate, requiredRole]);
 
-  if (!isAllowed) return <div>Loading...</div>;
+  if (!isAllowed) return <ProfileSkeleton />;
 
   return children;
 }

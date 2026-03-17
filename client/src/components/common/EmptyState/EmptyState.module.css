@@ -1,0 +1,39 @@
+.emptyState {
+  width: 100%;
+  padding: var(--space-8);
+  border-radius: var(--radius-xl);
+  border: 1px dashed var(--color-border-medium);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.compact {
+  padding: var(--space-6);
+  gap: var(--space-2);
+}
+
+.icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-tertiary);
+}
+
+.title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+}
+
+.description {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  max-width: 56ch;
+}
+
+.action {
+  margin-top: var(--space-2);
+}

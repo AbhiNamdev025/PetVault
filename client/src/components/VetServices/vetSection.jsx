@@ -1,38 +1,52 @@
-import React, { useState } from "react";
+import React, { useRef } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import VetHero from "./components/VetHero/vetHero";
 import VetCards from "./components/VetCards/vetCards";
-import VetAppointmentForm from "./components/VetAppointment/vetAppointmentForm";
-import styles from "./vetSection.module.css";
 import VetCTA from "./components/VetCTA/vetCta";
 import VetReviews from "./components/VetReviews/vetReviews";
 import VetFeatures from "./components/VetFeatures/vetFeatures";
+import { openAuthModal } from "../../utils/authModalNavigation";
 
 const VetSection = () => {
-  const [showForm, setShowForm] = useState(false);
+  const vetCardsRef = useRef(null);
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  const handleBookNow = () => setShowForm(true);
-  const closeForm = () => setShowForm(false);
+  const scrollToVetCards = () => {
+    vetCardsRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  const isAuthenticated = () =>
+    !!(localStorage.getItem("token") || sessionStorage.getItem("token"));
+
+  const openForm = (doctor) => {
+    if (!doctor?._id) return;
+    if (!isAuthenticated()) {
+      openAuthModal(navigate, {
+        location,
+        view: "login",
+        from: location.pathname,
+      });
+      return;
+    }
+    navigate(`/book/vet?doctorId=${doctor._id}`, {
+      state: {
+        from: location.pathname,
+        doctor,
+      },
+    });
+  };
 
   return (
     <>
-      <VetHero onBookNow={handleBookNow} />
-      <VetCards onBookNow={handleBookNow} />
+      <VetHero onBookClick={scrollToVetCards} />
+      <div ref={vetCardsRef}>
+        <VetCards onBookNow={openForm} />
+      </div>
 
-      <VetCTA onBookNow={handleBookNow} />
-
+      <VetCTA onBookNow={scrollToVetCards} />
       <VetFeatures />
       <VetReviews />
-
-      {showForm && (
-        <div className={styles.modalOverlay}>
-          <div className={styles.modalBox}>
-            <button className={styles.closeButton} onClick={closeForm}>
-              ✕
-            </button>
-            <VetAppointmentForm onClose={closeForm} />
-          </div>
-        </div>
-      )}
     </>
   );
 };

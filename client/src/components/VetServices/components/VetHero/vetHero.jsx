@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   PawPrint,
   Heart,
@@ -10,27 +10,26 @@ import {
   Cat,
   Pill,
 } from "lucide-react";
-import ServiceBookingForm from "../../../PetDaycare/components/ServicesBooking/serviceBookingForm";
 import styles from "./vetHero.module.css";
+import Button from "../../../common/Button/Button";
 
-const VetHero = () => {
-  const [showForm, setShowForm] = useState(false);
-
+const VetHero = ({ onBookClick }) => {
   const features = [
     {
       id: 1,
       icon: <Stethoscope size={22} strokeWidth={1.6} />,
       text: "Top Vets",
     },
+
     {
       id: 2,
-      icon: <Syringe size={22} strokeWidth={1.6} />,
-      text: "150k+ Pets Healed",
+      icon: <Ambulance size={22} strokeWidth={1.6} />,
+      text: "24×7 Care",
     },
     {
       id: 3,
-      icon: <Ambulance size={22} strokeWidth={1.6} />,
-      text: "24×7 Care",
+      icon: <Syringe size={22} strokeWidth={1.6} />,
+      text: "150k+ Pets Healed",
     },
   ];
 
@@ -60,7 +59,7 @@ const VetHero = () => {
           </div>
 
           <img
-            src="https://img.freepik.com/free-photo/veterinarian-check-ing-puppy-s-health_23-2148728396.jpg?semt=ais_hybrid&w=740&q=80"
+            src="https://img.freepik.com/free-photo/veterinarian-check-ing-puppy-s-health_23-2148728396.jpg"
             className={styles.petImage}
             alt="Pet"
           />
@@ -68,20 +67,17 @@ const VetHero = () => {
 
         <div className={styles.center}>
           <h1 className={styles.title}>
-            Compassionate Veterinary Care for Your Pets 🩺
+            Compassionate Veterinary Care for Your Pets
           </h1>
 
           <p className={styles.subtitle}>
-            Experienced veterinarians, modern facilities, and heartfelt care —
+            Experienced veterinarians, modern facilities, and heartfelt care,
             because your pets deserve nothing less.
           </p>
 
-          <button
-            className={styles.bookButton}
-            onClick={() => setShowForm(true)}
-          >
+          <Button variant="primary" size="lg" onClick={onBookClick}>
             Book Appointment
-          </button>
+          </Button>
 
           <div className={styles.featureCards}>
             {features.map((f) => (
@@ -110,13 +106,6 @@ const VetHero = () => {
           />
         </div>
       </div>
-
-      {showForm && (
-        <ServiceBookingForm
-          defaultService="Vet Appointment"
-          onClose={() => setShowForm(false)}
-        />
-      )}
     </section>
   );
 };

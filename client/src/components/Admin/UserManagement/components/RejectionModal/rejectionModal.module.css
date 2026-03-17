@@ -1,0 +1,33 @@
+.modalBody {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.description {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  line-height: 1.55;
+  margin: 0;
+}
+
+.reasonField :global(textarea) {
+  min-height: 130px;
+}
+
+.footerActions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-3);
+  width: 100%;
+}
+
+.actionButton {
+  width: 100%;
+}
+
+@media (max-width: 560px) {
+  .footerActions {
+    grid-template-columns: 1fr;
+  }
+}
