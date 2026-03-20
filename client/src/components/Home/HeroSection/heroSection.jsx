@@ -12,8 +12,7 @@ const HeroSection = () => {
       <div className={styles.container}>
         <div className={styles.dogImageOverlay}>
           <img
-            // src="https://png.pngtree.com/png-vector/20250111/ourmid/pngtree-golden-retriever-dog-pictures-png-image_15147078.png"
-            src="/public/images/Home/Hero.png"
+            src="https://png.pngtree.com/png-vector/20250111/ourmid/pngtree-golden-retriever-dog-pictures-png-image_15147078.png"
             alt="Happy dog"
           />
         </div>
@@ -23,11 +22,7 @@ const HeroSection = () => {
             Adopt L
             <span className={`${styles.badge} ${styles.petsBadge}`}>
               <div className={styles.heartContainer}>
-                <Heart
-                  size={130}
-                  fill="var(--color-primary-400)"
-                  color="var(--color-primary-400)"
-                />
+                <Heart size={130} fill="var(--color-primary-400)" color="var(--color-primary-400)" />
                 <div className={styles.heartContent}>
                   <span className={styles.heartText}>Pets</span>
                   <span className={styles.heartNumber}>5k+</span>

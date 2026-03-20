@@ -1,6 +1,6 @@
 import React from "react";
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
-import HomePage from "../pages/Homepage/HomePage";
+import HomePage from "../pages/Homepage/homePage";
 import PetShopPage from "../pages/PetShopPage/petShopPage";
 import VetServicesPage from "../pages/VetServices/vetServices";
 import PetAdoptionPage from "../pages/PetAdoptionPage/petAdoptionPage";
@@ -26,7 +26,7 @@ import PayoutDetails from "../components/Admin/PayoutManagement/payoutDetails";
 import PetDetails from "../components/PetShop/PetDetails/petDetails";
 import AdoptionPetDetails from "../components/PetAdoption/AdoptionPetDetails/adoptionPetDetails";
 import GoogleAuthCallback from "../components/Auth/GoogleAuthCallback/googleAuthCallback";
-import CartPage from "../pages/Cartpage/CartPage";
+import CartPage from "../pages/Cartpage/cartPage";
 import ProtectedPath from "./protectPath";
 import ProductDetails from "../components/PetProducts/ProductDetails/productDetails";
 import Confirmation from "../components/Order/Confirmation/confirmation";

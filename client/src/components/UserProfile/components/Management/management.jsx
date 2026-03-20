@@ -4,8 +4,9 @@ import styles from "./management.module.css";
 import DashboardTabs from "./dashboardTabs";
 
 import HospitalManagement from "./components/HospitalManagement/hospitalManagement";
+import DoctorManagement from "./components/DoctorManagement/doctorManagement";
 import DaycareManagement from "./components/DaycareManagement/daycareManagement";
-import SharedProviderManagement from "./components/sharedProviderManagement";
+import CaretakerManagement from "./components/CaretakerManagement/caretakerManagement";
 import ShopManagement from "./components/ShopManagement/components/ShopProducts/ShopProducts";
 import NgoManagement from "./components/NgoManagement/ngoManagement";
 import UserManagement from "./components/UsersManagement/userManagement";
@@ -61,11 +62,11 @@ const Management = ({ user, userRole }) => {
       case "hospital":
         return <HospitalManagement user={user} userRole={userRole} />;
       case "doctor":
-        return <SharedProviderManagement user={user} title="Doctor" />;
+        return <DoctorManagement user={user} userRole={userRole} />;
       case "daycare":
         return <DaycareManagement user={user} userRole={userRole} />;
       case "caretaker":
-        return <SharedProviderManagement user={user} title="Caretaker" />;
+        return <CaretakerManagement user={user} userRole={userRole} />;
       case "shop":
         return <ShopManagement user={user} userRole={userRole} />;
       case "pets":
